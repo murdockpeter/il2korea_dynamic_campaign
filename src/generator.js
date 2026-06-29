@@ -3,16 +3,8 @@ const path = require('path');
 
 const workspaceRoot = path.resolve(__dirname, '..');
 const catalogPath = path.join(workspaceRoot, 'catalog', 'il2_korea_catalog.json');
-const generatedRoot = path.join(workspaceRoot, 'generated');
-const il2MissionExportRoot = path.join(
-  'C:\\Program Files\\IL2Series\\game\\data\\Missions',
-  'CodexGenerated'
-);
-const il2MissionTemplateRoot = path.join('C:\\Program Files\\IL2Series\\game\\data\\Missions');
-const il2MultiplayerRoot = path.join('C:\\Program Files\\IL2Series\\game\\data\\Multiplayer');
-const il2CoopExportRoot = path.join(il2MultiplayerRoot, 'COOP');
-const il2CooperativeExportRoot = path.join(il2MultiplayerRoot, 'Cooperative');
-const il2NsDataUserRoot = path.join('C:\\Program Files\\IL2Series\\game\\data\\NSData', 'UserData');
+const il2TemplateMissionSentinel = path.join('game', 'data', 'Missions', '[DEMO]InchonStrike.Mission');
+let cachedInstallInfo = null;
 
 const aircraftCoalitions = {
   f51d: 'UN/US-aligned',
@@ -293,6 +285,148 @@ function readCatalog() {
   return JSON.parse(raw);
 }
 
+function getElectronAppSafe() {
+  try {
+    const electron = require('electron');
+    return electron?.app || null;
+  } catch (error) {
+    return null;
+  }
+}
+
+function getGeneratedRoot() {
+  const electronApp = getElectronAppSafe();
+  if (electronApp && electronApp.isPackaged) {
+    return path.join(electronApp.getPath('userData'), 'generated');
+  }
+
+  return path.join(workspaceRoot, 'generated');
+}
+
+function fileExists(targetPath) {
+  try {
+    fs.accessSync(targetPath, fs.constants.F_OK);
+    return true;
+  } catch (error) {
+    return false;
+  }
+}
+
+function directoryExists(targetPath) {
+  try {
+    return fs.statSync(targetPath).isDirectory();
+  } catch (error) {
+    return false;
+  }
+}
+
+function parseSteamLibraryFolders(vdfPath) {
+  if (!fileExists(vdfPath)) {
+    return [];
+  }
+
+  const raw = fs.readFileSync(vdfPath, 'utf8');
+  const matches = [...raw.matchAll(/"path"\s*"([^"]+)"/g)];
+  return matches.map((match) => match[1].replace(/\\\\/g, '\\'));
+}
+
+function buildInstallInfo(installRoot, source) {
+  const gameRoot = path.join(installRoot, 'game');
+  const dataRoot = path.join(gameRoot, 'data');
+  return {
+    detected: true,
+    source,
+    installRoot,
+    gameRoot,
+    dataRoot,
+    missionTemplateRoot: path.join(dataRoot, 'Missions'),
+    missionExportRoot: path.join(dataRoot, 'Missions', 'CodexGenerated'),
+    multiplayerRoot: path.join(dataRoot, 'Multiplayer'),
+    coopExportRoot: path.join(dataRoot, 'Multiplayer', 'COOP'),
+    cooperativeExportRoot: path.join(dataRoot, 'Multiplayer', 'Cooperative'),
+    nsDataUserRoot: path.join(dataRoot, 'NSData', 'UserData'),
+  };
+}
+
+function detectIl2Install() {
+  if (cachedInstallInfo) {
+    return cachedInstallInfo;
+  }
+
+  const envCandidates = [
+    { root: process.env.IL2_KOREA_INSTALL_DIR, source: 'env:IL2_KOREA_INSTALL_DIR' },
+    { root: process.env.IL2SERIES_HOME, source: 'env:IL2SERIES_HOME' },
+  ].filter((entry) => entry.root);
+
+  const programFilesCandidates = [
+    process.env.ProgramFiles,
+    process.env['ProgramFiles(x86)'],
+  ]
+    .filter(Boolean)
+    .map((basePath) => ({ root: path.join(basePath, 'IL2Series'), source: `default:${basePath}` }));
+
+  const steamRootCandidates = [
+    process.env['ProgramFiles(x86)'] ? path.join(process.env['ProgramFiles(x86)'], 'Steam') : null,
+    process.env.ProgramFiles ? path.join(process.env.ProgramFiles, 'Steam') : null,
+  ].filter(Boolean);
+
+  const steamLibraryCandidates = [];
+  steamRootCandidates.forEach((steamRoot) => {
+    const directRoot = path.join(steamRoot, 'steamapps', 'common', 'IL2Series');
+    steamLibraryCandidates.push({ root: directRoot, source: `steam:${steamRoot}` });
+
+    const libraryFile = path.join(steamRoot, 'steamapps', 'libraryfolders.vdf');
+    parseSteamLibraryFolders(libraryFile).forEach((libraryRoot) => {
+      steamLibraryCandidates.push({
+        root: path.join(libraryRoot, 'steamapps', 'common', 'IL2Series'),
+        source: `steam-library:${libraryRoot}`,
+      });
+    });
+  });
+
+  const orderedCandidates = [...envCandidates, ...programFilesCandidates, ...steamLibraryCandidates];
+  const seen = new Set();
+
+  for (const candidate of orderedCandidates) {
+    const normalizedRoot = path.resolve(candidate.root);
+    if (seen.has(normalizedRoot)) {
+      continue;
+    }
+    seen.add(normalizedRoot);
+
+    const sentinelPath = path.join(normalizedRoot, il2TemplateMissionSentinel);
+    if (fileExists(sentinelPath)) {
+      cachedInstallInfo = buildInstallInfo(normalizedRoot, candidate.source);
+      return cachedInstallInfo;
+    }
+  }
+
+  cachedInstallInfo = {
+    detected: false,
+    source: null,
+    installRoot: null,
+    gameRoot: null,
+    dataRoot: null,
+    missionTemplateRoot: null,
+    missionExportRoot: null,
+    multiplayerRoot: null,
+    coopExportRoot: null,
+    cooperativeExportRoot: null,
+    nsDataUserRoot: null,
+  };
+  return cachedInstallInfo;
+}
+
+function requireIl2Install() {
+  const installInfo = detectIl2Install();
+  if (!installInfo.detected) {
+    throw new Error(
+      'IL-2 Korea install not found. Set IL2_KOREA_INSTALL_DIR to the game root or install IL-2 Korea in a supported location.'
+    );
+  }
+  return installInfo;
+}
+
 function uniqueSorted(values) {
   return [...new Set(values.filter(Boolean))].sort((a, b) => a.localeCompare(b));
 }
@@ -355,6 +489,7 @@ function getObjectKind(entry) {
 }
 
 function buildOptions() {
+  const installInfo = detectIl2Install();
   const catalog = readCatalog();
   const missionCatalog = catalog.mission_object_catalog || [];
   const referenceCatalog = catalog.reference_catalog || [];
@@ -389,6 +524,7 @@ function buildOptions() {
     startingAirfields,
     aircraftCoalitions,
     coalitionOpposites,
+    installInfo,
   };
 }
 
@@ -508,11 +644,13 @@ function getTemplateDefinition(aircraft) {
 }
 
 function readTemplateMissionText(baseName) {
-  return fs.readFileSync(path.join(il2MissionTemplateRoot, `${baseName}.Mission`), 'utf8');
+  const installInfo = requireIl2Install();
+  return fs.readFileSync(path.join(installInfo.missionTemplateRoot, `${baseName}.Mission`), 'utf8');
 }
 
 function readTemplateLocalizationText(baseName) {
-  return fs.readFileSync(path.join(il2MissionTemplateRoot, `${baseName}.eng`), 'utf16le').replace(/^\uFEFF/, '');
+  const installInfo = requireIl2Install();
+  return fs.readFileSync(path.join(installInfo.missionTemplateRoot, `${baseName}.eng`), 'utf16le').replace(/^\uFEFF/, '');
 }
 
 function replaceMissionOption(text, key, value, quoted = false) {
@@ -1280,14 +1418,15 @@ alterVisibility = false
 }
 
 function getLocalServerSetupPaths() {
-  if (!fs.existsSync(il2NsDataUserRoot)) {
+  const installInfo = requireIl2Install();
+  if (!fs.existsSync(installInfo.nsDataUserRoot)) {
     return [];
   }
 
   return fs
-    .readdirSync(il2NsDataUserRoot, { withFileTypes: true })
+    .readdirSync(installInfo.nsDataUserRoot, { withFileTypes: true })
     .filter((entry) => entry.isDirectory())
-    .map((entry) => path.join(il2NsDataUserRoot, entry.name, 'LocalServerSetup.json'))
+    .map((entry) => path.join(installInfo.nsDataUserRoot, entry.name, 'LocalServerSetup.json'))
     .filter((filePath) => fs.existsSync(filePath));
 }
 
@@ -1322,6 +1461,7 @@ function registerCoopMissionInLocalServerSetup(relativeMissionPaths) {
 
 function buildScenario(input, options = {}) {
   const exportToGame = options.exportToGame !== false;
+  const installInfo = exportToGame ? requireIl2Install() : detectIl2Install();
   const catalog = readCatalog();
   const seed = makeSeed(input);
   const missionCatalog = catalog.mission_object_catalog || [];
@@ -1392,6 +1532,7 @@ function buildScenario(input, options = {}) {
       `Friendly support flights retargeted to ${supportAircraft.toUpperCase()}.`,
       `Starting airfield: ${startAirfield.label}.`,
       `Start time: ${startTime}.`,
+      installInfo.detected ? `Detected IL-2 install: ${installInfo.installRoot}.` : 'IL-2 install not detected.',
       coopFriendly ? 'COOP-friendly player flight enabled.' : 'Single-seat player flight export.',
     ],
   };
@@ -1400,14 +1541,15 @@ function buildScenario(input, options = {}) {
   const coopMissionText = coopFriendly ? buildCoopMissionText(missionText) : null;
   const localizationText = buildLocalizationTextFromTemplate(scenario, area, chosenTargets);
   const localizationBuffer = Buffer.from(`\uFEFF${localizationText}`, 'utf16le');
+  const generatedRoot = getGeneratedRoot();
 
   fs.mkdirSync(generatedRoot, { recursive: true });
   if (exportToGame) {
-    fs.mkdirSync(il2MissionExportRoot, { recursive: true });
+    fs.mkdirSync(installInfo.missionExportRoot, { recursive: true });
     if (coopFriendly) {
-      fs.mkdirSync(il2MultiplayerRoot, { recursive: true });
-      fs.mkdirSync(il2CoopExportRoot, { recursive: true });
-      fs.mkdirSync(il2CooperativeExportRoot, { recursive: true });
+      fs.mkdirSync(installInfo.multiplayerRoot, { recursive: true });
+      fs.mkdirSync(installInfo.coopExportRoot, { recursive: true });
+      fs.mkdirSync(installInfo.cooperativeExportRoot, { recursive: true });
     }
   }
 
@@ -1418,15 +1560,15 @@ function buildScenario(input, options = {}) {
   const jsonOutputPath = path.join(generatedRoot, `${baseName}.json`);
   const missionOutputPath = path.join(generatedRoot, `${baseName}.Mission`);
   const engOutputPath = path.join(generatedRoot, `${baseName}.eng`);
-  const exportMissionPath = exportToGame ? path.join(il2MissionExportRoot, `${baseName}.Mission`) : null;
-  const exportEngPath = exportToGame ? path.join(il2MissionExportRoot, `${baseName}.eng`) : null;
-  const coopExportMissionPath = exportToGame && coopFriendly ? path.join(il2CoopExportRoot, `${baseName}.Mission`) : null;
-  const coopExportEngPath = exportToGame && coopFriendly ? path.join(il2CoopExportRoot, `${baseName}.eng`) : null;
-  const coopRootExportMissionPath = exportToGame && coopFriendly ? path.join(il2MultiplayerRoot, `${baseName}.Mission`) : null;
-  const coopRootExportEngPath = exportToGame && coopFriendly ? path.join(il2MultiplayerRoot, `${baseName}.eng`) : null;
-  const coopExportSdsPath = exportToGame && coopFriendly ? path.join(il2CoopExportRoot, `${baseName}.sds`) : null;
-  const coopRootExportSdsPath = exportToGame && coopFriendly ? path.join(il2MultiplayerRoot, `${baseName}.sds`) : null;
-  const cooperativeMissionDir = exportToGame && coopFriendly ? path.join(il2CooperativeExportRoot, baseName) : null;
+  const exportMissionPath = exportToGame ? path.join(installInfo.missionExportRoot, `${baseName}.Mission`) : null;
+  const exportEngPath = exportToGame ? path.join(installInfo.missionExportRoot, `${baseName}.eng`) : null;
+  const coopExportMissionPath = exportToGame && coopFriendly ? path.join(installInfo.coopExportRoot, `${baseName}.Mission`) : null;
+  const coopExportEngPath = exportToGame && coopFriendly ? path.join(installInfo.coopExportRoot, `${baseName}.eng`) : null;
+  const coopRootExportMissionPath = exportToGame && coopFriendly ? path.join(installInfo.multiplayerRoot, `${baseName}.Mission`) : null;
+  const coopRootExportEngPath = exportToGame && coopFriendly ? path.join(installInfo.multiplayerRoot, `${baseName}.eng`) : null;
+  const coopExportSdsPath = exportToGame && coopFriendly ? path.join(installInfo.coopExportRoot, `${baseName}.sds`) : null;
+  const coopRootExportSdsPath = exportToGame && coopFriendly ? path.join(installInfo.multiplayerRoot, `${baseName}.sds`) : null;
+  const cooperativeMissionDir = exportToGame && coopFriendly ? path.join(installInfo.cooperativeExportRoot, baseName) : null;
   const cooperativeExportMissionPath =
     exportToGame && coopFriendly ? path.join(cooperativeMissionDir, `${baseName}.Mission`) : null;
   const cooperativeExportEngPath =
@@ -1482,6 +1624,7 @@ function buildScenario(input, options = {}) {
     cooperativeExportMissionPath,
     cooperativeExportEngPath,
     cooperativeExportSdsPath,
+    installInfo,
   };
 }
 

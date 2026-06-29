@@ -1,18 +1,59 @@
 {
   "name": "il2korea_dynamic_campaign",
   "version": "1.0.0",
-  "description": "Minimal IL-2 Korea scenario generator shell",
+  "description": "IL-2 Korea scenario generator and cooperative mission packager",
   "main": "src/main.js",
   "scripts": {
     "start": "set \"ELECTRON_RUN_AS_NODE=\" && electron .",
     "catalog": "powershell -ExecutionPolicy Bypass -File .\\tools\\build_il2_catalog.ps1",
-    "test": "node -e \"const { buildOptions, buildScenario } = require('./src/generator'); const options = buildOptions(); if (!options.aircraft.length) throw new Error('No aircraft options'); const scenario = buildScenario({ aircraft: options.aircraft[0], targetType: options.targetTypes[0], landscape: options.landscapes[0], enemyFaction: 'Any', weather: 'Clear' }, { exportToGame: false }); console.log(scenario.outputPath);\""
+    "test": "node -e \"const { buildOptions, buildScenario } = require('./src/generator'); const options = buildOptions(); if (!options.aircraft.length) throw new Error('No aircraft options'); const scenario = buildScenario({ aircraft: options.aircraft[0], targetType: options.targetTypes[0], landscape: options.landscapes[0], enemyFaction: 'Any', weather: 'Clear' }, { exportToGame: false }); console.log(scenario.outputPath);\"",
+    "dist": "electron-builder --win nsis",
+    "pack": "electron-builder --dir"
   },
   "keywords": [],
-  "author": "",
+  "author": "Peter G. Robbins",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "electron": "^31.7.7"
+    "electron": "^31.7.7",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.murdockpeter.il2korea_dynamic_campaign",
+    "productName": "IL-2 Korea Scenario Generator",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "src/**/*",
+      "catalog/**/*",
+      "tools/**/*",
+      "package.json",
+      "package-lock.json",
+      "README.md",
+      "docs/**/*",
+      "!.git/**/*",
+      "!generated/**/*",
+      "!dist/**/*"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "IL-2 Korea Scenario Generator"
+    }
   }
 }

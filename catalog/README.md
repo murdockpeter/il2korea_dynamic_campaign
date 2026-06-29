@@ -8,6 +8,10 @@ Generated from installed mission/config data under C:\Program Files\IL2Series\ga
 - il2_korea_catalog.csv: flattened mission-derived object catalog
 - il2_korea_preview_catalog.csv: editor preview names and inferred categories
 - il2_korea_reference_catalog.csv: known aircraft configs and preview-only references
+- il2_korea_landscape_objects.json: full direct landscape object dataset
+- il2_korea_landscape_groups.json: grouped landscape zone dataset
+- il2_korea_landscape_objects.csv: direct objects parsed from developer landscape group files
+- il2_korea_landscape_groups.csv: grouped landscape zones aggregated from developer landscape files
 
 ## Mission-Derived Categories
 
@@ -15,16 +19,30 @@ Generated from installed mission/config data under C:\Program Files\IL2Series\ga
 - airfield: 9
 - bridge: 84
 - effect: 3
-- fixed_weapon: 15
+- fixed_weapon: 12
 - ground_spawn: 65
 - ground_vehicle: 13
-- naval: 8
-- static_target: 332
+- naval: 7
+- static_target: 331
 
 ## Reference Sources
 
 - multiplayer_plane_config: 12
-- preview_only: 108
+- preview_only: 112
+
+## Landscape Group Categories
+
+- airfield_zone: 223
+- city_zone: 1821
+- dam_zone: 76
+- industrial_port_zone: 67
+- landscape_marker_zone: 190
+- military_camp_zone: 49
+- mine_zone: 23
+- rail_bridge: 3
+- railway_station_zone: 227
+- road_bridge: 2
+- tunnel_zone: 84
 
 ## Landscape Templates
 

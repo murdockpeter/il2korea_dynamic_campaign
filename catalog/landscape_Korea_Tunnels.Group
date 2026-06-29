@@ -1,0 +1,4471 @@
+Group
+{
+  Name = "TUNNELS";
+  Index = 27735;
+  Desc = "";
+  Group
+  {
+    Name = "Tunnel_01";
+    Index = 27736;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27737;
+      XPos = 173198.432;
+      YPos = 172.000;
+      ZPos = 344631.970;
+      XOri = 0;
+      YOri = 8.702766;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27738;
+      XPos = 173494.981;
+      YPos = 172.000;
+      ZPos = 344677.372;
+      XOri = 0;
+      YOri = 8.702766;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27739;
+      XPos = 172852.451;
+      YPos = 172.000;
+      ZPos = 344579.029;
+      XOri = 0;
+      YOri = 8.702766;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27740;
+      XPos = 172704.194;
+      YPos = 172.000;
+      ZPos = 344556.318;
+      XOri = 0;
+      YOri = 188.7028;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_02";
+    Index = 27741;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27742;
+      XPos = 244360.046;
+      YPos = 12.000;
+      ZPos = 385317.942;
+      XOri = 0;
+      YOri = 328.4897;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27743;
+      XPos = 244232.172;
+      YPos = 12.000;
+      ZPos = 385396.353;
+      XOri = 0;
+      YOri = 328.4897;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27744;
+      XPos = 244487.927;
+      YPos = 12.000;
+      ZPos = 385239.542;
+      XOri = 0;
+      YOri = 328.4897;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27745;
+      XPos = 244146.930;
+      YPos = 12.000;
+      ZPos = 385448.627;
+      XOri = 0;
+      YOri = 148.4896;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_04";
+    Index = 27746;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27747;
+      XPos = 282690.591;
+      YPos = 598.000;
+      ZPos = 305635.340;
+      XOri = 0;
+      YOri = 243.07;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27748;
+      XPos = 281875.357;
+      YPos = 598.000;
+      ZPos = 304030.549;
+      XOri = 0;
+      YOri = 243.07;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27749;
+      XPos = 282826.447;
+      YPos = 598.000;
+      ZPos = 305902.806;
+      XOri = 0;
+      YOri = 63.07035;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27750;
+      XPos = 282464.126;
+      YPos = 598.000;
+      ZPos = 305189.570;
+      XOri = 0;
+      YOri = 243.07;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27751;
+      XPos = 282237.677;
+      YPos = 598.000;
+      ZPos = 304743.792;
+      XOri = 0;
+      YOri = 243.07;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27752;
+      XPos = 282011.217;
+      YPos = 598.000;
+      ZPos = 304298.018;
+      XOri = 0;
+      YOri = 243.07;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_05";
+    Index = 27753;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27754;
+      XPos = 294620.000;
+      YPos = 470.000;
+      ZPos = 267341.623;
+      XOri = 0;
+      YOri = 40.2465;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27755;
+      XPos = 294505.519;
+      YPos = 470.000;
+      ZPos = 267244.737;
+      XOri = 0;
+      YOri = 40.24653;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27756;
+      XPos = 294810.793;
+      YPos = 470.000;
+      ZPos = 267503.132;
+      XOri = 0;
+      YOri = 40.24653;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27757;
+      XPos = 294429.188;
+      YPos = 470.000;
+      ZPos = 267180.143;
+      XOri = 0;
+      YOri = 220.2463;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27758;
+      XPos = 294734.486;
+      YPos = 470.000;
+      ZPos = 267438.527;
+      XOri = 0;
+      YOri = 40.2465;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_06";
+    Index = 27759;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27760;
+      XPos = 289065.259;
+      YPos = 338.000;
+      ZPos = 259703.976;
+      XOri = 0;
+      YOri = 50.788;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27761;
+      XPos = 288957.765;
+      YPos = 338.000;
+      ZPos = 259572.349;
+      XOri = 0;
+      YOri = 230.788;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27762;
+      XPos = 289017.844;
+      YPos = 338.000;
+      ZPos = 259645.888;
+      XOri = 0;
+      YOri = 50.788;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27763;
+      XPos = 288995.706;
+      YPos = 338.000;
+      ZPos = 259618.804;
+      XOri = 0;
+      YOri = 50.788;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0020.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_07";
+    Index = 27764;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27765;
+      XPos = 289765.283;
+      YPos = 169.000;
+      ZPos = 205080.213;
+      XOri = 0;
+      YOri = 132.849;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27766;
+      XPos = 290853.362;
+      YPos = 169.000;
+      ZPos = 203907.190;
+      XOri = 0;
+      YOri = 312.849;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27767;
+      XPos = 290309.325;
+      YPos = 169.000;
+      ZPos = 204493.690;
+      XOri = 0;
+      YOri = 132.849;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27768;
+      XPos = 289969.304;
+      YPos = 169.000;
+      ZPos = 204860.275;
+      XOri = 0;
+      YOri = 132.849;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27769;
+      XPos = 290649.332;
+      YPos = 169.000;
+      ZPos = 204127.121;
+      XOri = 0;
+      YOri = 132.849;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_08";
+    Index = 27770;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27771;
+      XPos = 321213.322;
+      YPos = 246.000;
+      ZPos = 220984.867;
+      XOri = 0;
+      YOri = 50.36793;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27772;
+      XPos = 321117.648;
+      YPos = 246.000;
+      ZPos = 220869.371;
+      XOri = 0;
+      YOri = 50.36796;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27773;
+      XPos = 321372.763;
+      YPos = 246.000;
+      ZPos = 221177.392;
+      XOri = 0;
+      YOri = 50.36796;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27774;
+      XPos = 321053.857;
+      YPos = 246.000;
+      ZPos = 220792.368;
+      XOri = 0;
+      YOri = 230.3677;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27775;
+      XPos = 321308.996;
+      YPos = 246.000;
+      ZPos = 221100.382;
+      XOri = 0;
+      YOri = 50.36793;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_09";
+    Index = 27776;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27777;
+      XPos = 314669.501;
+      YPos = 451.000;
+      ZPos = 270659.137;
+      XOri = 0;
+      YOri = 60.19919;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27778;
+      XPos = 314594.954;
+      YPos = 451.000;
+      ZPos = 270529.000;
+      XOri = 0;
+      YOri = 240.1993;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27779;
+      XPos = 314992.568;
+      YPos = 451.000;
+      ZPos = 271223.098;
+      XOri = 0;
+      YOri = 60.19919;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27780;
+      XPos = 314545.247;
+      YPos = 451.000;
+      ZPos = 270442.236;
+      XOri = 0;
+      YOri = 240.1993;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27781;
+      XPos = 314744.047;
+      YPos = 451.000;
+      ZPos = 270789.292;
+      XOri = 0;
+      YOri = 60.19919;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27782;
+      XPos = 314818.588;
+      YPos = 451.000;
+      ZPos = 270919.444;
+      XOri = 0;
+      YOri = 60.19919;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27783;
+      XPos = 314893.148;
+      YPos = 451.000;
+      ZPos = 271049.585;
+      XOri = 0;
+      YOri = 60.19919;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27784;
+      XPos = 314942.868;
+      YPos = 451.000;
+      ZPos = 271136.348;
+      XOri = 0;
+      YOri = 240.1993;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_10";
+    Index = 27785;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27786;
+      XPos = 315010.911;
+      YPos = 85.000;
+      ZPos = 287505.533;
+      XOri = 0;
+      YOri = 89.6669;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27787;
+      XPos = 315012.356;
+      YPos = 85.000;
+      ZPos = 287755.504;
+      XOri = 0;
+      YOri = 89.66691;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27788;
+      XPos = 315009.765;
+      YPos = 85.000;
+      ZPos = 287305.544;
+      XOri = 0;
+      YOri = 269.6666;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27789;
+      XPos = 315011.785;
+      YPos = 85.000;
+      ZPos = 287655.522;
+      XOri = 0;
+      YOri = 89.66689;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27790;
+      XPos = 315010.200;
+      YPos = 85.000;
+      ZPos = 287380.539;
+      XOri = 0;
+      YOri = 89.6669;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_11";
+    Index = 27791;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27792;
+      XPos = 345117.797;
+      YPos = 293.000;
+      ZPos = 207553.790;
+      XOri = 0;
+      YOri = 237.5989;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27793;
+      XPos = 346243.097;
+      YPos = 293.000;
+      ZPos = 209326.789;
+      XOri = 0;
+      YOri = 57.59907;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27794;
+      XPos = 345814.437;
+      YPos = 293.000;
+      ZPos = 208651.356;
+      XOri = 0;
+      YOri = 237.5989;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27795;
+      XPos = 345546.502;
+      YPos = 293.000;
+      ZPos = 208229.207;
+      XOri = 0;
+      YOri = 237.5989;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27796;
+      XPos = 346082.360;
+      YPos = 293.000;
+      ZPos = 209073.488;
+      XOri = 0;
+      YOri = 237.5989;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27797;
+      XPos = 345278.579;
+      YPos = 293.000;
+      ZPos = 207807.052;
+      XOri = 0;
+      YOri = 237.5989;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_12";
+    Index = 27798;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27799;
+      XPos = 369485.828;
+      YPos = 81.000;
+      ZPos = 354991.904;
+      XOri = 0;
+      YOri = 337.2798;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27800;
+      XPos = 368932.491;
+      YPos = 81.000;
+      ZPos = 355223.655;
+      XOri = 0;
+      YOri = 157.2792;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27801;
+      XPos = 369024.698;
+      YPos = 81.000;
+      ZPos = 355185.060;
+      XOri = 0;
+      YOri = 337.2798;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27802;
+      XPos = 369163.045;
+      YPos = 81.000;
+      ZPos = 355127.130;
+      XOri = 0;
+      YOri = 337.2798;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27803;
+      XPos = 369301.383;
+      YPos = 81.000;
+      ZPos = 355069.179;
+      XOri = 0;
+      YOri = 337.2798;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27804;
+      XPos = 369393.613;
+      YPos = 81.000;
+      ZPos = 355030.532;
+      XOri = 0;
+      YOri = 157.2792;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_14";
+    Index = 27805;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27806;
+      XPos = 363129.067;
+      YPos = 23.000;
+      ZPos = 345566.413;
+      XOri = 0;
+      YOri = 55.29061;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27807;
+      XPos = 362662.147;
+      YPos = 23.000;
+      ZPos = 344892.457;
+      XOri = 0;
+      YOri = 235.2902;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27808;
+      XPos = 362719.054;
+      YPos = 23.000;
+      ZPos = 344974.636;
+      XOri = 0;
+      YOri = 55.29061;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27809;
+      XPos = 362804.459;
+      YPos = 23.000;
+      ZPos = 345097.931;
+      XOri = 0;
+      YOri = 55.29061;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27810;
+      XPos = 362889.883;
+      YPos = 23.000;
+      ZPos = 345221.214;
+      XOri = 0;
+      YOri = 55.29061;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27811;
+      XPos = 362946.845;
+      YPos = 23.000;
+      ZPos = 345303.404;
+      XOri = 0;
+      YOri = 235.2902;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27812;
+      XPos = 363003.781;
+      YPos = 23.000;
+      ZPos = 345385.592;
+      XOri = 0;
+      YOri = 55.29061;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27813;
+      XPos = 363060.723;
+      YPos = 23.000;
+      ZPos = 345467.792;
+      XOri = 0;
+      YOri = 55.29058;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27814;
+      XPos = 363094.918;
+      YPos = 23.000;
+      ZPos = 345517.081;
+      XOri = 0;
+      YOri = 55.29058;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0020.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_15";
+    Index = 27815;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27816;
+      XPos = 358401.419;
+      YPos = 17.000;
+      ZPos = 340847.689;
+      XOri = 0;
+      YOri = 120.291;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27817;
+      XPos = 358300.516;
+      YPos = 17.000;
+      ZPos = 341020.358;
+      XOri = 0;
+      YOri = 120.2909;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27818;
+      XPos = 358451.844;
+      YPos = 17.000;
+      ZPos = 340761.341;
+      XOri = 0;
+      YOri = 300.2907;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27819;
+      XPos = 358350.960;
+      YPos = 17.000;
+      ZPos = 340934.018;
+      XOri = 0;
+      YOri = 120.291;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_17";
+    Index = 27820;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27821;
+      XPos = 386381.719;
+      YPos = 55.000;
+      ZPos = 325355.109;
+      XOri = 0;
+      YOri = 160.6679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27822;
+      XPos = 386098.658;
+      YPos = 55.000;
+      ZPos = 325454.414;
+      XOri = 0;
+      YOri = 160.6678;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27823;
+      XPos = 386617.570;
+      YPos = 55.000;
+      ZPos = 325272.337;
+      XOri = 0;
+      YOri = 340.6695;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27824;
+      XPos = 386287.354;
+      YPos = 55.000;
+      ZPos = 325388.183;
+      XOri = 0;
+      YOri = 160.6679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27825;
+      XPos = 386193.005;
+      YPos = 55.000;
+      ZPos = 325421.304;
+      XOri = 0;
+      YOri = 160.6679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27826;
+      XPos = 386476.059;
+      YPos = 55.000;
+      ZPos = 325321.983;
+      XOri = 0;
+      YOri = 160.6679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27827;
+      XPos = 386546.823;
+      YPos = 55.000;
+      ZPos = 325297.158;
+      XOri = 0;
+      YOri = 160.6679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_18";
+    Index = 27828;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27829;
+      XPos = 383025.517;
+      YPos = 12.000;
+      ZPos = 378472.606;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27830;
+      XPos = 383536.039;
+      YPos = 12.000;
+      ZPos = 377589.680;
+      XOri = 0;
+      YOri = 300.0436;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27831;
+      XPos = 383385.892;
+      YPos = 12.000;
+      ZPos = 377849.356;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27832;
+      XPos = 383310.800;
+      YPos = 12.000;
+      ZPos = 377979.190;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27833;
+      XPos = 383235.727;
+      YPos = 12.000;
+      ZPos = 378109.036;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27834;
+      XPos = 383185.683;
+      YPos = 12.000;
+      ZPos = 378195.613;
+      XOri = 0;
+      YOri = 300.0436;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27835;
+      XPos = 383135.630;
+      YPos = 12.000;
+      ZPos = 378282.165;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27836;
+      XPos = 383085.568;
+      YPos = 12.000;
+      ZPos = 378368.727;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27837;
+      XPos = 383055.572;
+      YPos = 12.000;
+      ZPos = 378420.678;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0020.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27838;
+      XPos = 383460.935;
+      YPos = 12.000;
+      ZPos = 377719.521;
+      XOri = 0;
+      YOri = 120.0441;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_19";
+    Index = 27839;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27840;
+      XPos = 400407.972;
+      YPos = 16.000;
+      ZPos = 418275.971;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27841;
+      XPos = 400835.303;
+      YPos = 16.000;
+      ZPos = 418697.091;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27842;
+      XPos = 400764.077;
+      YPos = 16.000;
+      ZPos = 418626.908;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27843;
+      XPos = 400977.720;
+      YPos = 16.000;
+      ZPos = 418837.482;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27844;
+      XPos = 401031.126;
+      YPos = 16.000;
+      ZPos = 418890.128;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27845;
+      XPos = 400692.866;
+      YPos = 16.000;
+      ZPos = 418556.708;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27846;
+      XPos = 400621.641;
+      YPos = 16.000;
+      ZPos = 418486.525;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27847;
+      XPos = 400906.515;
+      YPos = 16.000;
+      ZPos = 418767.280;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27848;
+      XPos = 401084.519;
+      YPos = 16.000;
+      ZPos = 418942.795;
+      XOri = 0;
+      YOri = 44.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27849;
+      XPos = 400550.417;
+      YPos = 16.000;
+      ZPos = 418416.333;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27850;
+      XPos = 400479.175;
+      YPos = 16.000;
+      ZPos = 418346.171;
+      XOri = 0;
+      YOri = 224.589;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_20";
+    Index = 27851;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27852;
+      XPos = 399242.537;
+      YPos = 8.000;
+      ZPos = 417076.616;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27853;
+      XPos = 398666.790;
+      YPos = 8.000;
+      ZPos = 416116.072;
+      XOri = 0;
+      YOri = 239.0684;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27854;
+      XPos = 398872.413;
+      YPos = 8.000;
+      ZPos = 416459.105;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27855;
+      XPos = 398949.507;
+      YPos = 8.000;
+      ZPos = 416587.760;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27856;
+      XPos = 399026.620;
+      YPos = 8.000;
+      ZPos = 416716.405;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27857;
+      XPos = 399078.043;
+      YPos = 8.000;
+      ZPos = 416802.170;
+      XOri = 0;
+      YOri = 239.0684;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27858;
+      XPos = 399129.439;
+      YPos = 8.000;
+      ZPos = 416887.931;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27859;
+      XPos = 399180.840;
+      YPos = 8.000;
+      ZPos = 416973.705;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27860;
+      XPos = 399211.713;
+      YPos = 8.000;
+      ZPos = 417025.140;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0020.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27861;
+      XPos = 398795.294;
+      YPos = 8.000;
+      ZPos = 416330.492;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27862;
+      XPos = 398718.192;
+      YPos = 8.000;
+      ZPos = 416201.844;
+      XOri = 0;
+      YOri = 59.06914;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_21";
+    Index = 27863;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27864;
+      XPos = 394948.052;
+      YPos = 140.000;
+      ZPos = 223547.416;
+      XOri = 0;
+      YOri = 176.7776;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27865;
+      XPos = 394748.416;
+      YPos = 140.000;
+      ZPos = 223558.666;
+      XOri = 0;
+      YOri = 176.7775;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27866;
+      XPos = 395147.714;
+      YPos = 140.000;
+      ZPos = 223536.144;
+      XOri = 0;
+      YOri = 356.7792;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27867;
+      XPos = 395047.879;
+      YPos = 140.000;
+      ZPos = 223541.768;
+      XOri = 0;
+      YOri = 176.7776;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27868;
+      XPos = 394848.238;
+      YPos = 140.000;
+      ZPos = 223553.047;
+      XOri = 0;
+      YOri = 176.7776;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_22";
+    Index = 27869;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27870;
+      XPos = 404125.634;
+      YPos = 200.000;
+      ZPos = 227429.761;
+      XOri = 0;
+      YOri = 188.883;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27871;
+      XPos = 403582.262;
+      YPos = 200.000;
+      ZPos = 227344.881;
+      XOri = 0;
+      YOri = 188.883;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27872;
+      XPos = 404323.220;
+      YPos = 200.000;
+      ZPos = 227460.611;
+      XOri = 0;
+      YOri = 8.884721;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27873;
+      XPos = 404224.426;
+      YPos = 200.000;
+      ZPos = 227445.173;
+      XOri = 0;
+      YOri = 188.8831;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27874;
+      XPos = 404026.859;
+      YPos = 200.000;
+      ZPos = 227414.334;
+      XOri = 0;
+      YOri = 188.883;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27875;
+      XPos = 403878.657;
+      YPos = 200.000;
+      ZPos = 227391.176;
+      XOri = 0;
+      YOri = 188.883;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27876;
+      XPos = 403730.463;
+      YPos = 200.000;
+      ZPos = 227368.018;
+      XOri = 0;
+      YOri = 188.883;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27877;
+      XPos = 403656.362;
+      YPos = 200.000;
+      ZPos = 227356.455;
+      XOri = 0;
+      YOri = 188.883;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_23";
+    Index = 27878;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27879;
+      XPos = 424587.241;
+      YPos = 42.000;
+      ZPos = 99814.286;
+      XOri = 0;
+      YOri = 142.9337;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27880;
+      XPos = 425065.945;
+      YPos = 42.000;
+      ZPos = 99452.661;
+      XOri = 0;
+      YOri = 322.9336;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27881;
+      XPos = 424826.617;
+      YPos = 42.000;
+      ZPos = 99633.487;
+      XOri = 0;
+      YOri = 142.9337;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27882;
+      XPos = 424706.938;
+      YPos = 42.000;
+      ZPos = 99723.890;
+      XOri = 0;
+      YOri = 142.9337;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27883;
+      XPos = 424946.252;
+      YPos = 42.000;
+      ZPos = 99543.065;
+      XOri = 0;
+      YOri = 142.9337;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_24";
+    Index = 27884;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27885;
+      XPos = 411037.846;
+      YPos = 360.000;
+      ZPos = 120581.351;
+      XOri = 0;
+      YOri = 327.2227;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27886;
+      XPos = 409944.843;
+      YPos = 360.000;
+      ZPos = 121285.146;
+      XOri = 0;
+      YOri = 147.2229;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27887;
+      XPos = 410365.242;
+      YPos = 360.000;
+      ZPos = 121014.470;
+      XOri = 0;
+      YOri = 147.2229;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27888;
+      XPos = 410785.622;
+      YPos = 360.000;
+      ZPos = 120743.769;
+      XOri = 0;
+      YOri = 147.2229;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27889;
+      XPos = 409524.463;
+      YPos = 360.000;
+      ZPos = 121555.841;
+      XOri = 0;
+      YOri = 147.2229;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27890;
+      XPos = 409104.079;
+      YPos = 360.000;
+      ZPos = 121826.532;
+      XOri = 0;
+      YOri = 147.2229;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27891;
+      XPos = 408851.862;
+      YPos = 360.000;
+      ZPos = 121988.949;
+      XOri = 0;
+      YOri = 147.223;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_25";
+    Index = 27892;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27893;
+      XPos = 421090.513;
+      YPos = 630.000;
+      ZPos = 227629.800;
+      XOri = 0;
+      YOri = 217.735;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27894;
+      XPos = 423067.594;
+      YPos = 630.000;
+      ZPos = 229159.776;
+      XOri = 0;
+      YOri = 37.73479;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27895;
+      XPos = 421644.103;
+      YPos = 630.000;
+      ZPos = 228058.172;
+      XOri = 0;
+      YOri = 217.735;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27896;
+      XPos = 422039.521;
+      YPos = 630.000;
+      ZPos = 228364.181;
+      XOri = 0;
+      YOri = 217.7347;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27897;
+      XPos = 422434.927;
+      YPos = 630.000;
+      ZPos = 228670.197;
+      XOri = 0;
+      YOri = 217.7347;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27898;
+      XPos = 422830.346;
+      YPos = 630.000;
+      ZPos = 228976.172;
+      XOri = 0;
+      YOri = 217.7347;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27899;
+      XPos = 421367.326;
+      YPos = 630.000;
+      ZPos = 227843.974;
+      XOri = 0;
+      YOri = 217.735;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27900;
+      XPos = 421209.145;
+      YPos = 630.000;
+      ZPos = 227721.594;
+      XOri = 0;
+      YOri = 217.735;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_26";
+    Index = 27901;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27902;
+      XPos = 419838.894;
+      YPos = 12.000;
+      ZPos = 436137.092;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27903;
+      XPos = 419671.694;
+      YPos = 12.000;
+      ZPos = 435560.909;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27904;
+      XPos = 419894.631;
+      YPos = 12.000;
+      ZPos = 436329.147;
+      XOri = 0;
+      YOri = 73.82725;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27905;
+      XPos = 419866.774;
+      YPos = 12.000;
+      ZPos = 436233.113;
+      XOri = 0;
+      YOri = 253.8251;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27906;
+      XPos = 419811.035;
+      YPos = 12.000;
+      ZPos = 436041.079;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27907;
+      XPos = 419769.245;
+      YPos = 12.000;
+      ZPos = 435897.017;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27908;
+      XPos = 419727.459;
+      YPos = 12.000;
+      ZPos = 435752.963;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27909;
+      XPos = 419706.550;
+      YPos = 12.000;
+      ZPos = 435680.939;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27910;
+      XPos = 419692.590;
+      YPos = 12.000;
+      ZPos = 435632.931;
+      XOri = 0;
+      YOri = 253.825;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_27";
+    Index = 27911;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27912;
+      XPos = 430860.160;
+      YPos = 522.000;
+      ZPos = 230902.194;
+      XOri = 0;
+      YOri = 203.5246;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27913;
+      XPos = 430722.619;
+      YPos = 522.000;
+      ZPos = 230842.362;
+      XOri = 0;
+      YOri = 203.5249;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27914;
+      XPos = 431043.531;
+      YPos = 522.000;
+      ZPos = 230981.988;
+      XOri = 0;
+      YOri = 23.5266;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27915;
+      XPos = 430951.847;
+      YPos = 522.000;
+      ZPos = 230942.078;
+      XOri = 0;
+      YOri = 203.5251;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27916;
+      XPos = 430791.388;
+      YPos = 522.000;
+      ZPos = 230872.271;
+      XOri = 0;
+      YOri = 203.5246;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_28";
+    Index = 27917;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27918;
+      XPos = 444009.677;
+      YPos = 101.000;
+      ZPos = 151288.560;
+      XOri = 0;
+      YOri = 3.195802;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27919;
+      XPos = 443660.262;
+      YPos = 101.000;
+      ZPos = 151269.100;
+      XOri = 0;
+      YOri = 183.1958;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27920;
+      XPos = 443859.928;
+      YPos = 101.000;
+      ZPos = 151280.213;
+      XOri = 0;
+      YOri = 3.1958;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27921;
+      XPos = 443735.146;
+      YPos = 101.000;
+      ZPos = 151273.227;
+      XOri = 0;
+      YOri = 3.1958;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_29";
+    Index = 27922;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27923;
+      XPos = 464388.962;
+      YPos = 345.000;
+      ZPos = 86229.155;
+      XOri = 0;
+      YOri = 284.082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27924;
+      XPos = 463951.037;
+      YPos = 345.000;
+      ZPos = 87974.990;
+      XOri = 0;
+      YOri = 104.082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27925;
+      XPos = 464145.653;
+      YPos = 345.000;
+      ZPos = 87199.077;
+      XOri = 0;
+      YOri = 284.082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27926;
+      XPos = 464024.026;
+      YPos = 345.000;
+      ZPos = 87684.035;
+      XOri = 0;
+      YOri = 284.082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27927;
+      XPos = 464267.305;
+      YPos = 345.000;
+      ZPos = 86714.110;
+      XOri = 0;
+      YOri = 284.082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27928;
+      XPos = 464352.466;
+      YPos = 345.000;
+      ZPos = 86374.640;
+      XOri = 0;
+      YOri = 284.082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_30";
+    Index = 27929;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27930;
+      XPos = 455120.887;
+      YPos = 372.000;
+      ZPos = 240165.267;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27931;
+      XPos = 454648.394;
+      YPos = 372.000;
+      ZPos = 239795.548;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27932;
+      XPos = 455357.118;
+      YPos = 372.000;
+      ZPos = 240350.106;
+      XOri = 0;
+      YOri = 38.05185;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27933;
+      XPos = 455199.642;
+      YPos = 372.000;
+      ZPos = 240226.871;
+      XOri = 0;
+      YOri = 218.05;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27934;
+      XPos = 455042.155;
+      YPos = 372.000;
+      ZPos = 240103.657;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27935;
+      XPos = 454924.030;
+      YPos = 372.000;
+      ZPos = 240011.208;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27936;
+      XPos = 454805.913;
+      YPos = 372.000;
+      ZPos = 239918.763;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27937;
+      XPos = 454746.844;
+      YPos = 372.000;
+      ZPos = 239872.553;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27938;
+      XPos = 454707.452;
+      YPos = 372.000;
+      ZPos = 239841.764;
+      XOri = 0;
+      YOri = 218.0499;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27939;
+      XPos = 455278.393;
+      YPos = 372.000;
+      ZPos = 240288.483;
+      XOri = 0;
+      YOri = 218.05;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_31";
+    Index = 27940;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27941;
+      XPos = 440801.954;
+      YPos = 9.000;
+      ZPos = 463734.394;
+      XOri = 0;
+      YOri = 194.4351;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27942;
+      XPos = 440414.615;
+      YPos = 9.000;
+      ZPos = 463634.700;
+      XOri = 0;
+      YOri = 194.4351;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27943;
+      XPos = 441092.447;
+      YPos = 9.000;
+      ZPos = 463809.122;
+      XOri = 0;
+      YOri = 14.43681;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27944;
+      XPos = 440898.792;
+      YPos = 9.000;
+      ZPos = 463759.290;
+      XOri = 0;
+      YOri = 194.4352;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27945;
+      XPos = 440705.135;
+      YPos = 9.000;
+      ZPos = 463709.482;
+      XOri = 0;
+      YOri = 194.4351;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27946;
+      XPos = 440559.868;
+      YPos = 9.000;
+      ZPos = 463672.095;
+      XOri = 0;
+      YOri = 194.4351;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27947;
+      XPos = 440995.630;
+      YPos = 9.000;
+      ZPos = 463784.196;
+      XOri = 0;
+      YOri = 194.4352;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_32";
+    Index = 27948;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27949;
+      XPos = 463969.200;
+      YPos = 556.000;
+      ZPos = 408060.194;
+      XOri = 0;
+      YOri = 317.9663;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27950;
+      XPos = 463857.792;
+      YPos = 556.000;
+      ZPos = 408160.625;
+      XOri = 0;
+      YOri = 317.9663;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27951;
+      XPos = 464080.602;
+      YPos = 556.000;
+      ZPos = 407959.769;
+      XOri = 0;
+      YOri = 317.9663;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27952;
+      XPos = 463783.519;
+      YPos = 556.000;
+      ZPos = 408227.579;
+      XOri = 0;
+      YOri = 137.9663;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_33";
+    Index = 27953;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27954;
+      XPos = 452276.246;
+      YPos = 343.000;
+      ZPos = 458748.771;
+      XOri = 0;
+      YOri = 63.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27955;
+      XPos = 452051.815;
+      YPos = 343.000;
+      ZPos = 458301.994;
+      XOri = 0;
+      YOri = 63.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27956;
+      XPos = 452725.141;
+      YPos = 343.000;
+      ZPos = 459642.335;
+      XOri = 0;
+      YOri = 63.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27957;
+      XPos = 452500.709;
+      YPos = 343.000;
+      ZPos = 459195.558;
+      XOri = 0;
+      YOri = 63.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27958;
+      XPos = 451827.387;
+      YPos = 343.000;
+      ZPos = 457855.201;
+      XOri = 0;
+      YOri = 63.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27959;
+      XPos = 452859.805;
+      YPos = 343.000;
+      ZPos = 459910.413;
+      XOri = 0;
+      YOri = 63.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27960;
+      XPos = 451692.728;
+      YPos = 343.000;
+      ZPos = 457587.132;
+      XOri = 0;
+      YOri = 243.328;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_34";
+    Index = 27961;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27962;
+      XPos = 450348.255;
+      YPos = 1195.000;
+      ZPos = 329590.187;
+      XOri = 0;
+      YOri = 34.7833;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27963;
+      XPos = 450225.062;
+      YPos = 1195.000;
+      ZPos = 329504.619;
+      XOri = 0;
+      YOri = 34.7833;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27964;
+      XPos = 450471.439;
+      YPos = 1195.000;
+      ZPos = 329675.750;
+      XOri = 0;
+      YOri = 34.7833;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27965;
+      XPos = 450019.741;
+      YPos = 1195.000;
+      ZPos = 329362.067;
+      XOri = 0;
+      YOri = 214.7833;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27966;
+      XPos = 450142.941;
+      YPos = 1195.000;
+      ZPos = 329447.583;
+      XOri = 0;
+      YOri = 34.7833;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27967;
+      XPos = 450081.341;
+      YPos = 1195.000;
+      ZPos = 329404.807;
+      XOri = 0;
+      YOri = 214.7833;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_16";
+    Index = 27968;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27969;
+      XPos = 388509.107;
+      YPos = 266.000;
+      ZPos = 131552.728;
+      XOri = 0;
+      YOri = 231.9772;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27970;
+      XPos = 388324.329;
+      YPos = 266.000;
+      ZPos = 131316.418;
+      XOri = 0;
+      YOri = 231.9771;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27971;
+      XPos = 388570.708;
+      YPos = 266.000;
+      ZPos = 131631.493;
+      XOri = 0;
+      YOri = 51.97859;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27972;
+      XPos = 388447.537;
+      YPos = 266.000;
+      ZPos = 131473.938;
+      XOri = 0;
+      YOri = 231.9772;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27973;
+      XPos = 388385.928;
+      YPos = 266.000;
+      ZPos = 131395.179;
+      XOri = 0;
+      YOri = 231.9772;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_35";
+    Index = 27974;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27975;
+      XPos = 367286.559;
+      YPos = 56.000;
+      ZPos = 353738.409;
+      XOri = 0;
+      YOri = 276.322;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27976;
+      XPos = 367264.584;
+      YPos = 56.000;
+      ZPos = 353937.154;
+      XOri = 0;
+      YOri = 96.32153;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27977;
+      XPos = 367275.564;
+      YPos = 56.000;
+      ZPos = 353837.781;
+      XOri = 0;
+      YOri = 96.32153;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_3";
+    Index = 27978;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27979;
+      XPos = 260233.598;
+      YPos = 258.000;
+      ZPos = 263346.204;
+      XOri = 0;
+      YOri = 356.541;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27980;
+      XPos = 260533.048;
+      YPos = 258.000;
+      ZPos = 263328.113;
+      XOri = 0;
+      YOri = 356.541;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27981;
+      XPos = 259934.153;
+      YPos = 258.000;
+      ZPos = 263364.292;
+      XOri = 0;
+      YOri = 176.5413;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_13";
+    Index = 27982;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27983;
+      XPos = 365078.408;
+      YPos = 27.000;
+      ZPos = 350722.100;
+      XOri = 0;
+      YOri = 21.27439;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27984;
+      XPos = 364938.647;
+      YPos = 27.000;
+      ZPos = 350667.695;
+      XOri = 0;
+      YOri = 201.2745;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27985;
+      XPos = 365684.081;
+      YPos = 27.000;
+      ZPos = 350957.863;
+      XOri = 0;
+      YOri = 21.27439;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27986;
+      XPos = 364379.587;
+      YPos = 27.000;
+      ZPos = 350450.008;
+      XOri = 0;
+      YOri = 201.2745;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27987;
+      XPos = 365218.179;
+      YPos = 27.000;
+      ZPos = 350776.520;
+      XOri = 0;
+      YOri = 21.27439;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27988;
+      XPos = 365357.944;
+      YPos = 27.000;
+      ZPos = 350830.940;
+      XOri = 0;
+      YOri = 21.27439;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27989;
+      XPos = 365497.717;
+      YPos = 27.000;
+      ZPos = 350885.340;
+      XOri = 0;
+      YOri = 21.27439;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27990;
+      XPos = 365590.911;
+      YPos = 27.000;
+      ZPos = 350921.600;
+      XOri = 0;
+      YOri = 201.2745;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27991;
+      XPos = 364705.706;
+      YPos = 27.000;
+      ZPos = 350577.032;
+      XOri = 0;
+      YOri = 21.2744;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27992;
+      XPos = 364845.479;
+      YPos = 27.000;
+      ZPos = 350631.432;
+      XOri = 0;
+      YOri = 21.2744;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27993;
+      XPos = 364519.352;
+      YPos = 27.000;
+      ZPos = 350504.449;
+      XOri = 0;
+      YOri = 21.2744;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_36";
+    Index = 27994;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 27995;
+      XPos = 281949.444;
+      YPos = 14.500;
+      ZPos = 339639.585;
+      XOri = 0;
+      YOri = 316.4623;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27996;
+      XPos = 282311.903;
+      YPos = 14.500;
+      ZPos = 339295.173;
+      XOri = 0;
+      YOri = 316.4623;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27997;
+      XPos = 281659.497;
+      YPos = 14.500;
+      ZPos = 339915.092;
+      XOri = 0;
+      YOri = 136.4623;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27998;
+      XPos = 282529.362;
+      YPos = 14.500;
+      ZPos = 339088.541;
+      XOri = 0;
+      YOri = 316.4623;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 27999;
+      XPos = 281731.968;
+      YPos = 14.500;
+      ZPos = 339846.234;
+      XOri = 0;
+      YOri = 316.4623;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_37";
+    Index = 28000;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 28001;
+      XPos = 303970.776;
+      YPos = 88.000;
+      ZPos = 221637.040;
+      XOri = 0;
+      YOri = 303.6082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28002;
+      XPos = 303694.025;
+      YPos = 88.000;
+      ZPos = 222053.449;
+      XOri = 0;
+      YOri = 303.6082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28003;
+      XPos = 303472.630;
+      YPos = 88.000;
+      ZPos = 222386.564;
+      XOri = 0;
+      YOri = 123.6081;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28004;
+      XPos = 304136.817;
+      YPos = 88.000;
+      ZPos = 221387.198;
+      XOri = 0;
+      YOri = 303.6082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28005;
+      XPos = 303527.981;
+      YPos = 88.000;
+      ZPos = 222303.287;
+      XOri = 0;
+      YOri = 303.6082;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_38";
+    Index = 28006;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 28007;
+      XPos = 424183.587;
+      YPos = 341.000;
+      ZPos = 433419.886;
+      XOri = 0;
+      YOri = 23.9847;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28008;
+      XPos = 424457.692;
+      YPos = 341.000;
+      ZPos = 433541.816;
+      XOri = 0;
+      YOri = 23.9847;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28009;
+      XPos = 423818.136;
+      YPos = 341.000;
+      ZPos = 433257.307;
+      XOri = 0;
+      YOri = 203.9847;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28010;
+      XPos = 423909.493;
+      YPos = 341.000;
+      ZPos = 433297.943;
+      XOri = 0;
+      YOri = 23.9847;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0100.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28011;
+      XPos = 424549.052;
+      YPos = 341.000;
+      ZPos = 433582.460;
+      XOri = 0;
+      YOri = 23.9847;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_39";
+    Index = 28012;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 28013;
+      XPos = 409642.654;
+      YPos = 275.000;
+      ZPos = 226331.818;
+      XOri = 0;
+      YOri = 108.3377;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal_short.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28014;
+      XPos = 409689.863;
+      YPos = 275.000;
+      ZPos = 226189.470;
+      XOri = 0;
+      YOri = 108.3377;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28015;
+      XPos = 409752.800;
+      YPos = 275.000;
+      ZPos = 225999.652;
+      XOri = 0;
+      YOri = 288.3377;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28016;
+      XPos = 409729.190;
+      YPos = 275.000;
+      ZPos = 226070.840;
+      XOri = 0;
+      YOri = 108.3377;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_40";
+    Index = 28017;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 28018;
+      XPos = 166758.395;
+      YPos = 323.000;
+      ZPos = 371084.180;
+      XOri = 0;
+      YOri = 83.5679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28019;
+      XPos = 166814.400;
+      YPos = 323.000;
+      ZPos = 371580.970;
+      XOri = 0;
+      YOri = 83.5679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28020;
+      XPos = 166702.395;
+      YPos = 323.000;
+      ZPos = 370587.358;
+      XOri = 0;
+      YOri = 83.5679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0500.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28021;
+      XPos = 166870.398;
+      YPos = 323.000;
+      ZPos = 372077.833;
+      XOri = 0;
+      YOri = 83.5679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28022;
+      XPos = 166668.811;
+      YPos = 323.000;
+      ZPos = 370289.252;
+      XOri = 0;
+      YOri = 263.5681;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28023;
+      XPos = 166853.601;
+      YPos = 323.000;
+      ZPos = 371928.766;
+      XOri = 0;
+      YOri = 83.5679;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0200.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_41";
+    Index = 28024;
+    Desc = "";
+    Group
+    {
+      Name = "Group";
+      Index = 28025;
+      Desc = "";
+      Ground
+      {
+        Name = "Ground";
+        Index = 28026;
+        XPos = 298611.041;
+        YPos = 100.000;
+        ZPos = 232189.192;
+        XOri = 0;
+        YOri = 103.2538;
+        ZOri = 0;
+        Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+        Desc = "";
+        Baked = 0;
+      }
+      
+
+      Ground
+      {
+        Name = "Ground";
+        Index = 28027;
+        XPos = 298645.392;
+        YPos = 100.000;
+        ZPos = 232043.210;
+        XOri = 0;
+        YOri = 283.2538;
+        ZOri = 0;
+        Model = "graphics\tunnels\tunnel_rr_portal.mgm";
+        Desc = "";
+        Baked = 0;
+      }
+      
+
+      Ground
+      {
+        Name = "Ground";
+        Index = 28028;
+        XPos = 298628.218;
+        YPos = 100.000;
+        ZPos = 232116.203;
+        XOri = 0;
+        YOri = 103.2538;
+        ZOri = 0;
+        Model = "graphics\tunnels\tunnel_rr_0050.mgm";
+        Desc = "";
+        Baked = 0;
+      }
+      
+
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_ARF";
+    Index = 28029;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 28030;
+      XPos = 130951.479;
+      YPos = -3.000;
+      ZPos = 457103.147;
+      XOri = 0;
+      YOri = 357.216;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal_short.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28031;
+      XPos = 130812.490;
+      YPos = -3.000;
+      ZPos = 457109.635;
+      XOri = 0;
+      YOri = 177.0809;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal_short.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28032;
+      XPos = 130892.012;
+      YPos = -3.000;
+      ZPos = 457106.042;
+      XOri = 0;
+      YOri = 357.216;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0020.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28033;
+      XPos = 130872.043;
+      YPos = -3.000;
+      ZPos = 457107.034;
+      XOri = 0;
+      YOri = 357.216;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_0020.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+  Group
+  {
+    Name = "Tunnel_ARF";
+    Index = 28034;
+    Desc = "";
+    Ground
+    {
+      Name = "Ground";
+      Index = 28035;
+      XPos = 350302.709;
+      YPos = 25.000;
+      ZPos = 191470.132;
+      XOri = 0;
+      YOri = 314.2916;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal_short.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+    Ground
+    {
+      Name = "Ground";
+      Index = 28036;
+      XPos = 350170.883;
+      YPos = 25.000;
+      ZPos = 191603.506;
+      XOri = 0;
+      YOri = 136.3316;
+      ZOri = 0;
+      Model = "graphics\tunnels\tunnel_rd_portal_short.mgm";
+      Desc = "";
+      Baked = 0;
+    }
+    
+
+  }
+  
+
+}
+

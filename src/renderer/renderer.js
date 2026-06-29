@@ -33,7 +33,9 @@ async function loadOptions() {
   }
   syncEnemyFaction();
   syncStartingAirfield();
-  status.textContent = 'Catalog ready.';
+  status.textContent = appOptions.installInfo?.detected
+    ? `Catalog ready. IL-2 detected at ${appOptions.installInfo.installRoot}.`
+    : 'Catalog ready. IL-2 install not detected yet.';
 }
 
 function syncEnemyFaction() {

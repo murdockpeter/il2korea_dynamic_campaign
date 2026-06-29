@@ -78,6 +78,114 @@ function Get-LeafBase {
     return [System.IO.Path]::GetFileNameWithoutExtension($path)
 }
 
+function Normalize-LandscapeGroupCategory {
+    param(
+        [string]$sourceFile,
+        [string]$groupPath,
+        [string]$objectType
+    )
+
+    $sample = @($sourceFile, $groupPath, $objectType) -join ' '
+    $sampleLower = $sample.ToLowerInvariant()
+
+    if ($sampleLower -match 'airfields') { return 'airfield_zone' }
+    if ($sampleLower -match 'bridgesrailroad') { return 'rail_bridge' }
+    if ($sampleLower -match 'bridgesroad') { return 'road_bridge' }
+    if ($sampleLower -match 'cities') { return 'city_zone' }
+    if ($sampleLower -match 'dams') { return 'dam_zone' }
+    if ($sampleLower -match 'industry_ports|industrial') { return 'industrial_port_zone' }
+    if ($sampleLower -match 'militarycamps|military_camp') { return 'military_camp_zone' }
+    if ($sampleLower -match 'mines') { return 'mine_zone' }
+    if ($sampleLower -match 'railwaystations|rw_station') { return 'railway_station_zone' }
+    if ($sampleLower -match 'tunnels|tunnel') { return 'tunnel_zone' }
+    if ($sampleLower -match 'fullscene|marks') { return 'landscape_marker_zone' }
+
+    return 'landscape_zone'
+}
+
+function Parse-LandscapeGroupFile {
+    param([string]$path)
+
+    $lines = Get-Content -LiteralPath $path
+    $stack = New-Object System.Collections.ArrayList
+    $pending = $null
+    $results = New-Object System.Collections.Generic.List[object]
+
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        $trim = $lines[$i].Trim()
+
+        if ($trim -match '^(Group|Bridge|Block|Ground|MCU_Waypoint|Vehicle|Plane|Airfield)$') {
+            $pending = [ordered]@{
+                type = $Matches[1]
+                Name = $null
+                Index = $null
+                Script = $null
+                Model = $null
+                XPos = $null
+                YPos = $null
+                ZPos = $null
+            }
+            continue
+        }
+
+        if ($trim -eq '{' -and $pending) {
+            [void]$stack.Add($pending)
+            $pending = $null
+            continue
+        }
+
+        if ($stack.Count -gt 0) {
+            $top = $stack[$stack.Count - 1]
+            if (-not $top.Name -and $trim -match '^Name\s*=\s*"([^"]+)"') { $top.Name = $Matches[1] }
+            if (-not $top.Index -and $trim -match '^Index\s*=\s*([0-9-]+)') { $top.Index = [int]$Matches[1] }
+            if (-not $top.Script -and $trim -match '^Script\s*=\s*"([^"]+)"') { $top.Script = $Matches[1] }
+            if (-not $top.Model -and $trim -match '^Model\s*=\s*"([^"]+)"') { $top.Model = $Matches[1] }
+            if ($null -eq $top.XPos -and $trim -match '^XPos\s*=\s*(-?[0-9.]+)') { $top.XPos = [double]$Matches[1] }
+            if ($null -eq $top.YPos -and $trim -match '^YPos\s*=\s*(-?[0-9.]+)') { $top.YPos = [double]$Matches[1] }
+            if ($null -eq $top.ZPos -and $trim -match '^ZPos\s*=\s*(-?[0-9.]+)') { $top.ZPos = [double]$Matches[1] }
+        }
+
+        if ($trim -eq '}') {
+            if ($stack.Count -eq 0) {
+                continue
+            }
+
+            $closed = $stack[$stack.Count - 1]
+            $stack.RemoveAt($stack.Count - 1)
+
+            if ($closed.type -eq 'Group') {
+                continue
+            }
+
+            $groupStack = @($stack | Where-Object { $_.type -eq 'Group' -and $_.Name })
+            $groupPathParts = @($groupStack | ForEach-Object { $_.Name })
+            $groupPathText = $groupPathParts -join ' > '
+            $sourceFile = [System.IO.Path]::GetFileName($path)
+
+            $results.Add([pscustomobject]@{
+                source_file = $sourceFile
+                source_path = $path
+                root_group = if ($groupPathParts.Count -gt 0) { $groupPathParts[0] } else { $null }
+                group_path = $groupPathText
+                group_name = if ($groupPathParts.Count -gt 0) { $groupPathParts[-1] } else { $null }
+                parent_group = if ($groupPathParts.Count -gt 1) { $groupPathParts[-2] } else { $null }
+                object_type = $closed.type
+                object_name = $closed.Name
+                object_index = $closed.Index
+                script_path = $closed.Script
+                model_path = $closed.Model
+                x = $closed.XPos
+                y = $closed.YPos
+                z = $closed.ZPos
+                category = Normalize-LandscapeGroupCategory -sourceFile $sourceFile -groupPath $groupPathText -objectType $closed.type
+                historical_faction_guess = Normalize-HistoricalFaction -name $groupPathText -scriptPath $closed.Script
+            })
+        }
+    }
+
+    return $results
+}
+
 function Parse-MissionObjects {
     param([string]$path)
 
@@ -292,6 +400,47 @@ $generatorLabels = Get-Content (Join-Path $installRoot 'Missions\_gen.eng') |
         }
     }
 
+$landscapeGroupFiles = Get-ChildItem -Path $outputRoot -Filter 'landscape_Korea_*.Group' -File | Sort-Object Name
+
+$landscapeObjectCatalog = foreach ($groupFile in $landscapeGroupFiles) {
+    Parse-LandscapeGroupFile -path $groupFile.FullName
+}
+
+$landscapeGroupCatalog = $landscapeObjectCatalog |
+    Group-Object source_file, group_path, group_name, parent_group, root_group, category, historical_faction_guess |
+    ForEach-Object {
+        $first = $_.Group[0]
+        $objects = $_.Group
+        $scriptPaths = @($objects.script_path | Where-Object { $_ } | Sort-Object -Unique)
+        $modelPaths = @($objects.model_path | Where-Object { $_ } | Sort-Object -Unique)
+        $objectTypeCounts = $objects |
+            Group-Object object_type |
+            Sort-Object Name |
+            ForEach-Object { "{0}:{1}" -f $_.Name, $_.Count }
+
+        [pscustomobject]@{
+            source_file = $first.source_file
+            root_group = $first.root_group
+            group_path = $first.group_path
+            group_name = $first.group_name
+            parent_group = $first.parent_group
+            category = $first.category
+            historical_faction_guess = $first.historical_faction_guess
+            object_count = $objects.Count
+            object_types = $objectTypeCounts
+            representative_scripts = $scriptPaths
+            representative_models = $modelPaths
+            center_x = [math]::Round((($objects | Where-Object { $null -ne $_.x } | Measure-Object -Property x -Average).Average), 3)
+            center_y = [math]::Round((($objects | Where-Object { $null -ne $_.y } | Measure-Object -Property y -Average).Average), 3)
+            center_z = [math]::Round((($objects | Where-Object { $null -ne $_.z } | Measure-Object -Property z -Average).Average), 3)
+            min_x = ($objects | Where-Object { $null -ne $_.x } | Measure-Object -Property x -Minimum).Minimum
+            max_x = ($objects | Where-Object { $null -ne $_.x } | Measure-Object -Property x -Maximum).Maximum
+            min_z = ($objects | Where-Object { $null -ne $_.z } | Measure-Object -Property z -Minimum).Minimum
+            max_z = ($objects | Where-Object { $null -ne $_.z } | Measure-Object -Property z -Maximum).Maximum
+        }
+    } |
+    Sort-Object category, source_file, group_path
+
 $output = [ordered]@{
     generated_at = (Get-Date).ToString('s')
     install_root = $installRoot
@@ -301,16 +450,42 @@ $output = [ordered]@{
     reference_catalog = $referenceCatalog
     mission_limits = $missionLimits
     landscape_templates = $landscapeTemplates
+    landscape_object_catalog = $landscapeObjectCatalog
+    landscape_group_catalog = $landscapeGroupCatalog
     generator_labels = $generatorLabels
 }
 
 $jsonPath = Join-Path $outputRoot 'il2_korea_catalog.json'
+$landscapeObjectsJsonPath = Join-Path $outputRoot 'il2_korea_landscape_objects.json'
+$landscapeGroupsJsonPath = Join-Path $outputRoot 'il2_korea_landscape_groups.json'
 $csvPath = Join-Path $outputRoot 'il2_korea_catalog.csv'
 $previewCsvPath = Join-Path $outputRoot 'il2_korea_preview_catalog.csv'
 $referenceCsvPath = Join-Path $outputRoot 'il2_korea_reference_catalog.csv'
+$landscapeObjectCsvPath = Join-Path $outputRoot 'il2_korea_landscape_objects.csv'
+$landscapeGroupCsvPath = Join-Path $outputRoot 'il2_korea_landscape_groups.csv'
 $summaryPath = Join-Path $outputRoot 'README.md'
 
-$output | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonPath -Encoding UTF8
+$mainOutput = [ordered]@{
+    generated_at = $output.generated_at
+    install_root = $output.install_root
+    mission_files = $output.mission_files
+    mission_object_catalog = $output.mission_object_catalog
+    preview_catalog = $output.preview_catalog
+    reference_catalog = $output.reference_catalog
+    mission_limits = $output.mission_limits
+    landscape_templates = $output.landscape_templates
+    generator_labels = $output.generator_labels
+    landscape_data_files = [ordered]@{
+        object_json = 'il2_korea_landscape_objects.json'
+        group_json = 'il2_korea_landscape_groups.json'
+        object_csv = 'il2_korea_landscape_objects.csv'
+        group_csv = 'il2_korea_landscape_groups.csv'
+    }
+}
+
+$mainOutput | ConvertTo-Json -Depth 8 | Set-Content -Path $jsonPath -Encoding UTF8
+$landscapeObjectCatalog | ConvertTo-Json -Depth 6 | Set-Content -Path $landscapeObjectsJsonPath -Encoding UTF8
+$landscapeGroupCatalog | ConvertTo-Json -Depth 6 | Set-Content -Path $landscapeGroupsJsonPath -Encoding UTF8
 
 $catalog |
     Select-Object category, object_type, display_name, script_path, model_path, source_count, historical_faction_guess,
@@ -327,8 +502,22 @@ $referenceCatalog |
     Select-Object source_type, asset_name, object_type, category, script_path, model_path, historical_faction_guess, present_in_mission_examples |
     Export-Csv -Path $referenceCsvPath -NoTypeInformation -Encoding UTF8
 
+$landscapeObjectCatalog |
+    Select-Object source_file, root_group, group_path, group_name, parent_group, category, historical_faction_guess,
+        object_type, object_name, object_index, script_path, model_path, x, y, z |
+    Export-Csv -Path $landscapeObjectCsvPath -NoTypeInformation -Encoding UTF8
+
+$landscapeGroupCatalog |
+    Select-Object source_file, root_group, group_path, group_name, parent_group, category, historical_faction_guess,
+        object_count, center_x, center_y, center_z, min_x, max_x, min_z, max_z,
+        @{ Name = 'object_types'; Expression = { ($_.object_types -join '; ') } },
+        @{ Name = 'representative_scripts'; Expression = { ($_.representative_scripts -join '; ') } },
+        @{ Name = 'representative_models'; Expression = { ($_.representative_models -join '; ') } } |
+    Export-Csv -Path $landscapeGroupCsvPath -NoTypeInformation -Encoding UTF8
+
 $catalogByCategory = $catalog | Group-Object category | Sort-Object Name
 $referenceBySource = $referenceCatalog | Group-Object source_type | Sort-Object Name
+$landscapeGroupsByCategory = $landscapeGroupCatalog | Group-Object category | Sort-Object Name
 $summaryLines = New-Object System.Collections.Generic.List[string]
 $summaryLines.Add('# IL-2 Korea Local Catalog')
 $summaryLines.Add('')
@@ -340,6 +529,10 @@ $summaryLines.Add("- `il2_korea_catalog.json`: full structured catalog")
 $summaryLines.Add("- `il2_korea_catalog.csv`: flattened mission-derived object catalog")
 $summaryLines.Add("- `il2_korea_preview_catalog.csv`: editor preview names and inferred categories")
 $summaryLines.Add("- `il2_korea_reference_catalog.csv`: known aircraft configs and preview-only references")
+$summaryLines.Add("- `il2_korea_landscape_objects.json`: full direct landscape object dataset")
+$summaryLines.Add("- `il2_korea_landscape_groups.json`: grouped landscape zone dataset")
+$summaryLines.Add("- `il2_korea_landscape_objects.csv`: direct objects parsed from developer landscape group files")
+$summaryLines.Add("- `il2_korea_landscape_groups.csv`: grouped landscape zones aggregated from developer landscape files")
 $summaryLines.Add('')
 $summaryLines.Add('## Mission-Derived Categories')
 $summaryLines.Add('')
@@ -350,6 +543,12 @@ $summaryLines.Add('')
 $summaryLines.Add('## Reference Sources')
 $summaryLines.Add('')
 foreach ($group in $referenceBySource) {
+    $summaryLines.Add("- $($group.Name): $($group.Count)")
+}
+$summaryLines.Add('')
+$summaryLines.Add('## Landscape Group Categories')
+$summaryLines.Add('')
+foreach ($group in $landscapeGroupsByCategory) {
     $summaryLines.Add("- $($group.Name): $($group.Count)")
 }
 $summaryLines.Add('')
