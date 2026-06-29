@@ -1,6 +1,7 @@
 node_modules/
 generated/
 dist/
+catalog/landscape_Korea_*.Group
 
 npm-debug.log*
 yarn-debug.log*
