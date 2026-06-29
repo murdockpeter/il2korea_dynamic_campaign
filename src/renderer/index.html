@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IL-2 Korea Scenario Generator</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel">
+        <section class="hero-banner" aria-label="IL-10 hero artwork">
+          <div class="hero-copy">
+            <p class="eyebrow">IL-2 Korea</p>
+            <h1>Scenario Generator</h1>
+            <p class="subhead">Choose a few constraints, then generate one plausible single-scenario seed.</p>
+          </div>
+          <div class="hero-art">
+            <img src="../images/hero_banner_il10.png" alt="IL-10 artwork banner" />
+          </div>
+        </section>
+
+        <div class="heading">
+          <p class="section-kicker">Mission Setup</p>
+        </div>
+
+        <form id="scenario-form" class="form">
+          <label class="field">
+            <span>Player Aircraft</span>
+            <select id="aircraft" name="aircraft"></select>
+          </label>
+
+          <label class="field">
+            <span>Target Type</span>
+            <select id="targetType" name="targetType"></select>
+          </label>
+
+          <label class="field">
+            <span>Landscape</span>
+            <select id="landscape" name="landscape"></select>
+          </label>
+
+          <label class="field">
+            <span>Enemy Faction</span>
+            <select id="enemyFaction" name="enemyFaction"></select>
+          </label>
+
+          <label class="field">
+            <span>Weather</span>
+            <select id="weather" name="weather">
+              <option value="Clear">Clear</option>
+              <option value="Broken Cloud">Broken Cloud</option>
+              <option value="Overcast">Overcast</option>
+              <option value="Poor Visibility">Poor Visibility</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span>Start Time</span>
+            <select id="startTime" name="startTime"></select>
+          </label>
+
+          <label class="field">
+            <span>Starting Airfield</span>
+            <select id="startAirfield" name="startAirfield"></select>
+          </label>
+
+          <label class="field field-checkbox">
+            <span>Multiplayer</span>
+            <label class="checkbox-row">
+              <input id="coopFriendly" name="coopFriendly" type="checkbox" />
+              <span>COOP-friendly player flight</span>
+            </label>
+          </label>
+
+          <button id="generate-button" type="submit" class="generate-button">Generate Scenario</button>
+        </form>
+
+        <section class="output">
+          <div class="output-header">
+            <h2>Latest Output</h2>
+            <p id="status">Loading catalog...</p>
+          </div>
+          <pre id="result" class="result">No scenario generated yet.</pre>
+        </section>
+      </section>
+    </main>
+
+    <script src="./renderer.js"></script>
+  </body>
+</html>
