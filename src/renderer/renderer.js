@@ -1,7 +1,47 @@
 const form = document.getElementById('scenario-form');
 const result = document.getElementById('result');
 const status = document.getElementById('status');
+const experimentalTargetTypes = new Set(['Airfield Strike']);
+const frontLineStorageKey = 'il2korea.frontLine';
 let appOptions = null;
+
+function getStoredFrontLine() {
+  const raw = window.localStorage.getItem(frontLineStorageKey);
+  const numeric = Number(raw);
+  return Number.isFinite(numeric) ? Math.max(0, Math.min(100, Math.round(numeric))) : null;
+}
+
+function describeFrontLine(value) {
+  if (value <= 20) return 'UN push north';
+  if (value <= 40) return 'UN advantage';
+  if (value <= 60) return 'Mid-conflict stalemate';
+  if (value <= 80) return 'Communist advantage';
+  return 'Communist push south';
+}
+
+function updateFrontLineLabel() {
+  const slider = document.getElementById('frontLine');
+  const value = Number(slider.value);
+  document.getElementById('frontLineLabel').textContent = `${value} • ${describeFrontLine(value)}`;
+}
+
+function isAirfieldAvailable(entry, coalition, frontLine) {
+  if (entry.id === 'auto') {
+    return true;
+  }
+
+  const windows = Array.isArray(entry.ownership) ? entry.ownership : [];
+  if (!windows.length) {
+    return entry.coalition === coalition;
+  }
+
+  return windows.some(
+    (window) =>
+      window.coalition === coalition &&
+      frontLine >= Number(window.minFrontLine) &&
+      frontLine <= Number(window.maxFrontLine)
+  );
+}
 
 function fillSelect(elementId, items, options = {}) {
   const select = document.getElementById(elementId);
@@ -27,12 +67,17 @@ async function loadOptions() {
   fillSelect('targetType', appOptions.targetTypes);
   fillSelect('landscape', appOptions.landscapes);
   fillSelect('startTime', appOptions.startTimes || []);
+  const frontLineSlider = document.getElementById('frontLine');
+  const storedFrontLine = getStoredFrontLine();
+  frontLineSlider.value = storedFrontLine ?? appOptions.defaultFrontLineState ?? 50;
+  updateFrontLineLabel();
   const startTimeSelect = document.getElementById('startTime');
   if (startTimeSelect.options.length) {
     startTimeSelect.value = '08:00:0';
   }
   syncEnemyFaction();
   syncStartingAirfield();
+  syncGeneratorMode();
   status.textContent = appOptions.installInfo?.detected
     ? `Catalog ready. IL-2 detected at ${appOptions.installInfo.installRoot}.`
     : 'Catalog ready. IL-2 install not detected yet.';
@@ -65,8 +110,9 @@ function syncStartingAirfield() {
 
   const aircraft = document.getElementById('aircraft').value || appOptions.aircraft[0];
   const coalition = appOptions.aircraftCoalitions?.[aircraft];
+  const frontLine = Number(document.getElementById('frontLine').value || appOptions.defaultFrontLineState || 50);
   const airfields = (appOptions.startingAirfields || []).filter(
-    (entry) => entry.coalition === 'any' || entry.coalition === coalition
+    (entry) => isAirfieldAvailable(entry, coalition, frontLine)
   );
   const select = document.getElementById('startAirfield');
   select.innerHTML = '';
@@ -83,8 +129,39 @@ function syncStartingAirfield() {
   }
 }
 
+function syncGeneratorMode() {
+  const checkbox = document.getElementById('useScratchBuilder');
+  const label = document.getElementById('generator-mode-label');
+  const targetType = document.getElementById('targetType').value;
+  const supported = experimentalTargetTypes.has(targetType);
+
+  checkbox.disabled = !supported;
+  if (!supported) {
+    checkbox.checked = false;
+  }
+
+  label.textContent = supported
+    ? 'Use parser-safe experimental route/target rebuild'
+    : 'Parser-safe route/target rebuild currently available for Airfield Strike only';
+}
+
 document.getElementById('aircraft').addEventListener('change', () => {
   syncEnemyFaction();
+  syncStartingAirfield();
+});
+
+document.getElementById('targetType').addEventListener('change', () => {
+  syncGeneratorMode();
+});
+
+document.getElementById('frontLine').addEventListener('input', () => {
+  updateFrontLineLabel();
+  syncStartingAirfield();
+});
+
+document.getElementById('frontLine').addEventListener('change', () => {
+  const value = document.getElementById('frontLine').value;
+  window.localStorage.setItem(frontLineStorageKey, value);
   syncStartingAirfield();
 });
 
@@ -93,6 +170,9 @@ form.addEventListener('submit', async (event) => {
 
   const formData = new FormData(form);
   const payload = Object.fromEntries(formData.entries());
+  payload.coopFriendly = document.getElementById('coopFriendly').checked;
+  payload.useScratchBuilder = document.getElementById('useScratchBuilder').checked;
+  payload.frontLine = Number(document.getElementById('frontLine').value);
   status.textContent = 'Generating scenario...';
 
   try {

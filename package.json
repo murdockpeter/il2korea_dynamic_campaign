@@ -7,6 +7,8 @@
     "start": "set \"ELECTRON_RUN_AS_NODE=\" && electron .",
     "catalog": "powershell -ExecutionPolicy Bypass -File .\\tools\\build_il2_catalog.ps1",
     "test": "node -e \"const { buildOptions, buildScenario } = require('./src/generator'); const options = buildOptions(); if (!options.aircraft.length) throw new Error('No aircraft options'); const scenario = buildScenario({ aircraft: options.aircraft[0], targetType: options.targetTypes[0], landscape: options.landscapes[0], enemyFaction: 'Any', weather: 'Clear' }, { exportToGame: false }); console.log(scenario.outputPath);\"",
+    "test:scratch": "node -e \"process.env.IL2_KOREA_SCRATCH_BUILDER='1'; const { buildScenario } = require('./src/generator'); const result = buildScenario({ aircraft: 'il10', targetType: 'Bridge Strike', landscape: 'LANDSCAPE_Korea_au', enemyFaction: 'UN/US-aligned', weather: 'Clear', startTime: '12:00:0', startAirfield: 'auto', coopFriendly: false }, { exportToGame: false }); console.log(result.missionOutputPath);\"",
+    "test:scratch:matrix": "node .\\tools\\run_scratch_matrix.js",
     "dist": "electron-builder --win nsis",
     "pack": "electron-builder --dir"
   },

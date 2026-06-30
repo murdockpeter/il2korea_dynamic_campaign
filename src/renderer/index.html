@@ -60,18 +60,34 @@
             <select id="startTime" name="startTime"></select>
           </label>
 
+          <label class="field field-slider">
+            <span>Front Line</span>
+            <div class="slider-shell">
+              <input id="frontLine" name="frontLine" type="range" min="0" max="100" step="5" value="50" />
+              <p id="frontLineLabel" class="slider-label">50 • Mid-conflict stalemate</p>
+            </div>
+          </label>
+
           <label class="field">
             <span>Starting Airfield</span>
             <select id="startAirfield" name="startAirfield"></select>
           </label>
 
-          <label class="field field-checkbox">
+          <div class="field field-checkbox">
             <span>Multiplayer</span>
-            <label class="checkbox-row">
+            <label class="checkbox-row" for="coopFriendly">
               <input id="coopFriendly" name="coopFriendly" type="checkbox" />
               <span>COOP-friendly player flight</span>
             </label>
-          </label>
+          </div>
+
+          <div class="field field-checkbox">
+            <span>Generator Mode</span>
+            <label class="checkbox-row" for="useScratchBuilder">
+              <input id="useScratchBuilder" name="useScratchBuilder" type="checkbox" checked />
+              <span id="generator-mode-label">Use parser-safe experimental route/target rebuild</span>
+            </label>
+          </div>
 
           <button id="generate-button" type="submit" class="generate-button">Generate Scenario</button>
         </form>

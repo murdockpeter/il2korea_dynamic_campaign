@@ -1,10 +1,16 @@
 const fs = require('fs');
 const path = require('path');
+const { buildScratchMissionText, buildScratchLocalizationText } = require('./scratchMissionBuilder');
 
 const workspaceRoot = path.resolve(__dirname, '..');
 const catalogPath = path.join(workspaceRoot, 'catalog', 'il2_korea_catalog.json');
+const frontLineAirfieldsPath = path.join(workspaceRoot, 'catalog', 'front_line_airfields.json');
 const il2TemplateMissionSentinel = path.join('game', 'data', 'Missions', '[DEMO]InchonStrike.Mission');
 let cachedInstallInfo = null;
+let cachedCatalog = null;
+let cachedLandscapeGroups = null;
+let cachedLandscapeObjects = null;
+let cachedFrontLineAirfields = null;
 
 const aircraftCoalitions = {
   f51d: 'UN/US-aligned',
@@ -176,6 +182,16 @@ const missionTemplates = {
   },
 };
 
+const scratchBuilderMissionTypes = new Set([
+  'Airfield Strike',
+  'Bridge Strike',
+  'Ground Attack',
+  'Harbor Strike',
+  'Industrial Strike',
+  'Rail Interdiction',
+  'Troop Area Strike',
+]);
+
 const supportAircraftPools = {
   'UN/US-aligned': {
     strike: ['f80c10', 'f84e', 'f86a5'],
@@ -198,51 +214,199 @@ const preferredSupportAircraft = {
   f86a5: ['f86a5', 'f84e'],
 };
 
+const excludedLandscapeGroupNames = new Set([
+  'Group',
+  'AIRFIELDS',
+  'BRIDGES_HH',
+  'BRIDGES_RR',
+  'CITIES',
+  'DAMS',
+  'FULLSCENE',
+  'INDUSTRY_PORTS',
+  'MARKS',
+  'MILITARY_CAMP',
+  'MINES',
+  'RW_STATIONS',
+  'TUNNELS',
+]);
+
+const missionTargetFamilies = {
+  'Airfield Strike': [
+    {
+      id: 'parked_aircraft_sweep',
+      label: 'Parked Aircraft Sweep',
+      source: { kind: 'group', categories: ['airfield_zone'] },
+      targetHints: ['static_plane_', 'arf_hangar', 'arf_tower', 'fuel', 'ammo'],
+      supportLevel: 'escort',
+      defenseDensity: 'medium',
+      targetCount: 3,
+      commandText: 'Hit parked aircraft, revetments, and support areas in a single fast pass sequence.',
+      ingressText: 'Expect runway-adjacent light flak, fuel fires, and alert fighters near the field.',
+    },
+    {
+      id: 'hangar_fuel_suppression',
+      label: 'Hangar and Fuel Suppression',
+      source: { kind: 'group', categories: ['airfield_zone'] },
+      targetHints: ['hangar', 'nissenhut', 'fuel', 'cistern', 'warehouse'],
+      supportLevel: 'light',
+      defenseDensity: 'medium',
+      targetCount: 3,
+      commandText: 'Concentrate on hangars, fuel storage, and maintenance infrastructure.',
+      ingressText: 'Expect dispersed anti-aircraft positions and support vehicles around the perimeter.',
+    },
+  ],
+  'Bridge Strike': [
+    {
+      id: 'road_bridge_chokepoint',
+      label: 'Road Bridge Chokepoint',
+      source: { kind: 'object', categories: ['road_bridge'] },
+      targetHints: ['bridge', 'road'],
+      supportLevel: 'light',
+      defenseDensity: 'light',
+      targetCount: 2,
+      commandText: 'Attack the crossing spans and road approaches to choke enemy movement.',
+      ingressText: 'Expect light flak and small-arms fire from the bridge banks and nearby roads.',
+    },
+    {
+      id: 'rail_bridge_cut',
+      label: 'Rail Bridge Cut',
+      source: { kind: 'object', categories: ['rail_bridge'] },
+      targetHints: ['bridge', 'rail', 'rw_'],
+      supportLevel: 'escort',
+      defenseDensity: 'medium',
+      targetCount: 2,
+      commandText: 'Break the rail span and sever the line feeding the front.',
+      ingressText: 'Expect defensive fire along the rail embankment and at adjacent service tracks.',
+    },
+  ],
+  'Ground Attack': [
+    {
+      id: 'vehicle_park_sweep',
+      label: 'Vehicle Park Sweep',
+      source: { kind: 'group', categories: ['military_camp_zone', 'city_zone'] },
+      targetHints: ['truck', 'car', 'aaa', 'mg', 'gun', 'tent'],
+      supportLevel: 'light',
+      defenseDensity: 'medium',
+      targetCount: 3,
+      commandText: 'Work through the vehicle park and nearby defensive positions.',
+      ingressText: 'Expect scattered automatic weapons and transport vehicles spread through the area.',
+    },
+    {
+      id: 'frontline_support_bust',
+      label: 'Frontline Support Bust',
+      source: { kind: 'group', categories: ['military_camp_zone', 'tunnel_zone'] },
+      targetHints: ['ammo', 'tent', 'dugout', 'gun', 'truck'],
+      supportLevel: 'none',
+      defenseDensity: 'light',
+      targetCount: 3,
+      commandText: 'Attack stores, dugouts, and support transport around the forward position.',
+      ingressText: 'Enemy resistance should be light but close to the ground and easy to miss on ingress.',
+    },
+  ],
+  'Harbor Strike': [
+    {
+      id: 'dockyard_warehouses',
+      label: 'Dockyard Warehouses',
+      source: { kind: 'group', categories: ['industrial_port_zone'] },
+      targetHints: ['port_', 'shipyard', 'warehouse', 'storage', 'crane'],
+      supportLevel: 'escort',
+      defenseDensity: 'heavy',
+      targetCount: 3,
+      commandText: 'Strike dockside storage, cranes, and harbor support infrastructure.',
+      ingressText: 'Expect concentrated anti-aircraft fire near the waterfront and dockyard approaches.',
+    },
+    {
+      id: 'shipping_and_fuel',
+      label: 'Shipping and Fuel',
+      source: { kind: 'group', categories: ['industrial_port_zone'] },
+      targetHints: ['ship', 'port_', 'fuel', 'cistern', 'storage'],
+      supportLevel: 'escort',
+      defenseDensity: 'heavy',
+      targetCount: 3,
+      commandText: 'Hit shipping support points, fuel stores, and loading areas in the harbor zone.',
+      ingressText: 'Waterfront guns and alert defense crews are likely around piers and fuel depots.',
+    },
+  ],
+  'Industrial Strike': [
+    {
+      id: 'factory_block_raid',
+      label: 'Factory Block Raid',
+      source: { kind: 'group', categories: ['industrial_port_zone', 'city_zone', 'mine_zone'] },
+      targetHints: ['factory', 'warehouse', 'storage', 'power', 'ind_'],
+      supportLevel: 'escort',
+      defenseDensity: 'medium',
+      targetCount: 3,
+      commandText: 'Attack the production blocks and warehouse rows feeding enemy operations.',
+      ingressText: 'Expect medium flak and concentrated smoke or dust around industrial buildings.',
+    },
+    {
+      id: 'mine_processing_strike',
+      label: 'Mine Processing Strike',
+      source: { kind: 'group', categories: ['mine_zone'] },
+      targetHints: ['mine', 'warehouse', 'storage', 'logs', 'planks'],
+      supportLevel: 'light',
+      defenseDensity: 'light',
+      targetCount: 3,
+      commandText: 'Suppress mine works, processing sheds, and nearby stockpiles.',
+      ingressText: 'Defenses are likely lighter here, but targets may be spread across a wider work site.',
+    },
+  ],
+  'Rail Interdiction': [
+    {
+      id: 'marshalling_yard_hit',
+      label: 'Marshalling Yard Hit',
+      source: { kind: 'group', categories: ['railway_station_zone'] },
+      targetHints: ['rw_', 'rail', 'train', 'controltower', 'coaltower'],
+      supportLevel: 'light',
+      defenseDensity: 'medium',
+      targetCount: 3,
+      commandText: 'Hit the station area, yard structures, and rail service points.',
+      ingressText: 'Expect defenses near sidings, control towers, and yard support buildings.',
+    },
+    {
+      id: 'tunnel_and_track_cut',
+      label: 'Tunnel and Track Cut',
+      source: { kind: 'group', categories: ['tunnel_zone', 'railway_station_zone'] },
+      targetHints: ['rw_', 'tunnel', 'rail', 'bridge'],
+      supportLevel: 'none',
+      defenseDensity: 'light',
+      targetCount: 2,
+      commandText: 'Disrupt the rail corridor around the tunnel approaches and choke points.',
+      ingressText: 'Enemy resistance should be intermittent but terrain masking will complicate your run-in.',
+    },
+  ],
+  'Troop Area Strike': [
+    {
+      id: 'camp_suppression',
+      label: 'Camp Suppression',
+      source: { kind: 'group', categories: ['military_camp_zone'] },
+      targetHints: ['tent', 'barrack', 'truck', 'ammo', 'dugout'],
+      supportLevel: 'light',
+      defenseDensity: 'medium',
+      targetCount: 3,
+      commandText: 'Attack troop shelters, stores, and assembly points inside the camp perimeter.',
+      ingressText: 'Expect small-caliber fire from dispersed positions and parked vehicles.',
+    },
+    {
+      id: 'staging_area_strike',
+      label: 'Staging Area Strike',
+      source: { kind: 'group', categories: ['military_camp_zone', 'city_zone'] },
+      targetHints: ['truck', 'car', 'tent', 'ammo', 'gun'],
+      supportLevel: 'none',
+      defenseDensity: 'light',
+      targetCount: 3,
+      commandText: 'Sweep the staging area for troop concentrations and transport support assets.',
+      ingressText: 'The target may be loosely organized, with defenses clustered around key vehicles or supplies.',
+    },
+  ],
+};
+
 const startTimePresets = [
   { value: '05:30:0', label: 'Dawn 05:30' },
   { value: '08:00:0', label: 'Morning 08:00' },
   { value: '12:00:0', label: 'Noon 12:00' },
   { value: '15:00:0', label: 'Afternoon 15:00' },
   { value: '18:30:0', label: 'Dusk 18:30' },
-];
-
-const startingAirfields = [
-  {
-    id: 'auto',
-    label: 'Auto',
-    coalition: 'any',
-    position: null,
-  },
-  {
-    id: 'antung',
-    label: 'Antung',
-    coalition: 'DPRK/PRC/Soviet-aligned',
-    position: { x: 380795.0, z: 52595.987 },
-  },
-  {
-    id: 'seoul',
-    label: 'Seoul (K-16)',
-    coalition: 'UN/US-aligned',
-    position: { x: 102349.0, z: 280779.0 },
-  },
-  {
-    id: 'kimpo',
-    label: 'Kimpo (K-14)',
-    coalition: 'UN/US-aligned',
-    position: { x: 105934.0, z: 269477.0 },
-  },
-  {
-    id: 'yangsu_ri',
-    label: 'Yangsu-ri (K-49)',
-    coalition: 'UN/US-aligned',
-    position: { x: 102114.0, z: 315358.0 },
-  },
-  {
-    id: 'suwon',
-    label: 'Suwon (K-13)',
-    coalition: 'UN/US-aligned',
-    position: { x: 70869.0, z: 288613.0 },
-  },
 ];
 
 const ambientTemplateConfig = {
@@ -281,8 +445,67 @@ const ambientTemplateConfig = {
 };
 
 function readCatalog() {
-  const raw = fs.readFileSync(catalogPath, 'utf8').replace(/^\uFEFF/, '');
+  if (!cachedCatalog) {
+    const raw = fs.readFileSync(catalogPath, 'utf8').replace(/^\uFEFF/, '');
+    cachedCatalog = JSON.parse(raw);
+  }
+
+  return cachedCatalog;
+}
+
+function readCatalogDataFile(relativePath) {
+  const fullPath = path.join(path.dirname(catalogPath), relativePath);
+  const raw = fs.readFileSync(fullPath, 'utf8').replace(/^\uFEFF/, '');
   return JSON.parse(raw);
+}
+
+function readFrontLineAirfields() {
+  if (!cachedFrontLineAirfields) {
+    const raw = fs.readFileSync(frontLineAirfieldsPath, 'utf8').replace(/^\uFEFF/, '');
+    const parsed = JSON.parse(raw);
+    cachedFrontLineAirfields = {
+      defaultFrontLineState: Number(parsed.defaultFrontLineState) || 50,
+      startingAirfields: Array.isArray(parsed.startingAirfields) ? parsed.startingAirfields : [],
+    };
+  }
+
+  return cachedFrontLineAirfields;
+}
+
+function getDefaultFrontLineState() {
+  return readFrontLineAirfields().defaultFrontLineState;
+}
+
+function getStartingAirfields() {
+  return readFrontLineAirfields().startingAirfields;
+}
+
+function readLandscapeGroups() {
+  const catalog = readCatalog();
+  const relativePath = catalog.landscape_data_files?.group_catalog_json || catalog.landscape_data_files?.group_json;
+  if (!relativePath) {
+    return [];
+  }
+
+  if (!cachedLandscapeGroups) {
+    cachedLandscapeGroups = readCatalogDataFile(relativePath);
+  }
+
+  return cachedLandscapeGroups;
+}
+
+function readLandscapeObjects() {
+  const catalog = readCatalog();
+  const relativePath = catalog.landscape_data_files?.object_catalog_json || catalog.landscape_data_files?.object_json;
+  if (!relativePath) {
+    return [];
+  }
+
+  if (!cachedLandscapeObjects) {
+    cachedLandscapeObjects = readCatalogDataFile(relativePath);
+  }
+
+  return cachedLandscapeObjects;
 }
 
 function getElectronAppSafe() {
@@ -521,7 +744,8 @@ function buildOptions() {
     landscapes: uniqueSorted((catalog.landscape_templates || []).map((entry) => entry.landscape)),
     factions: uniqueSorted(targetEntries.map((entry) => entry.historical_faction_guess)),
     startTimes: startTimePresets,
-    startingAirfields,
+    defaultFrontLineState: getDefaultFrontLineState(),
+    startingAirfields: getStartingAirfields(),
     aircraftCoalitions,
     coalitionOpposites,
     installInfo,
@@ -535,14 +759,275 @@ function pickOne(items, seed) {
 }
 
 function makeSeed(input) {
-  return `${input.aircraft}|${input.targetType}|${input.landscape}|${input.enemyFaction}|${input.weather}`
+  return `${input.aircraft}|${input.targetType}|${input.landscape}|${input.enemyFaction}|${input.weather}|${normalizeFrontLineValue(input.frontLine)}`
     .split('')
     .reduce((sum, char) => sum + char.charCodeAt(0), 0);
+}
+
+function normalizeFrontLineValue(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return getDefaultFrontLineState();
+  }
+
+  return Math.max(0, Math.min(100, Math.round(numeric)));
+}
+
+function describeFrontLineState(value) {
+  const normalized = normalizeFrontLineValue(value);
+  if (normalized <= 20) {
+    return 'UN push north';
+  }
+  if (normalized <= 40) {
+    return 'UN advantage';
+  }
+  if (normalized <= 60) {
+    return 'Mid-conflict stalemate';
+  }
+  if (normalized <= 80) {
+    return 'Communist advantage';
+  }
+  return 'Communist push south';
+}
+
+function normalizeText(value) {
+  return String(value || '').trim().toLowerCase();
+}
+
+function formatLocationLabel(value) {
+  return String(value || '')
+    .replace(/_/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function deriveLocationLabel(entry, fallbackCategory) {
+  const rawCandidates = [
+    entry.group_name,
+    ...(String(entry.group_path || '')
+      .split('>')
+      .map((segment) => segment.trim())
+      .filter(Boolean)
+      .reverse()),
+    entry.root_group,
+  ];
+
+  const useful = rawCandidates.find((candidate) => {
+    const normalized = String(candidate || '').trim();
+    return normalized && !excludedLandscapeGroupNames.has(normalized) && normalized !== 'Group';
+  });
+
+  return formatLocationLabel(useful || fallbackCategory || 'Target Area');
+}
+
+function isUsefulLandscapeGroup(entry) {
+  const groupName = String(entry.group_name || '').trim();
+  if (!groupName || excludedLandscapeGroupNames.has(groupName)) {
+    return false;
+  }
+
+  const normalizedGroupName = groupName.toLowerCase();
+  if (normalizedGroupName.endsWith('_ambient')) {
+    return false;
+  }
+
+  return entry.object_count >= 3;
+}
+
+function matchesFactionPreference(entry, enemyFaction) {
+  if (!enemyFaction) {
+    return true;
+  }
+
+  const faction = entry.historical_faction_guess;
+  return faction === enemyFaction || faction === 'terrain/static' || faction === 'unknown';
+}
+
+function isAirfieldOwnedByCoalition(entry, coalition, frontLine) {
+  if (!entry || entry.id === 'auto') {
+    return true;
+  }
+
+  const ownership = Array.isArray(entry.ownership) ? entry.ownership : [];
+  if (ownership.length === 0) {
+    return entry.coalition === coalition;
+  }
+
+  const normalizedFrontLine = normalizeFrontLineValue(frontLine);
+  return ownership.some(
+    (window) =>
+      window.coalition === coalition &&
+      normalizedFrontLine >= Number(window.minFrontLine) &&
+      normalizedFrontLine <= Number(window.maxFrontLine)
+  );
+}
+
+function findCuratedAirfieldByGroupPath(groupPath) {
+  return getStartingAirfields().find((entry) => entry.groupPath === groupPath) || null;
+}
+
+function chooseMissionFamily(targetType, seed) {
+  const families = missionTargetFamilies[targetType] || missionTargetFamilies['Ground Attack'];
+  return pickOne(families, seed + 19) || missionTargetFamilies['Ground Attack'][0];
+}
+
+function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
+  if (!family?.source) {
+    return null;
+  }
+
+  const frontLine = normalizeFrontLineValue(context.frontLine);
+  const availableFriendlyAirfields = Array.isArray(context.availableFriendlyAirfields)
+    ? context.availableFriendlyAirfields.filter((entry) => entry?.position)
+    : [];
+
+  if (family.source.kind === 'group') {
+    const seenPaths = new Set();
+    const groups = readLandscapeGroups().filter(
+      (entry) =>
+        family.source.categories.includes(entry.category) &&
+        isUsefulLandscapeGroup(entry) &&
+        matchesFactionPreference(entry, enemyFaction)
+    ).filter((entry) => {
+      if (entry.category !== 'airfield_zone') {
+        return true;
+      }
+
+      return String(entry.group_path || '').startsWith('AIRFIELDS >');
+    }).filter((entry) => {
+      const key = `${entry.category}|${entry.group_path || entry.group_name}`;
+      if (seenPaths.has(key)) {
+        return false;
+      }
+      seenPaths.add(key);
+      return true;
+    }).filter((entry) => {
+      if (entry.category !== 'airfield_zone') {
+        return true;
+      }
+
+      const curated = findCuratedAirfieldByGroupPath(entry.group_path);
+      if (!curated) {
+        return true;
+      }
+
+      return isAirfieldOwnedByCoalition(curated, enemyFaction, frontLine);
+    });
+
+    const sortedGroups = [...groups].sort((left, right) => {
+      const leftDistance = availableFriendlyAirfields.length
+        ? Math.min(
+            ...availableFriendlyAirfields.map((airfield) =>
+              getDistance2d(airfield.position, { x: left.center_x, z: left.center_z })
+            )
+          )
+        : 0;
+      const rightDistance = availableFriendlyAirfields.length
+        ? Math.min(
+            ...availableFriendlyAirfields.map((airfield) =>
+              getDistance2d(airfield.position, { x: right.center_x, z: right.center_z })
+            )
+          )
+        : 0;
+      const maxDistance = context.role === 'attack' ? 240000 : 340000;
+      const leftPenalty = leftDistance > maxDistance ? 1 : 0;
+      const rightPenalty = rightDistance > maxDistance ? 1 : 0;
+
+      if (leftPenalty !== rightPenalty) {
+        return leftPenalty - rightPenalty;
+      }
+
+      return leftDistance - rightDistance;
+    });
+
+    const choice = pickOne(sortedGroups.slice(0, Math.min(sortedGroups.length, 12)), seed + 101) || sortedGroups[0];
+    if (!choice) {
+      return null;
+    }
+
+    return {
+      kind: 'group',
+      label: deriveLocationLabel(choice, choice.category),
+      category: choice.category,
+      x: choice.center_x,
+      y: choice.center_y,
+      z: choice.center_z,
+      sourceFile: choice.source_file,
+      groupPath: choice.group_path,
+      raw: choice,
+    };
+  }
+
+  if (family.source.kind === 'object') {
+    const objects = readLandscapeObjects().filter(
+      (entry) =>
+        family.source.categories.includes(entry.category) &&
+        matchesFactionPreference(entry, enemyFaction)
+    );
+    const choice = pickOne(objects, seed + 131);
+    if (!choice) {
+      return null;
+    }
+
+    return {
+      kind: 'object',
+      label: deriveLocationLabel(choice, choice.category),
+      category: choice.category,
+      x: choice.x,
+      y: choice.y,
+      z: choice.z,
+      sourceFile: choice.source_file,
+      groupPath: choice.group_path,
+      raw: choice,
+    };
+  }
+
+  return null;
+}
+
+function scoreTargetEntry(entry, family, location) {
+  let score = 0;
+  const searchBlob = normalizeText(
+    `${entry.category} ${entry.display_name} ${entry.script_path} ${entry.model_path} ${entry.key}`
+  );
+
+  if (entry.category === 'bridge' && family.source?.categories?.includes('road_bridge')) {
+    score += searchBlob.includes('rail') ? 0 : 5;
+  }
+
+  if (entry.category === 'bridge' && family.source?.categories?.includes('rail_bridge')) {
+    score += searchBlob.includes('rail') || searchBlob.includes('rw_') ? 5 : 0;
+  }
+
+  (family.targetHints || []).forEach((hint) => {
+    if (searchBlob.includes(normalizeText(hint))) {
+      score += 4;
+    }
+  });
+
+  if (location?.category === 'airfield_zone' && searchBlob.includes('airfield')) {
+    score += 2;
+  }
+  if (location?.category === 'industrial_port_zone' && (searchBlob.includes('port_') || searchBlob.includes('shipyard'))) {
+    score += 2;
+  }
+  if (location?.category === 'railway_station_zone' && (searchBlob.includes('rw_') || searchBlob.includes('rail'))) {
+    score += 2;
+  }
+  if (location?.category === 'military_camp_zone' && (searchBlob.includes('tent') || searchBlob.includes('barrack'))) {
+    score += 2;
+  }
+
+  return score;
 }
 
 function buildTargetPool(missionCatalog, input, enemyFaction) {
   return missionCatalog.filter((entry) => {
     if (!['static_target', 'bridge', 'fixed_weapon', 'ground_vehicle', 'naval'].includes(entry.category)) {
+      return false;
+    }
+
+    if (!entry.model_path || !entry.script_path) {
       return false;
     }
 
@@ -562,11 +1047,20 @@ function buildTargetPool(missionCatalog, input, enemyFaction) {
   });
 }
 
-function chooseTargets(targetPool, seed) {
+function chooseTargets(targetPool, seed, family, location) {
+  const sortedPool = [...targetPool].sort((left, right) => {
+    const scoreDelta = scoreTargetEntry(right, family, location) - scoreTargetEntry(left, family, location);
+    if (scoreDelta !== 0) {
+      return scoreDelta;
+    }
+
+    return String(left.key || '').localeCompare(String(right.key || ''));
+  });
+
   const chosenTargets = [];
-  const maxTargets = Math.min(3, targetPool.length);
+  const maxTargets = Math.min(family?.targetCount || 3, sortedPool.length);
   for (let i = 0; i < maxTargets; i += 1) {
-    const target = pickOne(targetPool, seed + i * 17);
+    const target = pickOne(sortedPool.slice(0, Math.min(sortedPool.length, 12)), seed + i * 17) || sortedPool[i];
     if (target && !chosenTargets.find((entry) => entry.key === target.key)) {
       chosenTargets.push(target);
     }
@@ -582,35 +1076,49 @@ function getMissionTypeProfile(targetType) {
   return missionTypeProfiles[targetType] || missionTypeProfiles['Ground Attack'];
 }
 
-function getAvailableStartingAirfields(aircraft) {
+function getAvailableStartingAirfields(aircraft, frontLine = getDefaultFrontLineState()) {
   const coalition = getAircraftCoalition(aircraft);
-  return startingAirfields.filter((entry) => entry.coalition === 'any' || entry.coalition === coalition);
+  return getStartingAirfields().filter(
+    (entry) => entry.id === 'auto' || isAirfieldOwnedByCoalition(entry, coalition, frontLine)
+  );
 }
 
 function getTemplateStartingAirfield(aircraft) {
   return getAircraftCoalition(aircraft) === 'UN/US-aligned'
-    ? startingAirfields.find((entry) => entry.id === 'seoul')
-    : startingAirfields.find((entry) => entry.id === 'antung');
+    ? getStartingAirfields().find((entry) => entry.id === 'seoul')
+    : getStartingAirfields().find((entry) => entry.id === 'antung');
 }
 
-function getSelectedStartingAirfield(aircraft, requestedAirfieldId) {
-  const available = getAvailableStartingAirfields(aircraft);
+function getSelectedStartingAirfield(aircraft, requestedAirfieldId, frontLine, targetLocation) {
+  const available = getAvailableStartingAirfields(aircraft, frontLine).filter((entry) => entry.id !== 'auto');
   const fallback = getTemplateStartingAirfield(aircraft);
   if (!requestedAirfieldId || requestedAirfieldId === 'auto') {
-    return fallback;
+    if (targetLocation) {
+      const nearest = [...available].sort(
+        (left, right) =>
+          getDistance2d(left.position, targetLocation) - getDistance2d(right.position, targetLocation)
+      )[0];
+      return nearest || fallback;
+    }
+
+    return available[0] || fallback;
   }
 
   return available.find((entry) => entry.id === requestedAirfieldId) || fallback;
 }
 
-function chooseSupportAircraft(playerAircraft, role, seed) {
+function chooseSupportAircraft(playerAircraft, role, seed, supportLevel = 'escort') {
+  if (supportLevel === 'none') {
+    return null;
+  }
+
   const coalition = getAircraftCoalition(playerAircraft);
   const poolSet = supportAircraftPools[coalition];
   if (!poolSet) {
     return playerAircraft;
   }
 
-  const poolKey = role === 'fighter' ? 'fighter' : 'strike';
+  const poolKey = supportLevel === 'escort' || role === 'fighter' ? 'fighter' : 'strike';
   const pool = poolSet[poolKey] || [playerAircraft];
   const preferredPool = preferredSupportAircraft[playerAircraft]?.filter((entry) => pool.includes(entry)) || [];
   const candidatePool = preferredPool.length ? preferredPool : pool;
@@ -709,6 +1217,35 @@ function parseBlockObjects(missionText) {
   }));
 }
 
+function parseShipBlocks(missionText) {
+  const shipPattern = /Ship\s*\{[\s\S]*?\n\s*\}/g;
+  const blocks = missionText.match(shipPattern) || [];
+  return blocks.map((block) => ({
+    block,
+    index: extractMissionValue(block, 'Index') || '',
+    linkTrId: extractMissionValue(block, 'LinkTrId') || '',
+    name: extractMissionValue(block, 'Name')?.replace(/^"|"$/g, '') || '',
+    script: extractMissionValue(block, 'Script')?.replace(/^"|"$/g, '') || '',
+    model: extractMissionValue(block, 'Model')?.replace(/^"|"$/g, '') || '',
+    country: extractMissionValue(block, 'Country') || '',
+    x: Number(extractMissionValue(block, 'XPos')),
+    y: Number(extractMissionValue(block, 'YPos')),
+    z: Number(extractMissionValue(block, 'ZPos')),
+    yOri: Number(extractMissionValue(block, 'YOri')),
+  }));
+}
+
+function parseAttackAreaBlocks(missionText) {
+  const pattern = /MCU_CMD_AttackArea\s*\{[\s\S]*?\n\s*\}/g;
+  const blocks = missionText.match(pattern) || [];
+  return blocks.map((block) => ({
+    block,
+    index: extractMissionValue(block, 'Index') || '',
+    x: Number(extractMissionValue(block, 'XPos')),
+    z: Number(extractMissionValue(block, 'ZPos')),
+  }));
+}
+
 function parseEntityBlocks(missionText) {
   const entityPattern = /MCU_TR_Entity\s*\{[\s\S]*?\n\s*\}/g;
   const blocks = missionText.match(entityPattern) || [];
@@ -720,6 +1257,153 @@ function parseEntityBlocks(missionText) {
     z: Number(extractMissionValue(block, 'ZPos')),
     enabled: extractMissionValue(block, 'Enabled') || '',
   }));
+}
+
+function parseWaypointBlocks(missionText) {
+  const waypointPattern = /MCU_Waypoint\s*\{[\s\S]*?\n\s*\}/g;
+  const blocks = missionText.match(waypointPattern) || [];
+  return blocks.map((block) => ({
+    block,
+    index: extractMissionValue(block, 'Index') || '',
+    name: extractMissionValue(block, 'Name')?.replace(/^"|"$/g, '') || '',
+    targets: extractMissionValue(block, 'Targets') || '',
+    objects: extractMissionValue(block, 'Objects') || '',
+    x: Number(extractMissionValue(block, 'XPos')),
+    y: Number(extractMissionValue(block, 'YPos')),
+    z: Number(extractMissionValue(block, 'ZPos')),
+    area: Number(extractMissionValue(block, 'Area')),
+    speed: Number(extractMissionValue(block, 'Speed')),
+    priority: extractMissionValue(block, 'Priority') || '',
+  }));
+}
+
+function getDistance2d(a, b) {
+  const dx = Number(a.x) - Number(b.x);
+  const dz = Number(a.z) - Number(b.z);
+  return Math.sqrt(dx * dx + dz * dz);
+}
+
+function replaceMissionCoordinate(block, key, value) {
+  return block.replace(new RegExp(`(\\n\\s*${key}\\s*=\\s*)[^;]+;`), `$1${formatNumber(value)};`);
+}
+
+function shiftMissionBlockPosition(block, dx, dz) {
+  const x = Number(extractMissionValue(block, 'XPos'));
+  const z = Number(extractMissionValue(block, 'ZPos'));
+  if (!Number.isFinite(x) || !Number.isFinite(z)) {
+    return block;
+  }
+
+  let updated = replaceMissionCoordinate(block, 'XPos', x + dx);
+  updated = replaceMissionCoordinate(updated, 'ZPos', z + dz);
+  return updated;
+}
+
+function buildStaticTargetBlockFromShipBlock(shipBlock, target, enemyCountry) {
+  const index = extractMissionValue(shipBlock, 'Index') || '0';
+  const linkTrId = extractMissionValue(shipBlock, 'LinkTrId') || '0';
+  const xPos = Number(extractMissionValue(shipBlock, 'XPos')) || 0;
+  const yPos = Number(extractMissionValue(shipBlock, 'YPos')) || 0;
+  const zPos = Number(extractMissionValue(shipBlock, 'ZPos')) || 0;
+  const yOri = Number(extractMissionValue(shipBlock, 'YOri')) || 0;
+  const safeCountry = Number.isFinite(Number(enemyCountry)) ? Number(enemyCountry) : 0;
+
+  return `Block
+  {
+    Name = "Block";
+    Index = ${index};
+    LinkTrId = ${linkTrId};
+    XPos = ${formatNumber(xPos)};
+    YPos = ${formatNumber(yPos)};
+    ZPos = ${formatNumber(zPos)};
+    XOri = 0;
+    YOri = ${formatNumber(yOri)};
+    ZOri = 0;
+    Model = "${target.modelPath}";
+    Script = "${target.scriptPath}";
+    Country = ${safeCountry};
+    Desc = "";
+    DamageReport = 50;
+    DamageThreshold = 1;
+    DeleteAfterDeath = 1;
+    PinToTerrain = 1;
+    Flags = 0;
+  }`;
+}
+
+function replaceExactBlockOnce(text, originalBlock, replacementBlock) {
+  return text.replace(originalBlock, replacementBlock);
+}
+
+function retargetTemplateObjectivePackage(missionText, scenario) {
+  const targetArea = scenario.environment?.targetArea;
+  if (!targetArea || !Number.isFinite(targetArea.x) || !Number.isFinite(targetArea.z)) {
+    return missionText;
+  }
+
+  const attackAreas = parseAttackAreaBlocks(missionText);
+  const sourceAttackArea = attackAreas[0];
+  if (!sourceAttackArea) {
+    return missionText;
+  }
+
+  const dx = targetArea.x - sourceAttackArea.x;
+  const dz = targetArea.z - sourceAttackArea.z;
+  const sourceCenter = { x: sourceAttackArea.x, z: sourceAttackArea.z };
+  const shiftRadius = 12000;
+  const convertShipsToStatics =
+    getTemplateDefinition(scenario.aircraft.player).baseName === '[DEMO]InchonStrike' &&
+    scenario.filters.targetType !== 'Harbor Strike';
+  const chosenTargets = scenario.targets || [];
+  let updatedMissionText = missionText;
+  let convertedShipCount = 0;
+
+  const processBlocks = (pattern, transform) => {
+    const blocks = updatedMissionText.match(pattern) || [];
+    blocks.forEach((block) => {
+      const x = Number(extractMissionValue(block, 'XPos'));
+      const z = Number(extractMissionValue(block, 'ZPos'));
+      if (!Number.isFinite(x) || !Number.isFinite(z)) {
+        return;
+      }
+
+      if (getDistance2d({ x, z }, sourceCenter) > shiftRadius) {
+        return;
+      }
+
+      const nextBlock = transform(block);
+      updatedMissionText = replaceExactBlockOnce(updatedMissionText, block, nextBlock);
+    });
+  };
+
+  processBlocks(/Ship\s*\{[\s\S]*?\n\s*\}/g, (block) => {
+    let shifted = shiftMissionBlockPosition(block, dx, dz);
+    if (convertShipsToStatics && chosenTargets.length > 0) {
+      const target = chosenTargets[convertedShipCount % chosenTargets.length];
+      convertedShipCount += 1;
+      shifted = buildStaticTargetBlockFromShipBlock(shifted, target, getEnemyCountry(scenario.aircraft.player));
+    }
+    return shifted;
+  });
+
+  [
+    /Block\s*\{[\s\S]*?\n\s*\}/g,
+    /Vehicle\s*\{[\s\S]*?\n\s*\}/g,
+    /Bridge\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_TR_Entity\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_Waypoint\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_Timer\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_Activate\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_Deactivate\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_CMD_AttackArea\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_CheckZone\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_Icon\s*\{[\s\S]*?\n\s*\}/g,
+    /MCU_Command_AttackArea\s*\{[\s\S]*?\n\s*\}/g,
+  ].forEach((pattern) => {
+    processBlocks(pattern, (block) => shiftMissionBlockPosition(block, dx, dz));
+  });
+
+  return updatedMissionText;
 }
 
 function getOpposingAlignedCountries(aircraft) {
@@ -920,6 +1604,10 @@ function retargetTemplateAircraft(missionText, templateAircraft, selectedAircraf
 }
 
 function retargetFriendlySupportFlights(missionText, playerAircraft, supportAircraft) {
+  if (!supportAircraft) {
+    return missionText;
+  }
+
   const supportScript = `LuaScripts\\WorldObjects\\Planes\\${supportAircraft}.txt`;
   const supportModel = `graphics\\planes\\${supportAircraft}\\${supportAircraft}.mgm`;
   const playerFlight = findPlayerFlightSignature(missionText);
@@ -1040,7 +1728,19 @@ function shiftPlayerStartPackage(missionText, playerAircraft, startAirfield) {
 
 function stripPlayerAutoReposition(missionText) {
   const playerEntityIds = new Set(getPlayerFlightEntityIds(missionText));
-  return stripObjectRefsFromBlockTypes(missionText, playerEntityIds, ['MCU_CMD_Reposition', 'MCU_CMD_AttackArea']);
+  let updated = stripObjectRefsFromBlockTypes(missionText, playerEntityIds, ['MCU_CMD_Reposition', 'MCU_CMD_AttackArea']);
+
+  const repositionCommandIds = collectBlockIndicesByPredicate(updated, 'MCU_CMD_Reposition', () => true);
+  const repositionDialogIds = collectBlockIndicesByPredicate(
+    updated,
+    'MCU_TR_Media',
+    (block) => /Config\s*=\s*"nsdata\\dialogs\\reposition-from-target\.json";/i.test(block)
+  );
+
+  const idsToDisconnect = new Set([...repositionCommandIds, ...repositionDialogIds]);
+  updated = stripIdsFromMissionLists(updated, idsToDisconnect);
+
+  return updated;
 }
 
 function shiftAmbientPackage(missionText, playerAircraft, startAirfield) {
@@ -1186,6 +1886,430 @@ function disableTemplateAirBattleForAttackMissions(missionText, playerAircraft) 
   return updated;
 }
 
+function getMissionMaxIndex(missionText) {
+  const matches = [...missionText.matchAll(/\bIndex\s*=\s*(\d+);/g)].map((match) => Number(match[1]));
+  return matches.length ? Math.max(...matches) : 3;
+}
+
+function stripIdsFromMissionLists(missionText, idsToRemove) {
+  if (!idsToRemove || idsToRemove.size === 0) {
+    return missionText;
+  }
+
+  return missionText
+    .replace(/Targets\s*=\s*\[([^\]]*)\];/g, (match, contents) => `Targets = ${removeObjectIdsFromList(contents, idsToRemove)};`)
+    .replace(/Objects\s*=\s*\[([^\]]*)\];/g, (match, contents) => `Objects = ${removeObjectIdsFromList(contents, idsToRemove)};`);
+}
+
+function stripBlockTypesByIndexSet(missionText, blockType, idsToRemove) {
+  if (!idsToRemove || idsToRemove.size === 0) {
+    return missionText;
+  }
+
+  const pattern = new RegExp(`${blockType}\\s*\\{[\\s\\S]*?\\n\\s*\\}`, 'g');
+  return missionText.replace(pattern, (block) => {
+    const index = extractMissionValue(block, 'Index');
+    return idsToRemove.has(index) ? '' : block;
+  });
+}
+
+function collectBlockIndicesByPredicate(missionText, blockType, predicate) {
+  const pattern = new RegExp(`${blockType}\\s*\\{[\\s\\S]*?\\n\\s*\\}`, 'g');
+  const matches = missionText.match(pattern) || [];
+  return new Set(
+    matches
+      .filter((block) => predicate(block))
+      .map((block) => extractMissionValue(block, 'Index'))
+      .filter(Boolean)
+  );
+}
+
+function appendBlocksToMissionRoot(missionText, blockTexts) {
+  if (!blockTexts.length) {
+    return missionText;
+  }
+
+  const insertion = `${blockTexts.join('\r\n\r\n')}\r\n`;
+  return missionText.replace(/\r?\n\}\s*$/, `\r\n\r\n${insertion}}`);
+}
+
+function replaceMissionField(block, key, value) {
+  return block.replace(new RegExp(`(\\n\\s*${key}\\s*=\\s*)[^;]+;`), `$1${value};`);
+}
+
+function rebuildEnvelopePlayerRoute(missionText, scenario, startAirfield) {
+  const targetArea = scenario.environment?.targetArea;
+  const startPosition = startAirfield?.position;
+  if (!targetArea || !startPosition) {
+    return missionText;
+  }
+
+  const playerEntityIds = new Set(getPlayerFlightEntityIds(missionText));
+  const playerWaypoints = parseWaypointBlocks(missionText).filter((entry) => {
+    const objectIds = entry.objects
+      .replace(/^\[|\]$/g, '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean);
+    return objectIds.some((item) => playerEntityIds.has(item));
+  });
+
+  if (playerWaypoints.length === 0) {
+    return missionText;
+  }
+
+  const vectorX = Number(targetArea.x) - Number(startPosition.x);
+  const vectorZ = Number(targetArea.z) - Number(startPosition.z);
+  const length = Math.hypot(vectorX, vectorZ) || 1;
+  const dirX = vectorX / length;
+  const dirZ = vectorZ / length;
+  const sideX = -dirZ;
+  const sideZ = dirX;
+  const routeProfileByType = {
+    'Airfield Strike': {
+      ingressDistance: 18000,
+      stagingDistance: 26000,
+      attackDistance: 8000,
+      egressDistance: 14000,
+      ingressAltitude: 2200,
+      stagingAltitude: 3600,
+      attackAltitude: 2400,
+      egressAltitude: 2200,
+      ingressSpeed: 620,
+      stagingSpeed: 720,
+      attackSpeed: 640,
+      egressSpeed: 700,
+    },
+    'Bridge Strike': {
+      ingressDistance: 14000,
+      stagingDistance: 20000,
+      attackDistance: 6500,
+      egressDistance: 10000,
+      ingressAltitude: 1600,
+      stagingAltitude: 2400,
+      attackAltitude: 1300,
+      egressAltitude: 1800,
+      ingressSpeed: 520,
+      stagingSpeed: 560,
+      attackSpeed: 500,
+      egressSpeed: 540,
+    },
+    'Ground Attack': {
+      ingressDistance: 12000,
+      stagingDistance: 18000,
+      attackDistance: 5500,
+      egressDistance: 9000,
+      ingressAltitude: 1400,
+      stagingAltitude: 2200,
+      attackAltitude: 1200,
+      egressAltitude: 1600,
+      ingressSpeed: 500,
+      stagingSpeed: 540,
+      attackSpeed: 480,
+      egressSpeed: 520,
+    },
+    'Harbor Strike': {
+      ingressDistance: 22000,
+      stagingDistance: 30000,
+      attackDistance: 9000,
+      egressDistance: 16000,
+      ingressAltitude: 2600,
+      stagingAltitude: 3800,
+      attackAltitude: 2200,
+      egressAltitude: 2600,
+      ingressSpeed: 650,
+      stagingSpeed: 760,
+      attackSpeed: 620,
+      egressSpeed: 700,
+    },
+    'Industrial Strike': {
+      ingressDistance: 18000,
+      stagingDistance: 24000,
+      attackDistance: 7000,
+      egressDistance: 13000,
+      ingressAltitude: 2400,
+      stagingAltitude: 3400,
+      attackAltitude: 2100,
+      egressAltitude: 2400,
+      ingressSpeed: 610,
+      stagingSpeed: 700,
+      attackSpeed: 590,
+      egressSpeed: 660,
+    },
+    'Rail Interdiction': {
+      ingressDistance: 16000,
+      stagingDistance: 22000,
+      attackDistance: 6500,
+      egressDistance: 11000,
+      ingressAltitude: 1800,
+      stagingAltitude: 2600,
+      attackAltitude: 1400,
+      egressAltitude: 1900,
+      ingressSpeed: 560,
+      stagingSpeed: 610,
+      attackSpeed: 520,
+      egressSpeed: 580,
+    },
+    'Troop Area Strike': {
+      ingressDistance: 14000,
+      stagingDistance: 20000,
+      attackDistance: 6000,
+      egressDistance: 10000,
+      ingressAltitude: 1600,
+      stagingAltitude: 2400,
+      attackAltitude: 1300,
+      egressAltitude: 1700,
+      ingressSpeed: 520,
+      stagingSpeed: 570,
+      attackSpeed: 490,
+      egressSpeed: 540,
+    },
+  };
+  const routeProfile = routeProfileByType[scenario.filters.targetType] || routeProfileByType['Ground Attack'];
+
+  const routePoints = [
+    {
+      x: Number(startPosition.x) + dirX * routeProfile.ingressDistance + sideX * 3000,
+      z: Number(startPosition.z) + dirZ * routeProfile.ingressDistance + sideZ * 3000,
+      y: routeProfile.ingressAltitude,
+      speed: routeProfile.ingressSpeed,
+      area: 1200,
+    },
+    {
+      x: Number(targetArea.x) - dirX * routeProfile.stagingDistance + sideX * 9000,
+      z: Number(targetArea.z) - dirZ * routeProfile.stagingDistance + sideZ * 9000,
+      y: routeProfile.stagingAltitude,
+      speed: routeProfile.stagingSpeed,
+      area: 1800,
+    },
+    {
+      x: Number(targetArea.x) - dirX * routeProfile.attackDistance + sideX * 2200,
+      z: Number(targetArea.z) - dirZ * routeProfile.attackDistance + sideZ * 2200,
+      y: routeProfile.attackAltitude,
+      speed: routeProfile.attackSpeed,
+      area: 1400,
+    },
+    {
+      x: Number(targetArea.x) + dirX * routeProfile.egressDistance - sideX * 7000,
+      z: Number(targetArea.z) + dirZ * routeProfile.egressDistance - sideZ * 7000,
+      y: routeProfile.egressAltitude,
+      speed: routeProfile.egressSpeed,
+      area: 1800,
+    },
+  ];
+
+  const landingWaypoint = playerWaypoints.find((entry) => /land/i.test(entry.name));
+  const routeWaypoints = playerWaypoints
+    .filter((entry) => entry !== landingWaypoint)
+    .filter((entry) => Number.isFinite(entry.y) && entry.y >= 1000)
+    .sort((left, right) => left.index.localeCompare(right.index, undefined, { numeric: true }));
+
+  let orderedRouteWaypoints = routeWaypoints;
+  if (routeWaypoints.length >= 3) {
+    const startWaypoint = [...routeWaypoints].sort(
+      (left, right) =>
+        getDistance2d(left, { x: Number(startPosition.x), z: Number(startPosition.z) }) -
+        getDistance2d(right, { x: Number(startPosition.x), z: Number(startPosition.z) })
+    )[0];
+
+    const attackWaypoint = [...routeWaypoints]
+      .filter((entry) => entry !== startWaypoint)
+      .sort(
+        (left, right) =>
+          getDistance2d(left, { x: Number(targetArea.x), z: Number(targetArea.z) }) -
+          getDistance2d(right, { x: Number(targetArea.x), z: Number(targetArea.z) })
+      )[0];
+
+    const ingressWaypoint = routeWaypoints.find((entry) => entry !== startWaypoint && entry !== attackWaypoint) || attackWaypoint;
+    orderedRouteWaypoints = [startWaypoint, ingressWaypoint, attackWaypoint].filter(Boolean);
+  }
+
+  let updated = missionText;
+
+  orderedRouteWaypoints.forEach((entry, index) => {
+    const point = routePoints[Math.min(index, routePoints.length - 2)];
+    let nextBlock = entry.block;
+    nextBlock = replaceMissionCoordinate(nextBlock, 'XPos', point.x);
+    nextBlock = replaceMissionCoordinate(nextBlock, 'YPos', point.y);
+    nextBlock = replaceMissionCoordinate(nextBlock, 'ZPos', point.z);
+    nextBlock = replaceMissionField(nextBlock, 'Area', point.area);
+    nextBlock = replaceMissionField(nextBlock, 'Speed', point.speed);
+    updated = replaceExactBlockOnce(updated, entry.block, nextBlock);
+  });
+
+  if (landingWaypoint) {
+    let nextBlock = landingWaypoint.block;
+    nextBlock = replaceMissionCoordinate(nextBlock, 'XPos', Number(startPosition.x) + dirX * 3500);
+    nextBlock = replaceMissionCoordinate(nextBlock, 'YPos', 1000);
+    nextBlock = replaceMissionCoordinate(nextBlock, 'ZPos', Number(startPosition.z) + dirZ * 3500);
+    nextBlock = replaceMissionField(nextBlock, 'Area', 5000);
+    nextBlock = replaceMissionField(nextBlock, 'Speed', 450);
+    updated = replaceExactBlockOnce(updated, landingWaypoint.block, nextBlock);
+  }
+
+  return updated;
+}
+
+function buildTemplateEnvelopeTargetBlocks(scenario, startIndex, enemyCountry) {
+  const targetArea = scenario.environment?.targetArea;
+  if (!targetArea) {
+    return [];
+  }
+
+  const placementByType = {
+    'Airfield Strike': [
+      { x: -320, z: -180, yOri: 0 },
+      { x: 0, z: 40, yOri: 24 },
+      { x: 320, z: 180, yOri: 0 },
+      { x: -120, z: 240, yOri: 70 },
+    ],
+    'Bridge Strike': [
+      { x: -180, z: 0, yOri: 90 },
+      { x: 0, z: 0, yOri: 90 },
+      { x: 180, z: 0, yOri: 90 },
+    ],
+    'Ground Attack': [
+      { x: -260, z: -120, yOri: 10 },
+      { x: 40, z: 30, yOri: 35 },
+      { x: 280, z: 170, yOri: 60 },
+      { x: -120, z: 210, yOri: 120 },
+    ],
+    'Harbor Strike': [
+      { x: -420, z: -260, yOri: 315 },
+      { x: -120, z: -80, yOri: 300 },
+      { x: 180, z: 60, yOri: 290 },
+      { x: 420, z: 240, yOri: 280 },
+    ],
+    'Industrial Strike': [
+      { x: -300, z: -160, yOri: 0 },
+      { x: -60, z: 20, yOri: 24 },
+      { x: 220, z: 140, yOri: 40 },
+      { x: 420, z: -40, yOri: 10 },
+    ],
+    'Rail Interdiction': [
+      { x: -260, z: -40, yOri: 45 },
+      { x: -80, z: 0, yOri: 45 },
+      { x: 120, z: 40, yOri: 45 },
+      { x: 320, z: 80, yOri: 45 },
+    ],
+    'Troop Area Strike': [
+      { x: -280, z: -180, yOri: 0 },
+      { x: -40, z: -20, yOri: 18 },
+      { x: 220, z: 120, yOri: 36 },
+      { x: 40, z: 240, yOri: 54 },
+    ],
+  };
+
+  const placements = placementByType[scenario.filters.targetType] || [
+    { x: -220, z: -140, yOri: 0 },
+    { x: 0, z: 30, yOri: 20 },
+    { x: 240, z: 160, yOri: 45 },
+  ];
+
+  return (scenario.targets || []).map((target, index) => {
+    const placement = placements[index % placements.length];
+    const objectType = String(target.objectType || 'Block');
+    const safeScriptPath =
+      target.scriptPath ||
+      (typeof target.key === 'string' && target.key.split('|').length >= 3 ? target.key.split('|')[1] : '');
+    const safeModelPath =
+      target.modelPath ||
+      (typeof target.key === 'string' && target.key.split('|').length >= 3 ? target.key.split('|')[2] : '');
+
+    return `${objectType}
+  {
+    Name = "${objectType}";
+    Index = ${startIndex + index};
+    LinkTrId = 0;
+    XPos = ${formatNumber(Number(targetArea.x) + placement.x)};
+    YPos = ${formatNumber(Number(targetArea.y) || 0)};
+    ZPos = ${formatNumber(Number(targetArea.z) + placement.z)};
+    XOri = 0;
+    YOri = ${formatNumber(placement.yOri)};
+    ZOri = 0;
+    Model = "${safeModelPath}";
+    Script = "${safeScriptPath}";
+    Country = ${enemyCountry};
+    Desc = "";
+    DamageReport = 50;
+    DamageThreshold = 1;
+    DeleteAfterDeath = 1;
+    PinToTerrain = 1;
+    Flags = 0;
+  }`;
+  });
+}
+
+function stripTemplateObjectivePackage(missionText, scenario) {
+  const attackAreas = parseAttackAreaBlocks(missionText);
+  const sourceAttackArea = attackAreas[0];
+  if (!sourceAttackArea) {
+    return missionText;
+  }
+
+  const sourceCenter = { x: sourceAttackArea.x, z: sourceAttackArea.z };
+  const objectiveRadius = 9000;
+
+  const blockIds = new Set(
+    parseBlockObjects(missionText)
+      .filter((entry) => Number.isFinite(entry.x) && Number.isFinite(entry.z) && getDistance2d(entry, sourceCenter) <= objectiveRadius)
+      .map((entry) => entry.index)
+  );
+
+  const shipIds = new Set(
+    parseShipBlocks(missionText)
+      .filter((entry) => Number.isFinite(entry.x) && Number.isFinite(entry.z) && getDistance2d(entry, sourceCenter) <= objectiveRadius)
+      .map((entry) => entry.index)
+  );
+
+  const vehicleIds = new Set(
+    parseVehicleBlocks(missionText)
+      .filter((entry) => Number.isFinite(entry.x) && Number.isFinite(entry.z) && getDistance2d(entry, sourceCenter) <= objectiveRadius)
+      .map((entry) => entry.index)
+  );
+
+  const bridgeIds = new Set(
+    (missionText.match(/Bridge\s*\{[\s\S]*?\n\s*\}/g) || [])
+      .map((block) => ({
+        block,
+        index: extractMissionValue(block, 'Index') || '',
+        x: Number(extractMissionValue(block, 'XPos')),
+        z: Number(extractMissionValue(block, 'ZPos')),
+      }))
+      .filter((entry) => Number.isFinite(entry.x) && Number.isFinite(entry.z) && getDistance2d(entry, sourceCenter) <= objectiveRadius)
+      .map((entry) => entry.index)
+  );
+
+  const allObjectIds = new Set([...blockIds, ...shipIds, ...vehicleIds, ...bridgeIds]);
+  const linkedEntityIds = new Set(
+    parseEntityBlocks(missionText)
+      .filter((entry) => allObjectIds.has(entry.misObjId))
+      .map((entry) => entry.index)
+  );
+
+  let updated = missionText;
+  updated = stripIdsFromMissionLists(updated, new Set([...allObjectIds, ...linkedEntityIds]));
+  updated = stripBlockTypesByIndexSet(updated, 'Block', blockIds);
+  updated = stripBlockTypesByIndexSet(updated, 'Ship', shipIds);
+  updated = stripBlockTypesByIndexSet(updated, 'Vehicle', vehicleIds);
+  updated = stripBlockTypesByIndexSet(updated, 'Bridge', bridgeIds);
+  updated = stripBlockTypesByIndexSet(updated, 'MCU_TR_Entity', linkedEntityIds);
+
+  const nextIndex = getMissionMaxIndex(updated) + 1;
+  const enemyCountry = getEnemyCountry(scenario.aircraft.player);
+  const targetBlocks = buildTemplateEnvelopeTargetBlocks(scenario, nextIndex, enemyCountry);
+  updated = appendBlocksToMissionRoot(updated, targetBlocks);
+
+  return updated;
+}
+
+function buildMissionTextFromTemplateEnvelope({ scenario, landscape, supportAircraft, startAirfield }) {
+  let missionText = buildMissionTextFromTemplate({ scenario, landscape, supportAircraft, startAirfield });
+  missionText = stripTemplateObjectivePackage(missionText, scenario);
+  missionText = rebuildEnvelopePlayerRoute(missionText, scenario, startAirfield);
+  return missionText;
+}
+
 function buildMissionTextFromTemplate({ scenario, landscape, supportAircraft, startAirfield }) {
   const weather = weatherPresets[scenario.environment.weather] || weatherPresets.Clear;
   const template = getTemplateDefinition(scenario.aircraft.player);
@@ -1203,6 +2327,7 @@ function buildMissionTextFromTemplate({ scenario, landscape, supportAircraft, st
   missionText = applyAmbientVariation(missionText, scenario, supportAircraft, makeSeed(scenario.filters));
   missionText = shiftAmbientPackage(missionText, scenario.aircraft.player, startAirfield);
   missionText = shiftPlayerStartPackage(missionText, scenario.aircraft.player, startAirfield);
+  missionText = retargetTemplateObjectivePackage(missionText, scenario);
   missionText = replaceMissionOption(missionText, 'PlayerConfig', `LuaScripts\\WorldObjects\\Planes\\${scenario.aircraft.player}.txt`, true);
   missionText = replaceMissionOption(missionText, 'Time', scenario.environment.startTime);
   missionText = replaceMissionOption(missionText, 'Date', landscape.date);
@@ -1251,30 +2376,55 @@ function setLocalizationLine(lines, index, value) {
   lines.push(`${prefix}${value}`);
 }
 
+function formatSupportSummary(scenario) {
+  if (!scenario.supportAircraft) {
+    return 'No dedicated escort is assigned.';
+  }
+
+  const posture = scenario.missionFamily?.supportLevel || 'escort';
+  if (posture === 'light') {
+    return `Light cover by ${scenario.supportAircraft.toUpperCase()}.`;
+  }
+
+  return `Escort cover by ${scenario.supportAircraft.toUpperCase()}.`;
+}
+
+function formatDefenseSummary(scenario) {
+  const density = scenario.missionFamily?.defenseDensity || 'medium';
+  return `${density[0].toUpperCase()}${density.slice(1)} expected resistance.`;
+}
+
 function buildObjectiveText(scenario, area, chosenTargets) {
   const profile = getMissionTypeProfile(scenario.filters.targetType);
+  const familyCommandText = scenario.missionFamily?.commandText || profile.commandText;
+  const locationSummary = scenario.targetLocation?.label ? ` Target area: ${scenario.targetLocation.label}.` : '';
+  const packageSummary = scenario.missionFamily?.label ? ` Package: ${scenario.missionFamily.label}.` : '';
   const targetNames = chosenTargets
-    .map((target) => target.display_name)
+    .map((target) => target.displayName || target.display_name)
     .filter(Boolean)
     .slice(0, 3)
     .join(', ');
 
   const targetSummary = targetNames ? ` Primary targets: ${targetNames}.` : '';
-  const escortSummary = scenario.supportAircraft ? ` Escort cover: ${scenario.supportAircraft.toUpperCase()}.` : '';
+  const escortSummary = ` ${formatSupportSummary(scenario)}`;
+  const defenseSummary = ` ${formatDefenseSummary(scenario)}`;
   const airfieldSummary = scenario.startAirfield ? ` Departure field: ${scenario.startAirfield.label}.` : '';
   const timeSummary = scenario.environment.startTime ? ` Takeoff time: ${formatMissionTimeLabel(scenario.environment.startTime)}.` : '';
-  return `${scenario.aircraft.player.toUpperCase()} mission. ${profile.objectiveText}${targetSummary}${escortSummary}${airfieldSummary}${timeSummary}`;
+  return `${scenario.aircraft.player.toUpperCase()} mission. ${familyCommandText}${locationSummary}${packageSummary}${targetSummary}${escortSummary}${defenseSummary}${airfieldSummary}${timeSummary}`;
 }
 
 function buildLocalizationTextFromTemplate(scenario, area, chosenTargets) {
   const template = getTemplateDefinition(scenario.aircraft.player);
   const profile = getMissionTypeProfile(scenario.filters.targetType);
+  const familyCommandText = scenario.missionFamily?.commandText || profile.commandText;
+  const familyIngressText = scenario.missionFamily?.ingressText || profile.ingressText;
   const lines = readTemplateLocalizationText(template.baseName).replace(/\r\n/g, '\n').split('\n');
   const briefing = buildObjectiveText(scenario, area, chosenTargets);
   const missionComplete = `${scenario.filters.targetType} completed.`;
-  const enemyActivity = `${profile.ingressText} Enemy ${scenario.filters.enemyFaction} opposition expected in the target area.`;
+  const enemyActivity = `${familyIngressText} Enemy ${scenario.filters.enemyFaction} opposition expected in the target area. ${formatDefenseSummary(scenario)}`;
   const departureAirfield = scenario.startAirfield?.label || 'base';
   const recovery = `${profile.recoveryText} Recover at ${departureAirfield}.`;
+  const targetLocation = scenario.targetLocation?.label ? ` Target area: ${scenario.targetLocation.label}.` : '';
 
   setLocalizationLine(lines, 0, `Scenario - ${scenario.title}`);
   setLocalizationLine(lines, 1, briefing);
@@ -1286,9 +2436,9 @@ function buildLocalizationTextFromTemplate(scenario, area, chosenTargets) {
     setLocalizationLine(lines, index, profile.iconText);
   });
 
-  setLocalizationLine(lines, 210, `Take off from ${departureAirfield}. ${profile.commandText}`);
-  setLocalizationLine(lines, 211, profile.ingressText);
-  setLocalizationLine(lines, 212, profile.commandText);
+  setLocalizationLine(lines, 210, `Take off from ${departureAirfield}. ${familyCommandText}${targetLocation}`);
+  setLocalizationLine(lines, 211, familyIngressText);
+  setLocalizationLine(lines, 212, `${familyCommandText}${targetLocation}`);
   setLocalizationLine(lines, 213, enemyActivity);
   setLocalizationLine(lines, 218, recovery);
   setLocalizationLine(lines, 219, 'Proceed with landing approach.');
@@ -1304,6 +2454,19 @@ function buildLocalizationTextFromTemplate(scenario, area, chosenTargets) {
   setLocalizationLine(lines, 272, recovery);
 
   return `${lines.join('\r\n')}\r\n`;
+}
+
+function shouldUseScratchBuilder(scenario) {
+  if (!scratchBuilderMissionTypes.has(scenario.filters.targetType)) {
+    return false;
+  }
+
+  if (scenario.filters.useScratchBuilder !== undefined) {
+    return normalizeBoolean(scenario.filters.useScratchBuilder);
+  }
+
+  const flag = String(process.env.IL2_KOREA_SCRATCH_BUILDER || '').trim().toLowerCase();
+  return flag === '1' || flag === 'true' || flag === 'yes' || flag === 'on';
 }
 
 function buildCoopSdsText(scenario, relativeMissionPath) {
@@ -1468,12 +2631,22 @@ function buildScenario(input, options = {}) {
   const landscapes = catalog.landscape_templates || [];
   const friendlyFaction = getAircraftCoalition(input.aircraft);
   const enemyFaction = getOpposingCoalition(input.aircraft) || input.enemyFaction || null;
+  const frontLine = normalizeFrontLineValue(input.frontLine);
 
   const landscape = landscapes.find((item) => item.landscape === input.landscape) || null;
   if (!landscape) {
     throw new Error(`Unknown landscape: ${input.landscape}`);
   }
 
+  const missionFamily = chooseMissionFamily(input.targetType, seed);
+  const role = input.targetType.includes('Strike') || input.targetType.includes('Attack') ? 'attack' : 'fighter';
+  const availableFriendlyAirfields = getAvailableStartingAirfields(input.aircraft, frontLine).filter((entry) => entry.id !== 'auto');
+  const targetLocation = chooseLandscapeLocation(missionFamily, enemyFaction, seed, {
+    frontLine,
+    playerAircraft: input.aircraft,
+    role,
+    availableFriendlyAirfields,
+  });
   const targetPool = buildTargetPool(missionCatalog, input, enemyFaction);
   if (targetPool.length === 0) {
     throw new Error(
@@ -1481,14 +2654,21 @@ function buildScenario(input, options = {}) {
     );
   }
 
-  const chosenTargets = chooseTargets(targetPool, seed);
+  const chosenTargets = chooseTargets(targetPool, seed, missionFamily, targetLocation);
   const area = getMissionArea(input.targetType);
   const profile = getMissionTypeProfile(input.targetType);
-  const role = input.targetType.includes('Strike') || input.targetType.includes('Attack') ? 'attack' : 'fighter';
-  const supportAircraft = chooseSupportAircraft(input.aircraft, role, seed);
-  const startAirfield = getSelectedStartingAirfield(input.aircraft, input.startAirfield);
+  const supportAircraft = chooseSupportAircraft(input.aircraft, role, seed, missionFamily?.supportLevel);
+  const startAirfield = getSelectedStartingAirfield(input.aircraft, input.startAirfield, frontLine, targetLocation);
   const startTime = input.startTime || '09:00:0';
   const coopFriendly = normalizeBoolean(input.coopFriendly);
+  const effectiveTargetArea =
+    targetLocation && Number.isFinite(targetLocation.x) && Number.isFinite(targetLocation.z)
+      ? {
+          x: Number(targetLocation.x),
+          y: Number(targetLocation.y) || area.anchor.y,
+          z: Number(targetLocation.z),
+        }
+      : area.anchor;
 
   const scenario = {
     createdAt: new Date().toISOString(),
@@ -1506,18 +2686,42 @@ function buildScenario(input, options = {}) {
       seasonPrefix: landscape.season_prefix,
       weather: input.weather,
       startTime,
-      targetArea: area.anchor,
+      frontLine,
+      frontLineLabel: describeFrontLineState(frontLine),
+      targetArea: effectiveTargetArea,
     },
     aircraft: {
       player: input.aircraft,
       faction: friendlyFaction,
       role,
     },
+    missionFamily: missionFamily
+      ? {
+          id: missionFamily.id,
+          label: missionFamily.label,
+          supportLevel: missionFamily.supportLevel,
+          defenseDensity: missionFamily.defenseDensity,
+        }
+      : null,
+    targetLocation: targetLocation
+      ? {
+          kind: targetLocation.kind,
+          label: targetLocation.label,
+          category: targetLocation.category,
+          x: Number(targetLocation.x),
+          y: Number(targetLocation.y) || 0,
+          z: Number(targetLocation.z),
+          sourceFile: targetLocation.sourceFile,
+          groupPath: targetLocation.groupPath,
+        }
+      : null,
     supportAircraft,
     startAirfield,
     coopFriendly,
     missionProfile: profile,
     targets: chosenTargets.map((entry) => ({
+      key: entry.key,
+      objectType: entry.object_type,
       category: entry.category,
       displayName: entry.display_name,
       scriptPath: entry.script_path,
@@ -1529,17 +2733,54 @@ function buildScenario(input, options = {}) {
       'Playable mission package exported as .Mission and .eng.',
       `Mission graph cloned from stock template ${getTemplateDefinition(input.aircraft).baseName}.`,
       `Mission type profile applied: ${input.targetType}.`,
-      `Friendly support flights retargeted to ${supportAircraft.toUpperCase()}.`,
+      missionFamily ? `Mission family selected: ${missionFamily.label}.` : null,
+      targetLocation ? `Named target location selected: ${targetLocation.label}.` : null,
+      supportAircraft ? `Friendly support flights retargeted to ${supportAircraft.toUpperCase()}.` : 'No dedicated escort assigned.',
       `Starting airfield: ${startAirfield.label}.`,
+      `Front line setting: ${frontLine} (${describeFrontLineState(frontLine)}).`,
       `Start time: ${startTime}.`,
       installInfo.detected ? `Detected IL-2 install: ${installInfo.installRoot}.` : 'IL-2 install not detected.',
       coopFriendly ? 'COOP-friendly player flight enabled.' : 'Single-seat player flight export.',
-    ],
+      'Template mission builder requested from UI.',
+    ].filter(Boolean),
   };
 
-  const missionText = buildMissionTextFromTemplate({ scenario, landscape, supportAircraft, startAirfield });
+  const weather = weatherPresets[scenario.environment.weather] || weatherPresets.Clear;
+  const useScratchBuilder = shouldUseScratchBuilder(scenario);
+  const useTemplateEnvelopeBuilder = useScratchBuilder && scratchBuilderMissionTypes.has(input.targetType);
+  if (useTemplateEnvelopeBuilder) {
+    scenario.notes[1] = `Mission graph rebuilt from a stock template envelope for ${input.targetType}.`;
+  } else if (useScratchBuilder) {
+    scenario.notes[1] = `Mission graph built from scratch for ${input.targetType}.`;
+  }
+
+  const requestedBuilderNote = useTemplateEnvelopeBuilder
+    ? 'Template-envelope mission builder requested from UI.'
+    : useScratchBuilder
+      ? 'Scratch mission builder requested from UI.'
+      : normalizeBoolean(input.useScratchBuilder)
+        ? `Template-envelope builder requested, but ${input.targetType} currently uses the stock template path.`
+        : 'Template mission builder requested from UI.';
+
+  scenario.notes[scenario.notes.length - 1] = requestedBuilderNote;
+
+  const missionText = useTemplateEnvelopeBuilder
+    ? buildMissionTextFromTemplateEnvelope({ scenario, landscape, supportAircraft, startAirfield })
+    : useScratchBuilder
+      ? buildScratchMissionText({
+          scenario,
+          landscape,
+          weather,
+          enemyCountry: coalitionCountries[enemyFaction] || 501,
+          playerCountry: coalitionCountries[friendlyFaction] || 601,
+        })
+      : buildMissionTextFromTemplate({ scenario, landscape, supportAircraft, startAirfield });
   const coopMissionText = coopFriendly ? buildCoopMissionText(missionText) : null;
-  const localizationText = buildLocalizationTextFromTemplate(scenario, area, chosenTargets);
+  const localizationText = useTemplateEnvelopeBuilder
+    ? buildLocalizationTextFromTemplate(scenario, area, chosenTargets)
+    : useScratchBuilder
+      ? buildScratchLocalizationText(scenario, buildObjectiveText)
+      : buildLocalizationTextFromTemplate(scenario, area, chosenTargets);
   const localizationBuffer = Buffer.from(`\uFEFF${localizationText}`, 'utf16le');
   const generatedRoot = getGeneratedRoot();
 

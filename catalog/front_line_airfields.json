@@ -1,0 +1,110 @@
+{
+  "defaultFrontLineState": 50,
+  "startingAirfields": [
+    {
+      "id": "auto",
+      "label": "Auto",
+      "coalition": "any",
+      "position": null,
+      "ownership": []
+    },
+    {
+      "id": "antung",
+      "label": "Antung",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 380795.0, "z": 52595.987 },
+      "groupPath": "AIRFIELDS > 01 Antung (Andong)",
+      "ownership": [{ "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 0, "maxFrontLine": 100 }]
+    },
+    {
+      "id": "tatung_kao",
+      "label": "Tatung-kao (Myaogou)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 372900.817, "z": 40905.897 },
+      "groupPath": "AIRFIELDS > 02 Tatung-kao (Myaogou)",
+      "ownership": [{ "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 0, "maxFrontLine": 100 }]
+    },
+    {
+      "id": "dapu",
+      "label": "Dapu",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 438220.786, "z": 49059.463 },
+      "groupPath": "AIRFIELDS > 03 Dapu",
+      "ownership": [{ "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 0, "maxFrontLine": 100 }]
+    },
+    {
+      "id": "kuandian",
+      "label": "Kuandian",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 455014.558, "z": 79964.549 },
+      "groupPath": "AIRFIELDS > 04 Kuandian",
+      "ownership": [{ "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 0, "maxFrontLine": 100 }]
+    },
+    {
+      "id": "seoul",
+      "label": "Seoul (K-16)",
+      "coalition": "UN/US-aligned",
+      "position": { "x": 102349.0, "z": 280779.0 },
+      "groupPath": "AIRFIELDS > 08 K-16 Seoul",
+      "ownership": [
+        { "coalition": "UN/US-aligned", "minFrontLine": 0, "maxFrontLine": 65 },
+        { "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 80, "maxFrontLine": 100 }
+      ]
+    },
+    {
+      "id": "kimpo",
+      "label": "Kimpo (K-14)",
+      "coalition": "UN/US-aligned",
+      "position": { "x": 105934.0, "z": 269477.0 },
+      "groupPath": "AIRFIELDS > 07 K-14 Kimpo",
+      "ownership": [
+        { "coalition": "UN/US-aligned", "minFrontLine": 0, "maxFrontLine": 60 },
+        { "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 85, "maxFrontLine": 100 }
+      ]
+    },
+    {
+      "id": "yangsu_ri",
+      "label": "Yangsu-ri (K-49)",
+      "coalition": "UN/US-aligned",
+      "position": { "x": 102114.0, "z": 315358.0 },
+      "ownership": [{ "coalition": "UN/US-aligned", "minFrontLine": 0, "maxFrontLine": 70 }]
+    },
+    {
+      "id": "suwon",
+      "label": "Suwon (K-13)",
+      "coalition": "UN/US-aligned",
+      "position": { "x": 70869.0, "z": 288613.0 },
+      "ownership": [
+        { "coalition": "UN/US-aligned", "minFrontLine": 0, "maxFrontLine": 55 },
+        { "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 90, "maxFrontLine": 100 }
+      ]
+    },
+    {
+      "id": "pyongyang",
+      "label": "Pyongyang (K-23)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 269547.504, "z": 180412.216 },
+      "groupPath": "AIRFIELDS > 14 K-23 Pyongyang",
+      "ownership": [
+        { "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 30, "maxFrontLine": 100 },
+        { "coalition": "UN/US-aligned", "minFrontLine": 0, "maxFrontLine": 15 }
+      ]
+    },
+    {
+      "id": "wonsan",
+      "label": "Wonsan (K-25)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 284750.077, "z": 327133.352 },
+      "groupPath": "AIRFIELDS > 16 K-25 Wonsan",
+      "ownership": [{ "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 35, "maxFrontLine": 100 }]
+    },
+    {
+      "id": "sondok",
+      "label": "Sondok (K-26)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "position": { "x": 349367.274, "z": 325203.268 },
+      "groupPath": "AIRFIELDS > 17 K-26 Sondok",
+      "ownership": [{ "coalition": "DPRK/PRC/Soviet-aligned", "minFrontLine": 40, "maxFrontLine": 100 }]
+    }
+  ]
+}
