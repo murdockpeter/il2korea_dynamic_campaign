@@ -2396,21 +2396,7 @@ function formatDefenseSummary(scenario) {
 
 function buildObjectiveText(scenario, area, chosenTargets) {
   const profile = getMissionTypeProfile(scenario.filters.targetType);
-  const familyCommandText = scenario.missionFamily?.commandText || profile.commandText;
-  const locationSummary = scenario.targetLocation?.label ? ` Target area: ${scenario.targetLocation.label}.` : '';
-  const packageSummary = scenario.missionFamily?.label ? ` Package: ${scenario.missionFamily.label}.` : '';
-  const targetNames = chosenTargets
-    .map((target) => target.displayName || target.display_name)
-    .filter(Boolean)
-    .slice(0, 3)
-    .join(', ');
-
-  const targetSummary = targetNames ? ` Primary targets: ${targetNames}.` : '';
-  const escortSummary = ` ${formatSupportSummary(scenario)}`;
-  const defenseSummary = ` ${formatDefenseSummary(scenario)}`;
-  const airfieldSummary = scenario.startAirfield ? ` Departure field: ${scenario.startAirfield.label}.` : '';
-  const timeSummary = scenario.environment.startTime ? ` Takeoff time: ${formatMissionTimeLabel(scenario.environment.startTime)}.` : '';
-  return `${scenario.aircraft.player.toUpperCase()} mission. ${familyCommandText}${locationSummary}${packageSummary}${targetSummary}${escortSummary}${defenseSummary}${airfieldSummary}${timeSummary}`;
+  return `${scenario.aircraft.player.toUpperCase()} mission. ${profile.objectiveText}`;
 }
 
 function buildLocalizationTextFromTemplate(scenario, area, chosenTargets) {
@@ -2457,16 +2443,16 @@ function buildLocalizationTextFromTemplate(scenario, area, chosenTargets) {
 }
 
 function shouldUseScratchBuilder(scenario) {
-  if (!scratchBuilderMissionTypes.has(scenario.filters.targetType)) {
+  return false;
+}
+
+function shouldUseTemplateEnvelopeBuilder(scenario) {
+  const flag = String(process.env.IL2_KOREA_TEMPLATE_ENVELOPE || '').trim().toLowerCase();
+  if (!(flag === '1' || flag === 'true' || flag === 'yes' || flag === 'on')) {
     return false;
   }
 
-  if (scenario.filters.useScratchBuilder !== undefined) {
-    return normalizeBoolean(scenario.filters.useScratchBuilder);
-  }
-
-  const flag = String(process.env.IL2_KOREA_SCRATCH_BUILDER || '').trim().toLowerCase();
-  return flag === '1' || flag === 'true' || flag === 'yes' || flag === 'on';
+  return scratchBuilderMissionTypes.has(scenario.filters.targetType);
 }
 
 function buildCoopSdsText(scenario, relativeMissionPath) {
@@ -2747,7 +2733,7 @@ function buildScenario(input, options = {}) {
 
   const weather = weatherPresets[scenario.environment.weather] || weatherPresets.Clear;
   const useScratchBuilder = shouldUseScratchBuilder(scenario);
-  const useTemplateEnvelopeBuilder = useScratchBuilder && scratchBuilderMissionTypes.has(input.targetType);
+  const useTemplateEnvelopeBuilder = useScratchBuilder && shouldUseTemplateEnvelopeBuilder(scenario);
   if (useTemplateEnvelopeBuilder) {
     scenario.notes[1] = `Mission graph rebuilt from a stock template envelope for ${input.targetType}.`;
   } else if (useScratchBuilder) {
@@ -2759,7 +2745,7 @@ function buildScenario(input, options = {}) {
     : useScratchBuilder
       ? 'Scratch mission builder requested from UI.'
       : normalizeBoolean(input.useScratchBuilder)
-        ? `Template-envelope builder requested, but ${input.targetType} currently uses the stock template path.`
+        ? `Scratch mission builder requested, but ${input.targetType} currently uses the stock template path.`
         : 'Template mission builder requested from UI.';
 
   scenario.notes[scenario.notes.length - 1] = requestedBuilderNote;

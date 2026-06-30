@@ -132,17 +132,9 @@ function syncStartingAirfield() {
 function syncGeneratorMode() {
   const checkbox = document.getElementById('useScratchBuilder');
   const label = document.getElementById('generator-mode-label');
-  const targetType = document.getElementById('targetType').value;
-  const supported = experimentalTargetTypes.has(targetType);
-
-  checkbox.disabled = !supported;
-  if (!supported) {
-    checkbox.checked = false;
-  }
-
-  label.textContent = supported
-    ? 'Use parser-safe experimental route/target rebuild'
-    : 'Parser-safe route/target rebuild currently available for Airfield Strike only';
+  checkbox.checked = false;
+  checkbox.disabled = true;
+  label.textContent = 'Experimental generator temporarily disabled';
 }
 
 document.getElementById('aircraft').addEventListener('change', () => {
