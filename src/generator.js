@@ -929,7 +929,7 @@ function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
             )
           )
         : 0;
-      const maxDistance = context.role === 'attack' ? 240000 : 340000;
+      const maxDistance = context.role === 'attack' ? 150000 : 240000;
       const leftPenalty = leftDistance > maxDistance ? 1 : 0;
       const rightPenalty = rightDistance > maxDistance ? 1 : 0;
 
@@ -940,7 +940,8 @@ function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
       return leftDistance - rightDistance;
     });
 
-    const choice = pickOne(sortedGroups.slice(0, Math.min(sortedGroups.length, 12)), seed + 101) || sortedGroups[0];
+    const topChoices = sortedGroups.slice(0, Math.min(sortedGroups.length, context.role === 'attack' ? 6 : 10));
+    const choice = pickOne(topChoices, seed + 101) || sortedGroups[0];
     if (!choice) {
       return null;
     }
@@ -1274,6 +1275,23 @@ function parseWaypointBlocks(missionText) {
     area: Number(extractMissionValue(block, 'Area')),
     speed: Number(extractMissionValue(block, 'Speed')),
     priority: extractMissionValue(block, 'Priority') || '',
+  }));
+}
+
+function parseIconBlocks(missionText) {
+  const iconPattern = /MCU_Icon\s*\{[\s\S]*?\n\s*\}/g;
+  const blocks = missionText.match(iconPattern) || [];
+  return blocks.map((block) => ({
+    block,
+    index: extractMissionValue(block, 'Index') || '',
+    name: extractMissionValue(block, 'Name')?.replace(/^"|"$/g, '') || '',
+    targets: extractMissionValue(block, 'Targets') || '',
+    x: Number(extractMissionValue(block, 'XPos')),
+    y: Number(extractMissionValue(block, 'YPos')),
+    z: Number(extractMissionValue(block, 'ZPos')),
+    iconId: extractMissionValue(block, 'IconId') || '',
+    lineType: extractMissionValue(block, 'LineType') || '',
+    coalitions: extractMissionValue(block, 'Coalitions') || '',
   }));
 }
 
@@ -1913,6 +1931,27 @@ function stripBlockTypesByIndexSet(missionText, blockType, idsToRemove) {
   });
 }
 
+function stripTemplateBriefingIcons(missionText) {
+  const iconIdsToRemove = new Set(
+    parseIconBlocks(missionText)
+      .filter((entry) => {
+        const isRouteIcon = ['901', '902', '903'].includes(entry.iconId) && entry.lineType === '15';
+        const isFrontLineOverlay = entry.lineType === '13';
+        return !(isRouteIcon || isFrontLineOverlay);
+      })
+      .map((entry) => entry.index)
+      .filter(Boolean)
+  );
+
+  if (iconIdsToRemove.size === 0) {
+    return missionText;
+  }
+
+  let updated = stripIdsFromMissionLists(missionText, iconIdsToRemove);
+  updated = stripBlockTypesByIndexSet(updated, 'MCU_Icon', iconIdsToRemove);
+  return updated;
+}
+
 function collectBlockIndicesByPredicate(missionText, blockType, predicate) {
   const pattern = new RegExp(`${blockType}\\s*\\{[\\s\\S]*?\\n\\s*\\}`, 'g');
   const matches = missionText.match(pattern) || [];
@@ -1935,6 +1974,10 @@ function appendBlocksToMissionRoot(missionText, blockTexts) {
 
 function replaceMissionField(block, key, value) {
   return block.replace(new RegExp(`(\\n\\s*${key}\\s*=\\s*)[^;]+;`), `$1${value};`);
+}
+
+function isJetAircraft(aircraft) {
+  return new Set(['f80c10', 'f84e', 'f86a5', 'mig15bis', 'b29']).has(String(aircraft || '').toLowerCase());
 }
 
 function rebuildEnvelopePlayerRoute(missionText, scenario, startAirfield) {
@@ -1965,20 +2008,21 @@ function rebuildEnvelopePlayerRoute(missionText, scenario, startAirfield) {
   const dirZ = vectorZ / length;
   const sideX = -dirZ;
   const sideZ = dirX;
+  const jetProfile = isJetAircraft(scenario.aircraft?.player);
   const routeProfileByType = {
     'Airfield Strike': {
-      ingressDistance: 18000,
-      stagingDistance: 26000,
-      attackDistance: 8000,
-      egressDistance: 14000,
-      ingressAltitude: 2200,
-      stagingAltitude: 3600,
-      attackAltitude: 2400,
-      egressAltitude: 2200,
-      ingressSpeed: 620,
-      stagingSpeed: 720,
-      attackSpeed: 640,
-      egressSpeed: 700,
+      ingressDistance: jetProfile ? 18000 : 12000,
+      stagingDistance: jetProfile ? 26000 : 16000,
+      attackDistance: jetProfile ? 8000 : 5000,
+      egressDistance: jetProfile ? 14000 : 9000,
+      ingressAltitude: jetProfile ? 2200 : 1500,
+      stagingAltitude: jetProfile ? 3600 : 2000,
+      attackAltitude: jetProfile ? 2400 : 1300,
+      egressAltitude: jetProfile ? 2200 : 1600,
+      ingressSpeed: jetProfile ? 620 : 380,
+      stagingSpeed: jetProfile ? 720 : 420,
+      attackSpeed: jetProfile ? 640 : 360,
+      egressSpeed: jetProfile ? 700 : 400,
     },
     'Bridge Strike': {
       ingressDistance: 14000,
@@ -2146,6 +2190,79 @@ function rebuildEnvelopePlayerRoute(missionText, scenario, startAirfield) {
     nextBlock = replaceMissionField(nextBlock, 'Speed', 450);
     updated = replaceExactBlockOnce(updated, landingWaypoint.block, nextBlock);
   }
+
+  return updated;
+}
+
+function rebuildTemplatePlayerRoute(missionText, scenario, startAirfield) {
+  return rebuildEnvelopePlayerRoute(missionText, scenario, startAirfield);
+}
+
+function rebuildTemplateBriefingIcons(missionText, scenario, startAirfield) {
+  const targetArea = scenario.environment?.targetArea;
+  const startPosition = startAirfield?.position;
+  if (!targetArea || !startPosition) {
+    return missionText;
+  }
+
+  const routeIcons = parseIconBlocks(missionText)
+    .filter((entry) => ['901', '902', '903'].includes(entry.iconId) && entry.lineType === '15')
+    .sort((left, right) => Number(left.index) - Number(right.index));
+
+  if (routeIcons.length < 3) {
+    return missionText;
+  }
+
+  const vectorX = Number(targetArea.x) - Number(startPosition.x);
+  const vectorZ = Number(targetArea.z) - Number(startPosition.z);
+  const length = Math.hypot(vectorX, vectorZ) || 1;
+  const dirX = vectorX / length;
+  const dirZ = vectorZ / length;
+
+  const pointStart = {
+    x: Number(startPosition.x),
+    y: 20,
+    z: Number(startPosition.z),
+  };
+  const pointIngress = {
+    x: Number(startPosition.x) + dirX * Math.min(length * 0.35, 14000),
+    y: 400,
+    z: Number(startPosition.z) + dirZ * Math.min(length * 0.35, 14000),
+  };
+  const pointTarget = {
+    x: Number(targetArea.x),
+    y: Math.max(20, Number(targetArea.y) || 20),
+    z: Number(targetArea.z),
+  };
+  const pointEgress = {
+    x: Number(targetArea.x) - dirX * Math.min(length * 0.2, 8000),
+    y: 350,
+    z: Number(targetArea.z) - dirZ * Math.min(length * 0.2, 8000),
+  };
+  const pointReturn = {
+    x: Number(startPosition.x) + dirX * Math.min(length * 0.15, 7000),
+    y: 300,
+    z: Number(startPosition.z) + dirZ * Math.min(length * 0.15, 7000),
+  };
+
+  let updated = missionText;
+  routeIcons.forEach((entry) => {
+    let point = pointIngress;
+    if (entry.iconId === '903') {
+      point = pointStart;
+    } else if (entry.iconId === '902') {
+      point = pointTarget;
+    } else if (entry.iconId === '901') {
+      const nearTarget = getDistance2d(entry, targetArea) <= getDistance2d(entry, startPosition);
+      point = nearTarget ? pointEgress : pointReturn;
+    }
+
+    let nextBlock = entry.block;
+    nextBlock = replaceMissionCoordinate(nextBlock, 'XPos', point.x);
+    nextBlock = replaceMissionCoordinate(nextBlock, 'YPos', point.y);
+    nextBlock = replaceMissionCoordinate(nextBlock, 'ZPos', point.z);
+    updated = replaceExactBlockOnce(updated, entry.block, nextBlock);
+  });
 
   return updated;
 }
@@ -2324,10 +2441,13 @@ function buildMissionTextFromTemplate({ scenario, landscape, supportAircraft, st
   if (scenario.coopFriendly) {
     missionText = enableCoopPlayerFlight(missionText);
   }
+  missionText = stripTemplateBriefingIcons(missionText);
   missionText = applyAmbientVariation(missionText, scenario, supportAircraft, makeSeed(scenario.filters));
   missionText = shiftAmbientPackage(missionText, scenario.aircraft.player, startAirfield);
   missionText = shiftPlayerStartPackage(missionText, scenario.aircraft.player, startAirfield);
   missionText = retargetTemplateObjectivePackage(missionText, scenario);
+  missionText = rebuildTemplatePlayerRoute(missionText, scenario, startAirfield);
+  missionText = rebuildTemplateBriefingIcons(missionText, scenario, startAirfield);
   missionText = replaceMissionOption(missionText, 'PlayerConfig', `LuaScripts\\WorldObjects\\Planes\\${scenario.aircraft.player}.txt`, true);
   missionText = replaceMissionOption(missionText, 'Time', scenario.environment.startTime);
   missionText = replaceMissionOption(missionText, 'Date', landscape.date);
