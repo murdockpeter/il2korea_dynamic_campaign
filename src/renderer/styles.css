@@ -107,6 +107,38 @@ body {
   margin-bottom: 24px;
 }
 
+.install-panel {
+  display: grid;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.66);
+}
+
+.install-summary {
+  margin: 8px 0 0;
+  color: var(--muted);
+}
+
+.install-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto auto;
+  gap: 12px;
+}
+
+.install-input {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ink);
+  font-size: 1rem;
+}
+
 .eyebrow {
   margin: 0 0 8px;
   color: var(--accent);
@@ -208,7 +240,8 @@ h1 {
 }
 
 select,
-.generate-button {
+.generate-button,
+.secondary-button {
   width: 100%;
   min-height: 56px;
   border-radius: 16px;
@@ -235,9 +268,25 @@ select {
   transition: transform 120ms ease, filter 120ms ease;
 }
 
-.generate-button:hover {
+.generate-button:hover,
+.secondary-button:hover {
   transform: translateY(-1px);
   filter: brightness(1.03);
+}
+
+.secondary-button {
+  padding: 0 16px;
+  background: rgba(31, 41, 46, 0.92);
+  color: #f7eee6;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+.secondary-button-muted {
+  background: rgba(95, 111, 114, 0.94);
 }
 
 .output {
@@ -307,6 +356,10 @@ select {
   }
 
   .form {
+    grid-template-columns: 1fr;
+  }
+
+  .install-controls {
     grid-template-columns: 1fr;
   }
 

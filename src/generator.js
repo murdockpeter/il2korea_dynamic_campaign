@@ -5,8 +5,8 @@ const { buildScratchMissionText, buildScratchLocalizationText } = require('./scr
 const workspaceRoot = path.resolve(__dirname, '..');
 const catalogPath = path.join(workspaceRoot, 'catalog', 'il2_korea_catalog.json');
 const frontLineAirfieldsPath = path.join(workspaceRoot, 'catalog', 'front_line_airfields.json');
-const il2TemplateMissionSentinel = path.join('game', 'data', 'Missions', '[DEMO]InchonStrike.Mission');
 let cachedInstallInfo = null;
+let installRootOverride = null;
 let cachedCatalog = null;
 let cachedLandscapeGroups = null;
 let cachedLandscapeObjects = null;
@@ -571,12 +571,100 @@ function buildInstallInfo(installRoot, source) {
   };
 }
 
+function hasInstallStructure(dataRoot) {
+  return (
+    fileExists(path.join(dataRoot, 'Missions')) &&
+    fileExists(path.join(dataRoot, 'Multiplayer')) &&
+    (fileExists(path.join(dataRoot, 'LuaScripts')) || fileExists(path.join(dataRoot, 'graphics')))
+  );
+}
+
+function getTemplateMissionBaseNames() {
+  return [...new Set(Object.values(missionTemplates).map((entry) => entry.baseName).filter(Boolean))];
+}
+
+function getTemplateMissionPathCandidates(rootPath) {
+  return getTemplateMissionBaseNames().flatMap((baseName) => [
+    path.join(rootPath, 'game', 'data', 'Missions', `${baseName}.Mission`),
+    path.join(rootPath, 'data', 'Missions', `${baseName}.Mission`),
+  ]);
+}
+
+function buildMissingInstallInfo() {
+  return {
+    detected: false,
+    source: null,
+    installRoot: null,
+    gameRoot: null,
+    dataRoot: null,
+    missionTemplateRoot: null,
+    missionExportRoot: null,
+    multiplayerRoot: null,
+    coopExportRoot: null,
+    cooperativeExportRoot: null,
+    nsDataUserRoot: null,
+  };
+}
+
+function resolveInstallRoot(candidateRoot) {
+  if (!candidateRoot) {
+    return null;
+  }
+
+  const normalizedRoot = path.resolve(candidateRoot);
+  const templateCandidates = getTemplateMissionPathCandidates(normalizedRoot);
+  if (templateCandidates.some((candidatePath) => fileExists(candidatePath))) {
+    return normalizedRoot;
+  }
+
+  const dataRoot = path.join(normalizedRoot, 'data');
+  if (hasInstallStructure(dataRoot)) {
+    return path.dirname(normalizedRoot);
+  }
+
+  const gameDataRoot = path.join(normalizedRoot, 'game', 'data');
+  if (hasInstallStructure(gameDataRoot)) {
+    return normalizedRoot;
+  }
+
+  return null;
+}
+
+function buildInstallCandidate(root, source) {
+  const normalizedRoot = resolveInstallRoot(root);
+  if (!normalizedRoot) {
+    return null;
+  }
+
+  return buildInstallInfo(normalizedRoot, source);
+}
+
+function getDefaultInstallRootCandidates() {
+  const systemDrive = process.env.SystemDrive || 'C:';
+  return [
+    path.join(systemDrive, 'IL2Series'),
+    path.join(systemDrive, 'IL-2Series'),
+    path.join(systemDrive, 'Games', 'IL2Series'),
+    path.join(systemDrive, 'Games', 'IL-2Series'),
+  ];
+}
+
+function setInstallRootOverride(root) {
+  installRootOverride = root ? path.resolve(root) : null;
+  cachedInstallInfo = null;
+}
+
+function getInstallRootOverride() {
+  return installRootOverride;
+}
+
 function detectIl2Install() {
   if (cachedInstallInfo) {
     return cachedInstallInfo;
   }
 
-  const envCandidates = [
+  const configuredCandidates = [
+    { root: installRootOverride, source: 'settings:installOverride' },
     { root: process.env.IL2_KOREA_INSTALL_DIR, source: 'env:IL2_KOREA_INSTALL_DIR' },
     { root: process.env.IL2SERIES_HOME, source: 'env:IL2SERIES_HOME' },
   ].filter((entry) => entry.root);
@@ -593,6 +681,11 @@ function detectIl2Install() {
     process.env.ProgramFiles ? path.join(process.env.ProgramFiles, 'Steam') : null,
   ].filter(Boolean);
 
+  const fallbackCandidates = getDefaultInstallRootCandidates().map((root) => ({
+    root,
+    source: `default:${root}`,
+  }));
+
   const steamLibraryCandidates = [];
   steamRootCandidates.forEach((steamRoot) => {
     const directRoot = path.join(steamRoot, 'steamapps', 'common', 'IL2Series');
@@ -607,36 +700,29 @@ function detectIl2Install() {
     });
   });
 
-  const orderedCandidates = [...envCandidates, ...programFilesCandidates, ...steamLibraryCandidates];
+  const orderedCandidates = [
+    ...configuredCandidates,
+    ...programFilesCandidates,
+    ...fallbackCandidates,
+    ...steamLibraryCandidates,
+  ];
   const seen = new Set();
 
   for (const candidate of orderedCandidates) {
-    const normalizedRoot = path.resolve(candidate.root);
-    if (seen.has(normalizedRoot)) {
+    const candidateInfo = buildInstallCandidate(candidate.root, candidate.source);
+    if (!candidateInfo) {
       continue;
     }
-    seen.add(normalizedRoot);
 
-    const sentinelPath = path.join(normalizedRoot, il2TemplateMissionSentinel);
-    if (fileExists(sentinelPath)) {
-      cachedInstallInfo = buildInstallInfo(normalizedRoot, candidate.source);
-      return cachedInstallInfo;
+    if (seen.has(candidateInfo.installRoot)) {
+      continue;
     }
+    seen.add(candidateInfo.installRoot);
+    cachedInstallInfo = candidateInfo;
+    return cachedInstallInfo;
   }
 
-  cachedInstallInfo = {
-    detected: false,
-    source: null,
-    installRoot: null,
-    gameRoot: null,
-    dataRoot: null,
-    missionTemplateRoot: null,
-    missionExportRoot: null,
-    multiplayerRoot: null,
-    coopExportRoot: null,
-    cooperativeExportRoot: null,
-    nsDataUserRoot: null,
-  };
+  cachedInstallInfo = buildMissingInstallInfo();
   return cachedInstallInfo;
 }
 
@@ -644,7 +730,7 @@ function requireIl2Install() {
   const installInfo = detectIl2Install();
   if (!installInfo.detected) {
     throw new Error(
-      'IL-2 Korea install not found. Set IL2_KOREA_INSTALL_DIR to the game root or install IL-2 Korea in a supported location.'
+      'IL-2 Korea install not found. Set IL2_KOREA_INSTALL_DIR to the install root (or game folder) or choose the folder manually in the app.'
     );
   }
   return installInfo;
@@ -749,6 +835,7 @@ function buildOptions() {
     aircraftCoalitions,
     coalitionOpposites,
     installInfo,
+    installOverridePath: getInstallRootOverride(),
   };
 }
 
@@ -869,6 +956,86 @@ function findCuratedAirfieldByGroupPath(groupPath) {
 function chooseMissionFamily(targetType, seed) {
   const families = missionTargetFamilies[targetType] || missionTargetFamilies['Ground Attack'];
   return pickOne(families, seed + 19) || missionTargetFamilies['Ground Attack'][0];
+}
+
+function scoreLandscapeObjectForFamily(entry, family) {
+  const searchBlob = normalizeText(
+    `${entry.category} ${entry.display_name || ''} ${entry.script_path || ''} ${entry.model_path || ''} ${entry.group_path || ''}`
+  );
+
+  let score = 0;
+  (family?.targetHints || []).forEach((hint) => {
+    if (searchBlob.includes(normalizeText(hint))) {
+      score += 4;
+    }
+  });
+
+  if (family?.source?.categories?.includes(entry.category)) {
+    score += 2;
+  }
+
+  if (family?.id && family.source?.categories?.includes('industrial_port_zone')) {
+    if (searchBlob.includes('port_') || searchBlob.includes('shipyard') || searchBlob.includes('dock') || searchBlob.includes('seafront')) {
+      score += 4;
+    }
+  }
+
+  return score;
+}
+
+function refineLandscapeLocation(family, location, enemyFaction) {
+  if (!location || location.kind !== 'group' || !location.groupPath) {
+    return location;
+  }
+
+  const matchingObjects = readLandscapeObjects()
+    .filter((entry) => String(entry.group_path || '').startsWith(location.groupPath))
+    .filter((entry) => matchesFactionPreference(entry, enemyFaction))
+    .filter((entry) => Number.isFinite(entry.x) && Number.isFinite(entry.z))
+    .map((entry) => ({
+      ...entry,
+      familyScore: scoreLandscapeObjectForFamily(entry, family),
+    }))
+    .filter((entry) => entry.familyScore > 0)
+    .sort((left, right) => right.familyScore - left.familyScore);
+
+  if (matchingObjects.length === 0) {
+    return location;
+  }
+
+  const focusObjects = matchingObjects.slice(0, Math.min(matchingObjects.length, 36));
+  const center = focusObjects.reduce(
+    (sum, entry) => ({
+      x: sum.x + Number(entry.x),
+      y: sum.y + (Number(entry.y) || 0),
+      z: sum.z + Number(entry.z),
+    }),
+    { x: 0, y: 0, z: 0 }
+  );
+
+  return {
+    ...location,
+    x: center.x / focusObjects.length,
+    y: center.y / focusObjects.length,
+    z: center.z / focusObjects.length,
+  };
+}
+
+function getTemplateSafeAutoAirfields(aircraft, availableAirfields) {
+  const templateAirfield = getTemplateStartingAirfield(aircraft);
+  if (!templateAirfield) {
+    return availableAirfields;
+  }
+
+  const coalition = getAircraftCoalition(aircraft);
+  const coalitionSafeIds = {
+    'UN/US-aligned': new Set([templateAirfield.id]),
+    'DPRK/PRC/Soviet-aligned': new Set([templateAirfield.id]),
+  };
+
+  const safeIds = coalitionSafeIds[coalition] || new Set([templateAirfield.id]);
+  const safeAirfields = availableAirfields.filter((entry) => safeIds.has(entry.id));
+  return safeAirfields.length ? safeAirfields : [templateAirfield];
 }
 
 function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
@@ -1094,15 +1261,16 @@ function getSelectedStartingAirfield(aircraft, requestedAirfieldId, frontLine, t
   const available = getAvailableStartingAirfields(aircraft, frontLine).filter((entry) => entry.id !== 'auto');
   const fallback = getTemplateStartingAirfield(aircraft);
   if (!requestedAirfieldId || requestedAirfieldId === 'auto') {
+    const safeAvailable = getTemplateSafeAutoAirfields(aircraft, available);
     if (targetLocation) {
-      const nearest = [...available].sort(
+      const nearest = [...safeAvailable].sort(
         (left, right) =>
           getDistance2d(left.position, targetLocation) - getDistance2d(right.position, targetLocation)
       )[0];
       return nearest || fallback;
     }
 
-    return available[0] || fallback;
+    return safeAvailable[0] || fallback;
   }
 
   return available.find((entry) => entry.id === requestedAirfieldId) || fallback;
@@ -1154,12 +1322,24 @@ function getTemplateDefinition(aircraft) {
 
 function readTemplateMissionText(baseName) {
   const installInfo = requireIl2Install();
-  return fs.readFileSync(path.join(installInfo.missionTemplateRoot, `${baseName}.Mission`), 'utf8');
+  const missionPath = path.join(installInfo.missionTemplateRoot, `${baseName}.Mission`);
+  if (!fileExists(missionPath)) {
+    throw new Error(
+      `IL-2 install detected at ${installInfo.installRoot}, but required template mission ${baseName}.Mission was not found in ${installInfo.missionTemplateRoot}.`
+    );
+  }
+  return fs.readFileSync(missionPath, 'utf8');
 }
 
 function readTemplateLocalizationText(baseName) {
   const installInfo = requireIl2Install();
-  return fs.readFileSync(path.join(installInfo.missionTemplateRoot, `${baseName}.eng`), 'utf16le').replace(/^\uFEFF/, '');
+  const localizationPath = path.join(installInfo.missionTemplateRoot, `${baseName}.eng`);
+  if (!fileExists(localizationPath)) {
+    throw new Error(
+      `IL-2 install detected at ${installInfo.installRoot}, but required template localization ${baseName}.eng was not found in ${installInfo.missionTemplateRoot}.`
+    );
+  }
+  return fs.readFileSync(localizationPath, 'utf16le').replace(/^\uFEFF/, '');
 }
 
 function replaceMissionOption(text, key, value, quoted = false) {
@@ -2747,12 +2927,13 @@ function buildScenario(input, options = {}) {
   const missionFamily = chooseMissionFamily(input.targetType, seed);
   const role = input.targetType.includes('Strike') || input.targetType.includes('Attack') ? 'attack' : 'fighter';
   const availableFriendlyAirfields = getAvailableStartingAirfields(input.aircraft, frontLine).filter((entry) => entry.id !== 'auto');
-  const targetLocation = chooseLandscapeLocation(missionFamily, enemyFaction, seed, {
+  const baseTargetLocation = chooseLandscapeLocation(missionFamily, enemyFaction, seed, {
     frontLine,
     playerAircraft: input.aircraft,
     role,
     availableFriendlyAirfields,
   });
+  const targetLocation = refineLandscapeLocation(missionFamily, baseTargetLocation, enemyFaction);
   const targetPool = buildTargetPool(missionCatalog, input, enemyFaction);
   if (targetPool.length === 0) {
     throw new Error(
@@ -2978,4 +3159,6 @@ function buildScenario(input, options = {}) {
 module.exports = {
   buildOptions,
   buildScenario,
+  getInstallRootOverride,
+  setInstallRootOverride,
 };

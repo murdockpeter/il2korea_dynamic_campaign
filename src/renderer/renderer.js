@@ -1,6 +1,8 @@
 const form = document.getElementById('scenario-form');
 const result = document.getElementById('result');
 const status = document.getElementById('status');
+const installSummary = document.getElementById('install-summary');
+const installDirInput = document.getElementById('installDir');
 const experimentalTargetTypes = new Set(['Airfield Strike']);
 const frontLineStorageKey = 'il2korea.frontLine';
 let appOptions = null;
@@ -61,6 +63,28 @@ function fillSelect(elementId, items, options = {}) {
   });
 }
 
+function describeInstallStatus() {
+  if (!appOptions) {
+    return 'Checking for IL-2 Korea install...';
+  }
+
+  if (appOptions.installInfo?.detected) {
+    const source = appOptions.installInfo.source ? ` Source: ${appOptions.installInfo.source}.` : '';
+    return `Detected IL-2 at ${appOptions.installInfo.installRoot}.${source}`;
+  }
+
+  if (appOptions.installOverridePath) {
+    return `Manual path saved, but IL-2 was not verified there yet: ${appOptions.installOverridePath}.`;
+  }
+
+  return 'IL-2 not detected yet. Set a manual path if your install is outside the usual folders.';
+}
+
+function syncInstallControls() {
+  installDirInput.value = appOptions?.installOverridePath || appOptions?.installInfo?.installRoot || '';
+  installSummary.textContent = describeInstallStatus();
+}
+
 async function loadOptions() {
   appOptions = await window.scenarioApp.getOptions();
   fillSelect('aircraft', appOptions.aircraft);
@@ -78,6 +102,7 @@ async function loadOptions() {
   syncEnemyFaction();
   syncStartingAirfield();
   syncGeneratorMode();
+  syncInstallControls();
   status.textContent = appOptions.installInfo?.detected
     ? `Catalog ready. IL-2 detected at ${appOptions.installInfo.installRoot}.`
     : 'Catalog ready. IL-2 install not detected yet.';
@@ -155,6 +180,50 @@ document.getElementById('frontLine').addEventListener('change', () => {
   const value = document.getElementById('frontLine').value;
   window.localStorage.setItem(frontLineStorageKey, value);
   syncStartingAirfield();
+});
+
+document.getElementById('browseInstallDir').addEventListener('click', async () => {
+  const selectedPath = await window.scenarioApp.browseInstallDir();
+  if (selectedPath) {
+    installDirInput.value = selectedPath;
+  }
+});
+
+document.getElementById('saveInstallDir').addEventListener('click', async () => {
+  const nextPath = installDirInput.value.trim();
+  status.textContent = 'Saving IL-2 install path...';
+
+  try {
+    appOptions = await window.scenarioApp.setInstallDir(nextPath || null);
+    syncInstallControls();
+    syncEnemyFaction();
+    syncStartingAirfield();
+    syncGeneratorMode();
+    status.textContent = appOptions.installInfo?.detected
+      ? `IL-2 path saved. Detected install at ${appOptions.installInfo.installRoot}.`
+      : 'IL-2 path saved, but the install was not verified there.';
+  } catch (error) {
+    result.textContent = error?.stack || String(error);
+    status.textContent = 'Failed to save IL-2 install path.';
+  }
+});
+
+document.getElementById('clearInstallDir').addEventListener('click', async () => {
+  status.textContent = 'Returning to auto-detect...';
+
+  try {
+    appOptions = await window.scenarioApp.setInstallDir(null);
+    syncInstallControls();
+    syncEnemyFaction();
+    syncStartingAirfield();
+    syncGeneratorMode();
+    status.textContent = appOptions.installInfo?.detected
+      ? `Auto-detect restored. IL-2 detected at ${appOptions.installInfo.installRoot}.`
+      : 'Auto-detect restored. IL-2 install not detected yet.';
+  } catch (error) {
+    result.textContent = error?.stack || String(error);
+    status.textContent = 'Failed to clear IL-2 install path.';
+  }
 });
 
 form.addEventListener('submit', async (event) => {

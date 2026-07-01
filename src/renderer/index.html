@@ -24,6 +24,25 @@
           <p class="section-kicker">Mission Setup</p>
         </div>
 
+        <section class="install-panel" aria-label="IL-2 install path">
+          <div class="install-panel-copy">
+            <p class="section-kicker">Install Detection</p>
+            <p id="install-summary" class="install-summary">Checking for IL-2 Korea install...</p>
+          </div>
+          <div class="install-controls">
+            <input
+              id="installDir"
+              class="install-input"
+              type="text"
+              placeholder="C:\IL2Series or C:\IL2Series\game"
+              spellcheck="false"
+            />
+            <button id="browseInstallDir" type="button" class="secondary-button">Browse</button>
+            <button id="saveInstallDir" type="button" class="secondary-button">Save Path</button>
+            <button id="clearInstallDir" type="button" class="secondary-button secondary-button-muted">Auto Detect</button>
+          </div>
+        </section>
+
         <form id="scenario-form" class="form">
           <label class="field">
             <span>Player Aircraft</span>
