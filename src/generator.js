@@ -1038,6 +1038,19 @@ function getTemplateSafeAutoAirfields(aircraft, availableAirfields) {
   return safeAirfields.length ? safeAirfields : [templateAirfield];
 }
 
+function getPreferredDepartureAirfieldsForTargeting(aircraft, requestedAirfieldId, frontLine) {
+  const available = getAvailableStartingAirfields(aircraft, frontLine).filter((entry) => entry.id !== 'auto');
+  const fallback = getTemplateStartingAirfield(aircraft);
+
+  if (requestedAirfieldId && requestedAirfieldId !== 'auto') {
+    const selected = available.find((entry) => entry.id === requestedAirfieldId);
+    return selected ? [selected] : fallback ? [fallback] : [];
+  }
+
+  const safeAirfields = getTemplateSafeAutoAirfields(aircraft, available);
+  return safeAirfields.length ? safeAirfields : fallback ? [fallback] : [];
+}
+
 function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
   if (!family?.source) {
     return null;
@@ -1096,7 +1109,13 @@ function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
             )
           )
         : 0;
-      const maxDistance = context.role === 'attack' ? 150000 : 240000;
+      const maxDistance =
+        context.maxTargetDistance ||
+        (context.role === 'attack'
+          ? isJetAircraft(context.playerAircraft)
+            ? 140000
+            : 100000
+          : 240000);
       const leftPenalty = leftDistance > maxDistance ? 1 : 0;
       const rightPenalty = rightDistance > maxDistance ? 1 : 0;
 
@@ -1473,6 +1492,10 @@ function parseIconBlocks(missionText) {
     lineType: extractMissionValue(block, 'LineType') || '',
     coalitions: extractMissionValue(block, 'Coalitions') || '',
   }));
+}
+
+function isRouteIconEntry(entry) {
+  return ['901', '902', '903'].includes(entry.iconId) && ['14', '15'].includes(entry.lineType);
 }
 
 function getDistance2d(a, b) {
@@ -2115,7 +2138,7 @@ function stripTemplateBriefingIcons(missionText) {
   const iconIdsToRemove = new Set(
     parseIconBlocks(missionText)
       .filter((entry) => {
-        const isRouteIcon = ['901', '902', '903'].includes(entry.iconId) && entry.lineType === '15';
+        const isRouteIcon = isRouteIconEntry(entry);
         const isFrontLineOverlay = entry.lineType === '13';
         return !(isRouteIcon || isFrontLineOverlay);
       })
@@ -2386,7 +2409,7 @@ function rebuildTemplateBriefingIcons(missionText, scenario, startAirfield) {
   }
 
   const routeIcons = parseIconBlocks(missionText)
-    .filter((entry) => ['901', '902', '903'].includes(entry.iconId) && entry.lineType === '15')
+    .filter((entry) => isRouteIconEntry(entry))
     .sort((left, right) => Number(left.index) - Number(right.index));
 
   if (routeIcons.length < 3) {
@@ -2926,12 +2949,22 @@ function buildScenario(input, options = {}) {
 
   const missionFamily = chooseMissionFamily(input.targetType, seed);
   const role = input.targetType.includes('Strike') || input.targetType.includes('Attack') ? 'attack' : 'fighter';
-  const availableFriendlyAirfields = getAvailableStartingAirfields(input.aircraft, frontLine).filter((entry) => entry.id !== 'auto');
+  const availableFriendlyAirfields = getPreferredDepartureAirfieldsForTargeting(
+    input.aircraft,
+    input.startAirfield,
+    frontLine
+  );
   const baseTargetLocation = chooseLandscapeLocation(missionFamily, enemyFaction, seed, {
     frontLine,
     playerAircraft: input.aircraft,
     role,
     availableFriendlyAirfields,
+    maxTargetDistance:
+      role === 'attack'
+        ? isJetAircraft(input.aircraft)
+          ? 140000
+          : 100000
+        : 240000,
   });
   const targetLocation = refineLandscapeLocation(missionFamily, baseTargetLocation, enemyFaction);
   const targetPool = buildTargetPool(missionCatalog, input, enemyFaction);
