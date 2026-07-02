@@ -5,12 +5,14 @@ const { buildScratchMissionText, buildScratchLocalizationText } = require('./scr
 const workspaceRoot = path.resolve(__dirname, '..');
 const catalogPath = path.join(workspaceRoot, 'catalog', 'il2_korea_catalog.json');
 const frontLineAirfieldsPath = path.join(workspaceRoot, 'catalog', 'front_line_airfields.json');
+const derivedAirfieldStartsPath = path.join(workspaceRoot, 'catalog', 'derived_airfield_starts.json');
 let cachedInstallInfo = null;
 let installRootOverride = null;
 let cachedCatalog = null;
 let cachedLandscapeGroups = null;
 let cachedLandscapeObjects = null;
 let cachedFrontLineAirfields = null;
+let cachedDerivedAirfieldStarts = null;
 
 const aircraftCoalitions = {
   f51d: 'UN/US-aligned',
@@ -480,6 +482,69 @@ function getStartingAirfields() {
   return readFrontLineAirfields().startingAirfields;
 }
 
+function readDerivedAirfieldStarts() {
+  if (!fileExists(derivedAirfieldStartsPath)) {
+    return { generatedAt: null, airfields: [] };
+  }
+
+  if (!cachedDerivedAirfieldStarts) {
+    const raw = fs.readFileSync(derivedAirfieldStartsPath, 'utf8').replace(/^\uFEFF/, '');
+    const parsed = JSON.parse(raw);
+    cachedDerivedAirfieldStarts = {
+      generatedAt: parsed.generatedAt || null,
+      airfields: Array.isArray(parsed.airfields) ? parsed.airfields : [],
+    };
+  }
+
+  return cachedDerivedAirfieldStarts;
+}
+
+function getDerivedAirfieldStartEntry(airfieldId) {
+  if (!airfieldId || airfieldId === 'auto') {
+    return null;
+  }
+
+  return readDerivedAirfieldStarts().airfields.find((entry) => entry.id === airfieldId) || null;
+}
+
+function getResolvedAirfieldStartPlacement(airfield) {
+  const entry = getDerivedAirfieldStartEntry(airfield?.id);
+  if (!entry) {
+    return null;
+  }
+
+  if (
+    entry.manualOverride &&
+    entry.manualOverride.enabled &&
+    Number.isFinite(Number(entry.manualOverride.x)) &&
+    Number.isFinite(Number(entry.manualOverride.z))
+  ) {
+    return {
+      x: Number(entry.manualOverride.x),
+      z: Number(entry.manualOverride.z),
+      headingDeg: Number.isFinite(Number(entry.manualOverride.headingDeg)) ? Number(entry.manualOverride.headingDeg) : null,
+      source: 'manualOverride',
+      confidence: 'manual',
+    };
+  }
+
+  if (entry.derivedSpawnPoint && Number.isFinite(Number(entry.derivedSpawnPoint.x)) && Number.isFinite(Number(entry.derivedSpawnPoint.z))) {
+    return {
+      x: Number(entry.derivedSpawnPoint.x),
+      z: Number(entry.derivedSpawnPoint.z),
+      headingDeg: Number.isFinite(Number(entry.derivedHeadingDeg)) ? Number(entry.derivedHeadingDeg) : null,
+      source: 'derived',
+      confidence: entry.confidence || 'unknown',
+    };
+  }
+
+  return null;
+}
+
+function isAirfieldStartSupported(entry) {
+  return entry?.id === 'auto' || Boolean(getResolvedAirfieldStartPlacement(entry));
+}
+
 function readLandscapeGroups() {
   const catalog = readCatalog();
   const relativePath = catalog.landscape_data_files?.group_catalog_json || catalog.landscape_data_files?.group_json;
@@ -824,6 +889,15 @@ function buildOptions() {
     ...referenceAircraft.map((entry) => entry.asset_name),
   ]).filter((aircraftName) => confirmedFlyableAircraft.has(aircraftName));
 
+  const supportedAirfieldsByCoalition = {
+    'UN/US-aligned': getStartingAirfields()
+      .filter((entry) => entry.id === 'auto' || (entry.coalition === 'UN/US-aligned' && isAirfieldStartSupported(entry)))
+      .map((entry) => entry.id),
+    'DPRK/PRC/Soviet-aligned': getStartingAirfields()
+      .filter((entry) => entry.id === 'auto' || (entry.coalition === 'DPRK/PRC/Soviet-aligned' && isAirfieldStartSupported(entry)))
+      .map((entry) => entry.id),
+  };
+
   return {
     aircraft,
     targetTypes: uniqueSorted(targetEntries.map(categorizeTarget)),
@@ -832,6 +906,8 @@ function buildOptions() {
     startTimes: startTimePresets,
     defaultFrontLineState: getDefaultFrontLineState(),
     startingAirfields: getStartingAirfields(),
+    airfieldStartCatalogGeneratedAt: readDerivedAirfieldStarts().generatedAt,
+    supportedAirfieldsByCoalition,
     aircraftCoalitions,
     coalitionOpposites,
     installInfo,
@@ -1038,6 +1114,19 @@ function getTemplateSafeAutoAirfields(aircraft, availableAirfields) {
   return safeAirfields.length ? safeAirfields : [templateAirfield];
 }
 
+function getTemplateSupportedAirfields(aircraft, availableAirfields, { includeAuto = false } = {}) {
+  const templateAirfield = getTemplateStartingAirfield(aircraft);
+  const supportedIds = new Set(templateAirfield ? [templateAirfield.id] : []);
+
+  return availableAirfields.filter((entry) => {
+    if (entry.id === 'auto') {
+      return includeAuto;
+    }
+
+    return supportedIds.has(entry.id);
+  });
+}
+
 function getPreferredDepartureAirfieldsForTargeting(aircraft, requestedAirfieldId, frontLine) {
   const available = getAvailableStartingAirfields(aircraft, frontLine).filter((entry) => entry.id !== 'auto');
   const fallback = getTemplateStartingAirfield(aircraft);
@@ -1047,8 +1136,7 @@ function getPreferredDepartureAirfieldsForTargeting(aircraft, requestedAirfieldI
     return selected ? [selected] : fallback ? [fallback] : [];
   }
 
-  const safeAirfields = getTemplateSafeAutoAirfields(aircraft, available);
-  return safeAirfields.length ? safeAirfields : fallback ? [fallback] : [];
+  return available.length ? available : fallback ? [fallback] : [];
 }
 
 function chooseLandscapeLocation(family, enemyFaction, seed, context = {}) {
@@ -1265,9 +1353,11 @@ function getMissionTypeProfile(targetType) {
 
 function getAvailableStartingAirfields(aircraft, frontLine = getDefaultFrontLineState()) {
   const coalition = getAircraftCoalition(aircraft);
-  return getStartingAirfields().filter(
+  const available = getStartingAirfields().filter(
     (entry) => entry.id === 'auto' || isAirfieldOwnedByCoalition(entry, coalition, frontLine)
   );
+  const supported = available.filter((entry) => isAirfieldStartSupported(entry));
+  return supported.length ? supported : available;
 }
 
 function getTemplateStartingAirfield(aircraft) {
@@ -1280,19 +1370,25 @@ function getSelectedStartingAirfield(aircraft, requestedAirfieldId, frontLine, t
   const available = getAvailableStartingAirfields(aircraft, frontLine).filter((entry) => entry.id !== 'auto');
   const fallback = getTemplateStartingAirfield(aircraft);
   if (!requestedAirfieldId || requestedAirfieldId === 'auto') {
-    const safeAvailable = getTemplateSafeAutoAirfields(aircraft, available);
+    const safeAvailable = available;
     if (targetLocation) {
       const nearest = [...safeAvailable].sort(
         (left, right) =>
           getDistance2d(left.position, targetLocation) - getDistance2d(right.position, targetLocation)
       )[0];
-      return nearest || fallback;
+      return nearest
+        ? { ...nearest, startPlacement: getResolvedAirfieldStartPlacement(nearest) }
+        : fallback
+          ? { ...fallback, startPlacement: getResolvedAirfieldStartPlacement(fallback) }
+          : fallback;
     }
 
-    return safeAvailable[0] || fallback;
+    const selected = safeAvailable[0] || fallback;
+    return selected ? { ...selected, startPlacement: getResolvedAirfieldStartPlacement(selected) } : selected;
   }
 
-  return available.find((entry) => entry.id === requestedAirfieldId) || fallback;
+  const selected = available.find((entry) => entry.id === requestedAirfieldId) || fallback;
+  return selected ? { ...selected, startPlacement: getResolvedAirfieldStartPlacement(selected) } : selected;
 }
 
 function chooseSupportAircraft(playerAircraft, role, seed, supportLevel = 'escort') {
@@ -1876,6 +1972,53 @@ function shiftBlockXZ(block, deltaX, deltaZ) {
   return updated;
 }
 
+function replaceMissionOrientation(block, key, value) {
+  return block.replace(new RegExp(`(\\n\\s*${key}\\s*=\\s*)[^;]+;`), `$1${formatNumber(value)};`);
+}
+
+function normalizeHeadingDegrees(value) {
+  return ((Number(value) % 360) + 360) % 360;
+}
+
+function shortestHeadingDelta(targetHeading, sourceHeading) {
+  let delta = normalizeHeadingDegrees(targetHeading) - normalizeHeadingDegrees(sourceHeading);
+  if (delta > 180) {
+    delta -= 360;
+  }
+  if (delta < -180) {
+    delta += 360;
+  }
+  return delta;
+}
+
+function transformBlockXZ(block, origin, targetOrigin, rotationDeg = 0, rotateHeading = false) {
+  const x = Number(extractMissionValue(block, 'XPos'));
+  const z = Number(extractMissionValue(block, 'ZPos'));
+  if (!Number.isFinite(x) || !Number.isFinite(z)) {
+    return block;
+  }
+
+  const radians = (rotationDeg * Math.PI) / 180;
+  const cos = Math.cos(radians);
+  const sin = Math.sin(radians);
+  const dx = x - origin.x;
+  const dz = z - origin.z;
+  const rotatedX = dx * cos - dz * sin;
+  const rotatedZ = dx * sin + dz * cos;
+
+  let updated = replaceMissionCoordinate(block, 'XPos', targetOrigin.x + rotatedX);
+  updated = replaceMissionCoordinate(updated, 'ZPos', targetOrigin.z + rotatedZ);
+
+  if (rotateHeading) {
+    const yOri = Number(extractMissionValue(block, 'YOri'));
+    if (Number.isFinite(yOri)) {
+      updated = replaceMissionOrientation(updated, 'YOri', normalizeHeadingDegrees(yOri + rotationDeg));
+    }
+  }
+
+  return updated;
+}
+
 function stripObjectRefsFromBlockTypes(missionText, objectIds, blockTypes) {
   let updated = missionText;
 
@@ -1891,26 +2034,57 @@ function stripObjectRefsFromBlockTypes(missionText, objectIds, blockTypes) {
 
 function shiftPlayerStartPackage(missionText, playerAircraft, startAirfield) {
   const templateAirfield = getTemplateStartingAirfield(playerAircraft);
-  if (!startAirfield?.position || !templateAirfield?.position || startAirfield.id === templateAirfield.id) {
+  if (!startAirfield?.position || !templateAirfield?.position) {
     return missionText;
   }
 
-  const deltaX = startAirfield.position.x - templateAirfield.position.x;
-  const deltaZ = startAirfield.position.z - templateAirfield.position.z;
   const playerEntityIds = new Set(getPlayerFlightEntityIds(missionText));
   const playerPlaneIds = new Set(getPlayerFlightPlaneIndices(missionText));
+  const playerFlight = findPlayerFlightSignature(missionText);
+  const playerLead =
+    parsePlaneBlocks(missionText).find(
+      (entry) =>
+        entry.callsign === playerFlight.callsign &&
+        entry.country === playerFlight.country &&
+        extractMissionValue(entry.block, 'NumberInFormation') === '0'
+    ) ||
+    parsePlaneBlocks(missionText).find(
+      (entry) => entry.callsign === playerFlight.callsign && entry.country === playerFlight.country
+    );
+
+  if (!playerLead) {
+    return missionText;
+  }
+
+  const origin = { x: Number(extractMissionValue(playerLead.block, 'XPos')), z: Number(extractMissionValue(playerLead.block, 'ZPos')) };
+  const templateHeading = Number(extractMissionValue(playerLead.block, 'YOri'));
+  const placement = startAirfield.startPlacement;
+  const targetOrigin = placement && Number.isFinite(placement.x) && Number.isFinite(placement.z)
+    ? { x: Number(placement.x), z: Number(placement.z) }
+    : { x: origin.x + (startAirfield.position.x - templateAirfield.position.x), z: origin.z + (startAirfield.position.z - templateAirfield.position.z) };
+  const rotationDeg = placement && Number.isFinite(placement.headingDeg) && Number.isFinite(templateHeading)
+    ? shortestHeadingDelta(Number(placement.headingDeg), templateHeading)
+    : 0;
+
+  if (
+    startAirfield.id === templateAirfield.id &&
+    (!placement || (!Number.isFinite(rotationDeg) || Math.abs(rotationDeg) < 0.01))
+  ) {
+    return missionText;
+  }
+
   let updated = missionText;
 
   const planeBlockPattern = /Plane\s*\{[\s\S]*?\n\s*\}/g;
   updated = updated.replace(planeBlockPattern, (block) => {
     const index = extractMissionValue(block, 'Index');
-    return playerPlaneIds.has(index) ? shiftBlockXZ(block, deltaX, deltaZ) : block;
+    return playerPlaneIds.has(index) ? transformBlockXZ(block, origin, targetOrigin, rotationDeg, true) : block;
   });
 
   const entityPattern = /MCU_TR_Entity\s*\{[\s\S]*?\n\s*\}/g;
   updated = updated.replace(entityPattern, (block) => {
     const index = extractMissionValue(block, 'Index');
-    return playerEntityIds.has(index) ? shiftBlockXZ(block, deltaX, deltaZ) : block;
+    return playerEntityIds.has(index) ? transformBlockXZ(block, origin, targetOrigin, rotationDeg, true) : block;
   });
 
   const linkedTypes = [
@@ -1940,7 +2114,9 @@ function shiftPlayerStartPackage(missionText, playerAircraft, startAirfield) {
         .map((item) => item.trim())
         .filter(Boolean);
 
-      return objectIds.some((item) => playerEntityIds.has(item)) ? shiftBlockXZ(block, deltaX, deltaZ) : block;
+      return objectIds.some((item) => playerEntityIds.has(item))
+        ? transformBlockXZ(block, origin, targetOrigin, rotationDeg, true)
+        : block;
     });
   });
 

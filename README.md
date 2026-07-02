@@ -310,6 +310,30 @@ Important current limits:
 - blue-side and red-side start fields are curated, not exhaustive
 - COOP support is working by known-good package layout, but still intentionally conservative
 
+## Persistent Airfield Findings
+
+Airfield-start findings now have a dedicated local home:
+- `catalog/derived_airfield_starts.json`
+
+This file is intended to preserve:
+- derived runway-axis estimates
+- derived spawn and taxi candidate points
+- confidence and verification status
+- manual notes
+- screenshot references for troublesome fields
+
+To rebuild the derived baseline from the local landscape data:
+
+```bash
+npm run airfields
+```
+
+Intended workflow:
+- generate the derived baseline once from local catalog data
+- test an airfield in game
+- if it still behaves badly, keep that finding locally by updating the airfield entry instead of rediscovering it later
+- use screenshots as supporting evidence for manual corrections and overrides
+
 ## Why It Works This Way
 
 The current design optimizes for:

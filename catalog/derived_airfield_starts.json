@@ -1,0 +1,342 @@
+{
+  "generatedAt": "2026-07-02T13:31:16.996Z",
+  "sourceFiles": {
+    "frontLineAirfields": "catalog/front_line_airfields.json",
+    "landscapeObjects": "catalog/il2_korea_landscape_objects.json"
+  },
+  "airfields": [
+    {
+      "id": "antung",
+      "label": "Antung",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 01 Antung (Andong)",
+      "referencePosition": {
+        "x": 380795,
+        "z": 52595.987
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 102.375,
+      "derivedHeadingDeg": 282.375,
+      "reciprocalHeadingDeg": 102.375,
+      "estimatedRunwayLengthM": 767,
+      "derivedSpawnPoint": {
+        "x": 380877.27,
+        "z": 52403.555
+      },
+      "derivedTaxiPoint": {
+        "x": 380727.526,
+        "z": 52436.41
+      },
+      "supportApronCenter": {
+        "x": 380734.359,
+        "z": 52434.911
+      },
+      "supportDistanceM": 0,
+      "objectStats": {
+        "totalObjects": 180,
+        "runwayLightObjects": 1,
+        "supportObjects": 4
+      },
+      "confidence": "low"
+    },
+    {
+      "id": "tatung_kao",
+      "label": "Tatung-kao (Myaogou)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 02 Tatung-kao (Myaogou)",
+      "referencePosition": {
+        "x": 372900.817,
+        "z": 40905.897
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 80.631,
+      "derivedHeadingDeg": 80.631,
+      "reciprocalHeadingDeg": 260.631,
+      "estimatedRunwayLengthM": 2038,
+      "derivedSpawnPoint": {
+        "x": 372053.286,
+        "z": 40748.474
+      },
+      "derivedTaxiPoint": {
+        "x": 372455.432,
+        "z": 40814.827
+      },
+      "supportApronCenter": {
+        "x": 372614.09,
+        "z": 40841.005
+      },
+      "supportDistanceM": 0,
+      "objectStats": {
+        "totalObjects": 149,
+        "runwayLightObjects": 1,
+        "supportObjects": 7
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "dapu",
+      "label": "Dapu",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 03 Dapu",
+      "referencePosition": {
+        "x": 438220.786,
+        "z": 49059.463
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 65.348,
+      "derivedHeadingDeg": 245.348,
+      "reciprocalHeadingDeg": 65.348,
+      "estimatedRunwayLengthM": 1591,
+      "derivedSpawnPoint": {
+        "x": 438929.952,
+        "z": 48832.019
+      },
+      "derivedTaxiPoint": {
+        "x": 438640.727,
+        "z": 48699.284
+      },
+      "supportApronCenter": {
+        "x": 438451.33,
+        "z": 48612.364
+      },
+      "supportDistanceM": 0,
+      "objectStats": {
+        "totalObjects": 145,
+        "runwayLightObjects": 1,
+        "supportObjects": 4
+      },
+      "confidence": "low"
+    },
+    {
+      "id": "kuandian",
+      "label": "Kuandian",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 04 Kuandian",
+      "referencePosition": {
+        "x": 455014.558,
+        "z": 79964.549
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 138.346,
+      "derivedHeadingDeg": 138.346,
+      "reciprocalHeadingDeg": 318.346,
+      "estimatedRunwayLengthM": 2534,
+      "derivedSpawnPoint": {
+        "x": 454333.094,
+        "z": 80726.973
+      },
+      "derivedTaxiPoint": {
+        "x": 454612.241,
+        "z": 80413.162
+      },
+      "supportApronCenter": {
+        "x": 454911.556,
+        "z": 80034.916
+      },
+      "supportDistanceM": 28,
+      "objectStats": {
+        "totalObjects": 114,
+        "runwayLightObjects": 0,
+        "supportObjects": 3
+      },
+      "confidence": "low"
+    },
+    {
+      "id": "seoul",
+      "label": "Seoul (K-16)",
+      "coalition": "UN/US-aligned",
+      "groupPath": "AIRFIELDS > 08 K-16 Seoul",
+      "referencePosition": {
+        "x": 102349,
+        "z": 280779
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 179.991,
+      "derivedHeadingDeg": 179.991,
+      "reciprocalHeadingDeg": 359.991,
+      "estimatedRunwayLengthM": 1273,
+      "derivedSpawnPoint": {
+        "x": 102105.472,
+        "z": 281274.685
+      },
+      "derivedTaxiPoint": {
+        "x": 102105.51,
+        "z": 281020.083
+      },
+      "supportApronCenter": {
+        "x": 102105.535,
+        "z": 280855.081
+      },
+      "supportDistanceM": 0,
+      "objectStats": {
+        "totalObjects": 158,
+        "runwayLightObjects": 2,
+        "supportObjects": 6
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "kimpo",
+      "label": "Kimpo (K-14)",
+      "coalition": "UN/US-aligned",
+      "groupPath": "AIRFIELDS > 07 K-14 Kimpo",
+      "referencePosition": {
+        "x": 105934,
+        "z": 269477
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 60.66,
+      "derivedHeadingDeg": 60.66,
+      "reciprocalHeadingDeg": 240.66,
+      "estimatedRunwayLengthM": 1409,
+      "derivedSpawnPoint": {
+        "x": 105656.1,
+        "z": 268913.847
+      },
+      "derivedTaxiPoint": {
+        "x": 105901.75,
+        "z": 269051.926
+      },
+      "supportApronCenter": {
+        "x": 106064.987,
+        "z": 269276.158
+      },
+      "supportDistanceM": 115,
+      "objectStats": {
+        "totalObjects": 470,
+        "runwayLightObjects": 8,
+        "supportObjects": 10
+      },
+      "confidence": "high"
+    },
+    {
+      "id": "pyongyang",
+      "label": "Pyongyang (K-23)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 14 K-23 Pyongyang",
+      "referencePosition": {
+        "x": 269547.504,
+        "z": 180412.216
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 17.805,
+      "derivedHeadingDeg": 197.805,
+      "reciprocalHeadingDeg": 17.805,
+      "estimatedRunwayLengthM": 471,
+      "derivedSpawnPoint": {
+        "x": 269544.606,
+        "z": 180438.686
+      },
+      "derivedTaxiPoint": {
+        "x": 269515.783,
+        "z": 180348.942
+      },
+      "supportApronCenter": {
+        "x": 269501.423,
+        "z": 180304.228
+      },
+      "supportDistanceM": 0,
+      "objectStats": {
+        "totalObjects": 159,
+        "runwayLightObjects": 3,
+        "supportObjects": 8
+      },
+      "confidence": "medium"
+    },
+    {
+      "id": "wonsan",
+      "label": "Wonsan (K-25)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 16 K-25 Wonsan",
+      "referencePosition": {
+        "x": 284750.077,
+        "z": 327133.352
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 94.071,
+      "derivedHeadingDeg": 94.071,
+      "reciprocalHeadingDeg": 274.071,
+      "estimatedRunwayLengthM": 3521,
+      "derivedSpawnPoint": {
+        "x": 283612.968,
+        "z": 327214.286
+      },
+      "derivedTaxiPoint": {
+        "x": 284031.908,
+        "z": 327184.468
+      },
+      "supportApronCenter": {
+        "x": 284579.582,
+        "z": 327132.713
+      },
+      "supportDistanceM": 13,
+      "objectStats": {
+        "totalObjects": 130,
+        "runwayLightObjects": 1,
+        "supportObjects": 3
+      },
+      "confidence": "low"
+    },
+    {
+      "id": "sondok",
+      "label": "Sondok (K-26)",
+      "coalition": "DPRK/PRC/Soviet-aligned",
+      "groupPath": "AIRFIELDS > 17 K-26 Sondok",
+      "referencePosition": {
+        "x": 349367.274,
+        "z": 325203.268
+      },
+      "status": "derived-unverified",
+      "notes": [],
+      "screenshotRefs": [],
+      "manualOverride": null,
+      "derivedRunwayAxisDeg": 96.224,
+      "derivedHeadingDeg": 276.224,
+      "reciprocalHeadingDeg": 96.224,
+      "estimatedRunwayLengthM": 2745,
+      "derivedSpawnPoint": {
+        "x": 350623.811,
+        "z": 325159.496
+      },
+      "derivedTaxiPoint": {
+        "x": 350206.287,
+        "z": 325205.029
+      },
+      "supportApronCenter": {
+        "x": 349432.073,
+        "z": 325127.142
+      },
+      "supportDistanceM": 161,
+      "objectStats": {
+        "totalObjects": 246,
+        "runwayLightObjects": 4,
+        "supportObjects": 4
+      },
+      "confidence": "medium"
+    }
+  ]
+}

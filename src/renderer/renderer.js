@@ -136,8 +136,9 @@ function syncStartingAirfield() {
   const aircraft = document.getElementById('aircraft').value || appOptions.aircraft[0];
   const coalition = appOptions.aircraftCoalitions?.[aircraft];
   const frontLine = Number(document.getElementById('frontLine').value || appOptions.defaultFrontLineState || 50);
+  const supportedIds = new Set(appOptions.supportedAirfieldsByCoalition?.[coalition] || ['auto']);
   const airfields = (appOptions.startingAirfields || []).filter(
-    (entry) => isAirfieldAvailable(entry, coalition, frontLine)
+    (entry) => isAirfieldAvailable(entry, coalition, frontLine) && supportedIds.has(entry.id)
   );
   const select = document.getElementById('startAirfield');
   select.innerHTML = '';
@@ -145,12 +146,20 @@ function syncStartingAirfield() {
   airfields.forEach((entry) => {
     const option = document.createElement('option');
     option.value = entry.id;
-    option.textContent = entry.label;
+    option.textContent = entry.id === 'auto' ? 'Auto' : entry.label;
     select.appendChild(option);
   });
 
   if (airfields.some((entry) => entry.id === 'auto')) {
     select.value = 'auto';
+  }
+
+  const note = document.getElementById('startAirfieldNote');
+  if (note) {
+    const namedAirfields = airfields.filter((entry) => entry.id !== 'auto');
+    note.textContent = namedAirfields.length
+      ? `Only airfields with saved derived/manual spawn data are listed. Visible choices for this aircraft/front line: ${namedAirfields.map((entry) => entry.label).join(', ')}.`
+      : 'Only airfields with saved derived/manual spawn data are listed.';
   }
 }
 
