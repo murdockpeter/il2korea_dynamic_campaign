@@ -13,6 +13,7 @@ let cachedLandscapeGroups = null;
 let cachedLandscapeObjects = null;
 let cachedFrontLineAirfields = null;
 let cachedDerivedAirfieldStarts = null;
+let cachedDerivedAirfieldStartsMtimeMs = null;
 
 const aircraftCoalitions = {
   f51d: 'UN/US-aligned',
@@ -487,13 +488,15 @@ function readDerivedAirfieldStarts() {
     return { generatedAt: null, airfields: [] };
   }
 
-  if (!cachedDerivedAirfieldStarts) {
+  const stats = fs.statSync(derivedAirfieldStartsPath);
+  if (!cachedDerivedAirfieldStarts || cachedDerivedAirfieldStartsMtimeMs !== stats.mtimeMs) {
     const raw = fs.readFileSync(derivedAirfieldStartsPath, 'utf8').replace(/^\uFEFF/, '');
     const parsed = JSON.parse(raw);
     cachedDerivedAirfieldStarts = {
       generatedAt: parsed.generatedAt || null,
       airfields: Array.isArray(parsed.airfields) ? parsed.airfields : [],
     };
+    cachedDerivedAirfieldStartsMtimeMs = stats.mtimeMs;
   }
 
   return cachedDerivedAirfieldStarts;

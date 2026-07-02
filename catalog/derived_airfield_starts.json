@@ -51,10 +51,22 @@
         "x": 372900.817,
         "z": 40905.897
       },
-      "status": "derived-unverified",
-      "notes": [],
-      "screenshotRefs": [],
-      "manualOverride": null,
+      "status": "manual-adjusted-pending",
+      "notes": [
+        "2026-07-02: Beta screenshots showed the derived spawn sitting in dirt just off the paved strip.",
+        "Manual override moves the spawn onto the visible concrete at Tatung-kao while preserving the east-northeast launch heading.",
+        "Second manual adjustment moves the start closer to the runway threshold after the first override still placed the aircraft beside the taxiway.",
+        "Third manual adjustment recenters the two-ship spawn on the visible runway concrete using the latest in-game screenshots."
+      ],
+      "screenshotRefs": [
+        "2026-07-02 user screenshots: Tatung-kao spawn off pavement on grass/dirt shoulder beside strip."
+      ],
+      "manualOverride": {
+        "enabled": true,
+        "x": 372056.0,
+        "z": 40766.0,
+        "headingDeg": 80.5
+      },
       "derivedRunwayAxisDeg": 80.631,
       "derivedHeadingDeg": 80.631,
       "reciprocalHeadingDeg": 260.631,
