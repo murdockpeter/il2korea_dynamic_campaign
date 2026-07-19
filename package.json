@@ -1,7 +1,7 @@
 {
   "name": "il2korea_dynamic_campaign",
   "version": "1.0.0",
-  "description": "IL-2 Korea scenario generator and cooperative mission packager",
+  "description": "Bring-your-own-LLM framework for persistent IL-2 Korea campaign authoring",
   "main": "src/main.js",
   "scripts": {
     "start": "set \"ELECTRON_RUN_AS_NODE=\" && electron .",

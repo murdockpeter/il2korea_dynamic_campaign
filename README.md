@@ -1,349 +1,255 @@
-# IL-2 Korea Dynamic Campaign
+# IL-2 Korea Dynamic Campaign Framework
 
-Electron-based scenario generator for **IL-2 Korea**.
+A bring-your-own-LLM framework for creating and tracking persistent,
+human-directed campaigns in **IL-2 Korea**.
 
-Current scope:
-- generate a single playable mission from a small UI
-- export single-player missions directly into the game install
-- export COOP-ready missions into the multiplayer cooperative layout that Korea accepts
+This repository is not primarily a packaged campaign application. It is a
+mission-authoring workspace that gives a capable coding LLM the references,
+examples, campaign context, validation rules, and local builders needed to
+collaborate with a player over a continuing war.
 
-The generator currently works by **cloning a stock mission template** and then patching the parts we control:
-- player aircraft
-- support aircraft
-- target/briefing profile
-- weather
-- time of day
-- starting airfield
-- light apron ambiance near the start
-- COOP packaging and registration
+You bring the LLM or coding agent. The repository does not require or bundle a
+particular model provider, API, subscription, or hosted service.
 
-## Running
+## The central idea
 
-```bash
-npm install
-npm start
+The persistent war situation and the playable sortie are separate layers.
+
+The war situation tracks what exists before a mission is assigned:
+
+- campaign date, time, phase, weather, and intelligence confidence;
+- estimated and actual front-line conditions by sector;
+- airbases, air units, pilots, aircraft, and serviceability;
+- operational ground formations rather than every individual soldier;
+- bridges, railways, airfields, supply routes, and persistent damage;
+- confirmed, reported, suspected, and aging contacts;
+- consequences of earlier sorties.
+
+A mission is an overlay created in response to that situation. It selects the
+relevant forces, task area, player package, route, threats, uncertainty, and
+success logic without manufacturing an unrelated war around a desired target.
+
+After the player flies the mission, the debrief changes the persistent state.
+Time continues to pass whether the sortie succeeds or fails.
+
+## Bring-your-own-LLM workflow
+
+Use the repository with a coding LLM or agent that can read and modify local
+files and run the project tools. Codex, Claude, and comparable tools can all be
+used; none is required by the framework.
+
+A normal campaign turn is:
+
+1. Review the current campaign situation and unresolved contacts.
+2. Report the preceding sortie result, including unknown or uncertain facts.
+3. Let the LLM advance time, ground movement, intelligence, squadron state,
+   and the front where justified.
+4. Have headquarters assign a mission because of the resulting war state.
+5. Generate and validate the IL-2 mission and localization files.
+6. Install single-player and/or COOP packages into the game directories.
+7. Fly the sortie and return with a human debrief.
+8. Record the outcome and begin the next turn.
+
+The player remains the campaign director and final authority. The LLM helps
+reason about the evolving situation, authors mission files, maintains records,
+and learns from editor and in-game test results.
+
+## Current example campaign
+
+The active working example is the fictional:
+
+```text
+81st Fighter-Bomber Squadron, "Black Scorpions"
+Attached to the 8th Fighter-Bomber Group
+Aircraft: F-80C Shooting Star
+Initial base: Itazuke Air Base, Japan
+Opening period: July 1950
 ```
 
-Minimal verification:
+The fictional identity permits persistent pilot losses, replacement aircraft,
+marking changes, transfers, and alternate deployment timing without claiming
+to reproduce the exact daily history of a real squadron.
 
-```bash
+Current authored sorties include:
+
+- **Black Scorpions 001 - Suwon Road Interdiction**: an initial four-ship
+  ground-attack validation sortie.
+- **Black Scorpions 002 - Osan Road Hunt**: armed reconnaissance caused by the
+  first sortie's failure to delay the column, with moving ground forces,
+  dedicated top cover, and a possible Yak-9 interception.
+
+The campaign skeleton and operating concept are maintained in the
+[campaign design document](https://docs.google.com/document/d/1XAE0tv5kd3I2kY3hjLNFcWVIlDITr30Hpou71J4KvRA/edit?usp=sharing).
+
+## Mission quality standard
+
+Every delivered campaign mission should include:
+
+- a complete, situation-specific operational briefing;
+- the consequence that caused headquarters to assign the sortie;
+- a clear task, success condition, execution plan, threats, ROE, weather, and
+  recovery instructions;
+- localized map markings for the start, important route points, action area,
+  egress, and recovery or map exit unless deliberately withheld;
+- honest intelligence uncertainty rather than omniscient target disclosure;
+- single-player and COOP packaging when both are requested;
+- Korea-compatible UTF-16LE localization files;
+- structural and reference validation before in-game testing.
+
+Consistent quality does not mean identical missions. Routes, force mixes,
+target certainty, timing, weather, opposition, support, objectives, and
+campaign consequences should follow the operational situation rather than a
+fixed template.
+
+See the [mission authoring guidelines](docs/mission-authoring-guidelines.md)
+and [scenario learning library](scenario-samplings/README.md).
+
+## Sources of truth
+
+Mission work uses the following evidence hierarchy:
+
+1. The included IL-2 Mission Editor manual and shipped Korea demo missions.
+2. Observed IL-2 Korea editor and in-game behavior.
+3. Player-authored scenario samples and play-test reports.
+4. Extracted local object, airfield, and landscape catalogs.
+5. Source-text inference, clearly marked as provisional.
+
+The canonical editor reference is the included
+[IL-2 Sturmovik Mission Editor and Multiplayer Server Manual](docs/IL-2%20Sturmovik%20Mission%20Editor%20and%20Multiplayer%20Server%20Manual.pdf).
+The Great Battles manual remains substantially applicable to Korea, while the
+shipped Korea missions and live tests identify version-specific differences.
+
+## Repository layout
+
+```text
+catalog/                 Extracted IL-2 object, landscape, and airfield data
+docs/                    Editor references and project authoring rules
+generated/               Locally generated mission packages
+scenario-samplings/      Manual samples, generated examples, and test findings
+src/                     Shared generator and legacy UI code
+tools/                   Catalog and scenario builders
+AGENTS.md                 Persistent instructions for LLM-assisted mission work
+```
+
+Large source missions may remain in the local IL-2 installation rather than
+being duplicated in Git. Their path, timestamp, and hash should be recorded in
+the corresponding scenario analysis.
+
+## Requirements
+
+- IL-2 Korea installed locally.
+- Node.js and npm for the current JavaScript builders and validation scripts.
+- A coding LLM/agent capable of working with the repository, or a human willing
+  to perform the same authoring steps manually.
+- The IL-2 Mission Editor for visual inspection and corrective editing.
+
+The current builders assume the default installation location:
+
+```text
+C:\Program Files\IL2Series\game
+```
+
+Builders that expose path arguments can be directed to another installation.
+
+## Current commands
+
+Install JavaScript dependencies:
+
+```powershell
+npm install
+```
+
+Run the general regression check:
+
+```powershell
 npm test
 ```
 
-## What The UI Fields Do
+Rebuild and install the current Black Scorpions sorties:
 
-This section describes the fields as they work **right now**, not as planned future behavior.
+```powershell
+npm run scenario:black-scorpions-001
+npm run scenario:black-scorpions-002
+```
 
-### `Player Aircraft`
+Rebuild derived airfield-start findings:
 
-What it does:
-- selects the player-flyable aircraft type used for the player flight in the generated mission
-- determines the player's coalition
-- determines the default enemy coalition
-- limits the available starting airfields
-- influences which friendly support aircraft may be generated
-- influences the airfield ambiance mix near the spawn
-
-Current flyable aircraft list:
-- `f51d`
-- `f80c10`
-- `f84e`
-- `f86a5`
-- `il10`
-- `la11`
-- `mig15bis`
-- `yak9p`
-
-Coalition mapping:
-- `f51d`, `f80c10`, `f84e`, `f86a5` -> `UN/US-aligned`
-- `il10`, `la11`, `mig15bis`, `yak9p` -> `DPRK/PRC/Soviet-aligned`
-
-What it does not do:
-- it does not build a mission graph from scratch
-- it does not yet change payload presets intelligently by aircraft role
-
-### `Target Type`
-
-What it does:
-- filters the internal catalog to one target category
-- selects the briefing text profile
-- determines the mission role bucket used for support logic
-
-Current target types:
-- `Airfield Strike`
-- `Bridge Strike`
-- `Ground Attack`
-- `Harbor Strike`
-- `Industrial Strike`
-- `Rail Interdiction`
-- `Troop Area Strike`
-
-Target selection behavior:
-- the generator filters the catalog to valid objects matching this type
-- it then chooses up to 3 targets from that filtered pool using a deterministic seed
-- briefing text and map text are updated to match the selected mission type
-
-Mission role mapping:
-- any type containing `Strike` or `Attack` is treated as an `attack` role for support generation
-
-What it does not do:
-- it does not yet place a brand-new target complex into the mission world
-- it does not yet move the objective geographically to the chosen catalog target; the mission still uses a stock template mission area and briefing profile
-
-### `Landscape`
-
-What it does:
-- selects the map template metadata used for mission options
-- patches these mission settings:
-  - `HMap`
-  - `Textures`
-  - `Forests`
-  - `GuiMap`
-  - `SeasonPrefix`
-  - `Date`
-  - `Temperature`
-
-What it does not do:
-- it does not currently relocate the stock mission graph to a new theater region based on terrain choice alone
-
-### `Enemy Faction`
-
-What it does in the UI:
-- currently auto-locks to the **opposite coalition of the selected player aircraft**
-
-Current behavior:
-- if the selected aircraft is `UN/US-aligned`, enemy is forced to `DPRK/PRC/Soviet-aligned`
-- if the selected aircraft is `DPRK/PRC/Soviet-aligned`, enemy is forced to `UN/US-aligned`
-
-What it affects:
-- target filtering against catalog faction guesses
-- briefing text
-
-What it does not do:
-- it does not currently let the player force a same-side or arbitrary enemy selection from the UI
-
-### `Weather`
-
-What it does:
-- patches mission weather options directly
-
-Current presets:
-
-`Clear`
-- `CloudLevel = 1300`
-- `CloudHeight = 6000`
-- `PrecLevel = 0`
-- `PrecType = 0`
-- `CloudConfig = summer\00_Clear_00\sky.ini`
-- `Haze = 0`
-- `LayerFog = 0`
-
-`Broken Cloud`
-- `CloudLevel = 1500`
-- `CloudHeight = 2800`
-- `PrecLevel = 2`
-- `PrecType = 1`
-- `CloudConfig = summer\02_Medium_06\sky.ini`
-- `Haze = 0.08`
-- `LayerFog = 0`
-
-`Overcast`
-- `CloudLevel = 1400`
-- `CloudHeight = 1800`
-- `PrecLevel = 5`
-- `PrecType = 1`
-- `CloudConfig = summer\03_Heavy_08\sky.ini`
-- `Haze = 0.12`
-- `LayerFog = 0`
-
-`Poor Visibility`
-- `CloudLevel = 1100`
-- `CloudHeight = 1500`
-- `PrecLevel = 4`
-- `PrecType = 1`
-- `CloudConfig = summer\02_Medium_09\sky.ini`
-- `Haze = 0.32`
-- `LayerFog = 1`
-
-What it does not do:
-- it does not currently change AI behavior or mission routing based on weather
-
-### `Start Time`
-
-What it does:
-- patches the mission `Time` option directly
-- updates briefing text with takeoff time
-
-Current choices:
-- `Dawn 05:30`
-- `Morning 08:00`
-- `Noon 12:00`
-- `Afternoon 15:00`
-- `Dusk 18:30`
-
-Default:
-- `Morning 08:00`
-
-What it does not do:
-- it does not currently rebuild mission lighting logic beyond the mission time value itself
-
-### `Starting Airfield`
-
-What it does:
-- picks the departure field for the player flight
-- moves the player start package from the template airfield to the selected one
-- moves the local apron ambiance package with it
-- updates briefing text
-
-Current choices by coalition:
-
-All aircraft:
-- `Auto`
-
-`UN/US-aligned` aircraft:
-- `Seoul (K-16)`
-- `Kimpo (K-14)`
-- `Yangsu-ri (K-49)`
-- `Suwon (K-13)`
-
-`DPRK/PRC/Soviet-aligned` aircraft:
-- `Antung`
-
-Default behavior:
-- `Auto` resolves to the stock template field
-- blue-side template default is `Seoul (K-16)`
-- red-side template default is `Antung`
-
-What it does not do:
-- it does not yet validate runway suitability or front-line historical date per aircraft
-- red-side currently only has a curated `Antung` option
-
-### `COOP-friendly player flight`
-
-What it does:
-- enables COOP export mode
-- converts the generated multiplayer mission copy to `MissionType = 1`
-- marks the player flight for multiplayer coop use
-- writes multiplayer package files into the game install
-- registers the mission path into Korea's local cooperative server setup
-
-Current export behavior when checked:
-- still writes the normal single-player export
-- additionally writes multiplayer copies to:
-  - `data\Multiplayer\Cooperative\<MissionName>\`
-  - `data\Multiplayer\COOP\`
-  - `data\Multiplayer\`
-- writes `.sds` files for multiplayer package paths
-- appends multiplayer mission references into:
-  - `data\NSData\UserData\<profile>\LocalServerSetup.json`
-  - `mode2.rotationMissions`
-
-Current package written under the preferred cooperative layout:
-- `<MissionName>.Mission`
-- `<MissionName>.eng`
-- `<MissionName>.sds`
-
-What it does not do:
-- it does not currently generate `.list` or `.msbin` sidecars
-- it does not yet create dedicated-server rotation bundles beyond `.sds` and local server registration
-
-## Generation Behavior
-
-### Template Base
-
-The generator does not create a mission graph from zero.
-
-It clones one of these stock missions:
-- `UN/US-aligned` player aircraft -> `[DEMO]InchonStrike`
-- `DPRK/PRC/Soviet-aligned` player aircraft -> `[DEMO]BlackThursday`
-
-This is the current playability strategy because hand-built missions were not reliable enough in Korea's current parser.
-
-### Friendly Support Aircraft
-
-The generator retargets friendly non-player support flights to a support aircraft appropriate to the player's coalition and role.
-
-Support pools:
-- blue strike: `f80c10`, `f84e`, `f86a5`
-- blue fighter: `f51d`, `f80c10`, `f84e`, `f86a5`
-- red strike: `la11`, `yak9p`, `mig15bis`
-- red fighter: `la11`, `yak9p`, `mig15bis`
-
-Preferred pairings:
-- `il10` prefers `la11` or `yak9p`
-- `mig15bis` prefers `mig15bis` or `yak9p`
-- `f51d` prefers `f80c10` or `f84e`
-- `f86a5` prefers `f86a5` or `f84e`
-
-### Airfield Ambiance
-
-The generator now preserves a light stock-template airfield atmosphere and varies it by seed.
-
-Current ambiance behavior:
-- shifts a curated local apron package with the selected start field
-- varies nearby parked static aircraft by coalition
-- toggles some non-critical support vehicles and parked aircraft on/off by seed
-
-This is intentionally conservative:
-- it avoids changing takeoff-chain objects
-- it avoids inventing new mission logic blocks
-
-## Output Files
-
-The app always writes local copies into:
-- `generated/`
-
-Single-player export target:
-- `C:\Program Files\IL2Series\game\data\Missions\CodexGenerated`
-
-When `COOP-friendly player flight` is enabled, additional exports are written to:
-- `C:\Program Files\IL2Series\game\data\Multiplayer\Cooperative\<MissionName>\`
-- `C:\Program Files\IL2Series\game\data\Multiplayer\COOP`
-- `C:\Program Files\IL2Series\game\data\Multiplayer`
-
-## Current Limits
-
-Important current limits:
-- objective geography is still template-based, not fully catalog-driven
-- mission logic is template-derived, not procedurally authored
-- payload/loadout logic is still basic
-- blue-side and red-side start fields are curated, not exhaustive
-- COOP support is working by known-good package layout, but still intentionally conservative
-
-## Persistent Airfield Findings
-
-Airfield-start findings now have a dedicated local home:
-- `catalog/derived_airfield_starts.json`
-
-This file is intended to preserve:
-- derived runway-axis estimates
-- derived spawn and taxi candidate points
-- confidence and verification status
-- manual notes
-- screenshot references for troublesome fields
-
-To rebuild the derived baseline from the local landscape data:
-
-```bash
+```powershell
 npm run airfields
 ```
 
-Intended workflow:
-- generate the derived baseline once from local catalog data
-- test an airfield in game
-- if it still behaves badly, keep that finding locally by updating the airfield entry instead of rediscovering it later
-- use screenshots as supporting evidence for manual corrections and overrides
+## Mission output
 
-## Why It Works This Way
+Project copies are written under:
 
-The current design optimizes for:
-- missions that load
-- missions that can be flown immediately
-- a reliable export path into Korea's current single-player and cooperative mission flow
+```text
+generated/
+```
 
-That is why the generator prefers:
-- stock template cloning
-- targeted patching
-- explicit multiplayer packaging
+Handcrafted campaign builders currently install single-player missions under:
 
-instead of a fully synthetic mission builder at this stage.
+```text
+C:\Program Files\IL2Series\game\data\Missions
+```
+
+Preferred COOP packages are written under:
+
+```text
+C:\Program Files\IL2Series\game\data\Multiplayer\Cooperative\<MissionName>\
+```
+
+Compatibility copies and `.sds` server definitions may also be written under
+`data\Multiplayer` and `data\Multiplayer\COOP`. COOP builders register mission
+paths in the current profile's local cooperative-server rotation.
+
+## Human debriefs and campaign state
+
+The framework deliberately keeps a human in the loop. After a sortie, report
+what is actually known:
+
+```text
+Pilots returned:
+Aircraft returned:
+Aircraft damaged:
+Confirmed air victories:
+Confirmed ground kills:
+Mission objective:
+Contacts seen or not found:
+Notable observations:
+```
+
+Unknown information should remain unknown. A pilot surviving does not prove an
+aircraft is serviceable, and failing to find a column does not prove the column
+was absent. This distinction drives later reconnaissance, contact confidence,
+ground movement, and mission assignments.
+
+## Legacy Electron prototype
+
+The repository still contains the earlier Electron scenario-generator UI and
+its template-patching code. It can currently be launched with:
+
+```powershell
+npm start
+```
+
+That UI is retained as experimental and reference tooling. It is not the
+primary project direction and should not be understood as a polished,
+fully-supported end-user application. Current campaign development is centered
+on the BYO-LLM workspace, persistent situation reasoning, handcrafted or
+LLM-authored mission builders, player debriefs, and iterative in-game testing.
+
+## Current limitations
+
+- Campaign-state files and result ingestion are still evolving.
+- Mission results are currently interpreted from human debriefs rather than an
+  automatic game-log importer.
+- Not every generated construction has completed in-game validation.
+- Ground road paths and terrain placement still require editor and play checks.
+- The framework does not make every LLM automatically knowledgeable about the
+  IL-2 mission format; the included evidence and rules must be followed.
+- IL-2 Korea is still changing, so parser, asset, and editor behavior may need
+  version-specific accommodations.
+
+This is intentionally a collaborative campaign laboratory: preserve what is
+proven, record what fails, update the guidance, and let the evolving war state
+create the next mission.
