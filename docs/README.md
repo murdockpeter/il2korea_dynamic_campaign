@@ -41,6 +41,7 @@ baseline and the tested workaround as a version-specific accommodation.
 
 ## Other project documentation
 
+- [Campaign mission authoring guidelines](mission-authoring-guidelines.md)
 - [Scenario samplings](../scenario-samplings/README.md)
 - [Shipped Korea DEMO comparison](../scenario-samplings/DEMO_mission_comparison.md)
 - [Current application guide](UserGuide.html)

@@ -62,6 +62,14 @@ the operational problem and several experiential dimensions at once:
 Do not introduce variation merely by swapping vehicle types at unchanged
 coordinates. The operational situation should be the source of variation.
 
+## Briefing policy
+
+Every generated scenario must follow the repository's
+[campaign mission authoring guidelines](../docs/mission-authoring-guidelines.md).
+Enhanced operational briefings, localized route/action/recovery map markings,
+and Korea-compatible UTF-16LE localization are baseline deliverables, not
+optional finishing work.
+
 ## Current analyses
 
 - [F80_vs_Infantry_And_Armor_1](F80_vs_Infantry_And_Armor_1.md)
