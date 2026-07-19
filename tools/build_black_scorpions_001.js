@@ -509,7 +509,7 @@ function writePackage(directory, missionText, englishText) {
   const missionPath = path.join(directory, `${MISSION_NAME}.Mission`);
   const englishPath = path.join(directory, `${MISSION_NAME}.eng`);
   fs.writeFileSync(missionPath, missionText, 'utf8');
-  fs.writeFileSync(englishPath, englishText, 'utf8');
+  fs.writeFileSync(englishPath, Buffer.concat([Buffer.from([0xff, 0xfe]), Buffer.from(englishText, 'utf16le')]));
   return { missionPath, englishPath };
 }
 

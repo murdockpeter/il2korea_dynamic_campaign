@@ -11,6 +11,7 @@
     "test:scratch": "node -e \"process.env.IL2_KOREA_SCRATCH_BUILDER='1'; const { buildScenario } = require('./src/generator'); const result = buildScenario({ aircraft: 'il10', targetType: 'Bridge Strike', landscape: 'LANDSCAPE_Korea_au', enemyFaction: 'UN/US-aligned', weather: 'Clear', startTime: '12:00:0', startAirfield: 'auto', coopFriendly: false }, { exportToGame: false }); console.log(result.missionOutputPath);\"",
     "test:scratch:matrix": "node .\\tools\\run_scratch_matrix.js",
     "scenario:black-scorpions-001": "node .\\tools\\build_black_scorpions_001.js",
+    "scenario:black-scorpions-002": "node .\\tools\\build_black_scorpions_002.js",
     "dist": "electron-builder --win nsis",
     "pack": "electron-builder --dir"
   },
