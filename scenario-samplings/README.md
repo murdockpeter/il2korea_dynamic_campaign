@@ -66,3 +66,4 @@ coordinates. The operational situation should be the source of variation.
 
 - [F80_vs_Infantry_And_Armor_1](F80_vs_Infantry_And_Armor_1.md)
 - [Shipped Korea DEMO mission comparison](DEMO_mission_comparison.md)
+- [Black Scorpions 001 - Suwon Road Interdiction](BlackScorpions_001_Suwon_Road.md)

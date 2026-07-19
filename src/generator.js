@@ -2935,7 +2935,10 @@ function buildCoopMissionText(missionText) {
       return block;
     }
 
-    return block.replace(/(\n\s*CoopStart\s*=\s*)\d+;/, '$11;');
+    return block
+      .replace(/(\n\s*Desc\s*=\s*)"[^"]*";/, '$1"PLAYERSQUAD";')
+      .replace(/(\n\s*AILevel\s*=\s*)\d+;/, (_, prefix) => `${prefix}0;`)
+      .replace(/(\n\s*CoopStart\s*=\s*)\d+;/, (_, prefix) => `${prefix}1;`);
   });
 
   return updated;
@@ -3444,6 +3447,9 @@ function buildScenario(input, options = {}) {
 module.exports = {
   buildOptions,
   buildScenario,
+  buildCoopMissionText,
+  buildCoopSdsText,
   getInstallRootOverride,
+  registerCoopMissionInLocalServerSetup,
   setInstallRootOverride,
 };
