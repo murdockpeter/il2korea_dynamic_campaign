@@ -81,6 +81,71 @@ Current authored sorties include:
 The campaign skeleton and operating concept are maintained in the
 [campaign design document](https://docs.google.com/document/d/1XAE0tv5kd3I2kY3hjLNFcWVIlDITr30Hpou71J4KvRA/edit?usp=sharing).
 
+### Current situation dossier
+
+The canonical machine-readable situation is
+[`campaign/current-situation.json`](campaign/current-situation.json). It records
+the current front estimate, sector pressure, squadron state, contacts, air
+forces, sortie results, and ground formations. Historical anchor points and
+campaign-reconstructed conditions are labeled separately so uncertain detail
+does not become accidental fact.
+
+Build the standalone, printable HTML intelligence dossier with:
+
+```powershell
+npm run report:situation
+```
+
+The output is `reports/current-situation.html`. It embeds its styling and
+interactive filters and loads Google Maps for the geographic base beneath the
+campaign front, advance axes, mission route, and unit overlays. Regiments are
+expanded into individually tracked battalion equivalents in the report; their
+0–100 condition values are campaign-resolution indices rather than literal
+personnel counts.
+
+The map builder reads its credential from `GOOGLE_MAPS_API_KEY`; the key is
+never stored in source files. In PowerShell, set it for only the current shell,
+build the report, then remove it:
+
+```powershell
+$env:GOOGLE_MAPS_API_KEY = '<your Google Maps key>'
+npm run report:situation
+Remove-Item Env:\GOOGLE_MAPS_API_KEY
+npm run report:serve
+```
+
+Open `http://localhost:4173/` while the local server is running. Serving over
+localhost is more reliable than a `file:` URL for Google Maps website
+restrictions. The generated HTML is ignored by Git because a browser-side Maps
+key is necessarily present in the built file and its network requests. Restrict
+the key in Google Cloud to the **Maps JavaScript API** and, when supported by
+the key type, the local website origin used for this report. Do not publish or
+email a key-bearing generated report.
+
+### Historical front-line atlas
+
+The separate historical atlas follows the mobile front from the invasion on
+25 June through the UN crossing of the 38th Parallel on 7 October 1950. Its
+Google terrain map has a playable date slider, broad front-line
+reconstructions, initiative shading, and dated viability states for Itazuke and
+the principal early Korean K-bases.
+
+The historical source data is
+[`campaign/historical-frontline.json`](campaign/historical-frontline.json).
+Build the ignored, key-bearing HTML alongside the current-situation report:
+
+```powershell
+$env:GOOGLE_MAPS_API_KEY = '<your Google Maps key>'
+npm run report:history
+Remove-Item Env:\GOOGLE_MAPS_API_KEY
+npm run report:serve
+```
+
+Open `http://localhost:4173/history`. The displayed lines are deliberately
+operational-scale estimates: the opening campaign frequently consisted of
+road-bound columns, local delaying positions, bypassed units, and gaps rather
+than one continuous front.
+
 ## Mission quality standard
 
 Every delivered campaign mission should include:
@@ -123,8 +188,10 @@ shipped Korea missions and live tests identify version-specific differences.
 
 ```text
 catalog/                 Extracted IL-2 object, landscape, and airfield data
+campaign/                Canonical persistent situation state
 docs/                    Editor references and project authoring rules
 generated/               Locally generated mission packages
+reports/                 Generated standalone campaign intelligence dossier
 scenario-samplings/      Manual samples, generated examples, and test findings
 src/                     Shared generator and legacy UI code
 tools/                   Catalog and scenario builders
@@ -170,6 +237,24 @@ Rebuild and install the current Black Scorpions sorties:
 ```powershell
 npm run scenario:black-scorpions-001
 npm run scenario:black-scorpions-002
+```
+
+Rebuild the current campaign situation dossier:
+
+```powershell
+npm run report:situation
+```
+
+Rebuild the historical front-line atlas:
+
+```powershell
+npm run report:history
+```
+
+Serve the dossier locally after building it:
+
+```powershell
+npm run report:serve
 ```
 
 Rebuild derived airfield-start findings:

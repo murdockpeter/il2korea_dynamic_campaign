@@ -1,0 +1,191 @@
+{
+  "title": "The Front in Motion",
+  "subtitle": "Korea, 25 June–7 October 1950",
+  "classification": "HISTORICAL CAMPAIGN ATLAS // PLAYER STAFF",
+  "frames": [
+    {
+      "date": "1950-06-25",
+      "label": "Invasion",
+      "initiative": "DPRK",
+      "pressure": 100,
+      "headline": "The North Korean invasion opens across the 38th Parallel.",
+      "summary": "Seven assault divisions, armored forces, and supporting formations cross into the Republic of Korea. The line shown is the prewar boundary and opening contact zone, not a stabilized battlefield front.",
+      "line": [[37.96,125.25],[37.97,126.30],[38.02,127.10],[38.05,128.10],[38.08,128.90]],
+      "view": { "lat": 37.65, "lng": 127.35, "zoom": 7 }
+    },
+    {
+      "date": "1950-06-28",
+      "label": "Seoul Falls",
+      "initiative": "DPRK",
+      "pressure": 96,
+      "headline": "Seoul falls as the ROK defense fragments south of the Han.",
+      "summary": "The western defense is no longer a continuous line. North Korean columns enter Seoul while other axes press through the central mountains and down the east coast.",
+      "line": [[37.48,126.40],[37.48,126.90],[37.56,127.45],[37.63,128.10],[37.68,128.95]],
+      "view": { "lat": 37.45, "lng": 127.65, "zoom": 7 }
+    },
+    {
+      "date": "1950-07-04",
+      "label": "Suwon–Wonju–Samcheok",
+      "initiative": "DPRK",
+      "pressure": 91,
+      "campaignNow": true,
+      "headline": "The invasion reaches the Suwon–Wonju–Samcheok alignment.",
+      "summary": "The western thrust breaks the Suwon delay and presses toward Osan. The former NKPA 7th Division approaches Wonju, while east-coast forces continue south toward Samcheok. Task Force Smith prepares north of Osan.",
+      "line": [[37.31,126.54],[37.26,127.03],[37.34,127.92],[37.45,129.17]],
+      "view": { "lat": 37.25, "lng": 127.80, "zoom": 8 }
+    },
+    {
+      "date": "1950-07-20",
+      "label": "Taejon Lost",
+      "initiative": "DPRK",
+      "pressure": 88,
+      "headline": "Taejon falls; the delaying battle moves toward the southeast.",
+      "summary": "UN and ROK forces continue trading ground for time. North Korean columns push beyond the Kum River and threaten the approaches to Taegu, while the eastern advance pressures the Andong–Yongdok region.",
+      "line": [[36.20,126.55],[36.23,127.35],[36.48,128.05],[36.54,128.70],[36.42,129.43]],
+      "view": { "lat": 36.35, "lng": 128.05, "zoom": 7 }
+    },
+    {
+      "date": "1950-08-04",
+      "label": "Pusan Perimeter",
+      "initiative": "DPRK",
+      "pressure": 82,
+      "headline": "The UN defense contracts behind the Naktong into the Pusan Perimeter.",
+      "summary": "The southeastern lodgment becomes the final defensive position. Taegu, Pohang, the Naktong crossings, and the southwestern approach to Pusan are all under pressure.",
+      "line": [[35.12,128.08],[35.40,128.28],[35.72,128.25],[36.04,128.38],[36.28,128.63],[36.18,129.02],[36.35,129.39]],
+      "view": { "lat": 35.78, "lng": 128.70, "zoom": 8 }
+    },
+    {
+      "date": "1950-09-15",
+      "label": "Inchon",
+      "initiative": "CONTESTED",
+      "pressure": 58,
+      "headline": "The Inchon landing opens a second front behind the North Korean armies.",
+      "summary": "The Pusan Perimeter still exists, but the strategic geometry has changed. X Corps lands at Inchon while Eighth Army prepares to break out from the southeast.",
+      "line": [[35.12,128.08],[35.40,128.28],[35.72,128.25],[36.04,128.38],[36.28,128.63],[36.18,129.02],[36.35,129.39]],
+      "secondary": [[37.38,126.47],[37.46,126.57],[37.49,126.70]],
+      "view": { "lat": 36.40, "lng": 127.85, "zoom": 7 }
+    },
+    {
+      "date": "1950-09-28",
+      "label": "Seoul Recaptured",
+      "initiative": "UN",
+      "pressure": 26,
+      "headline": "Seoul is recaptured and North Korean forces retreat toward the parallel.",
+      "summary": "The Inchon force and the breakout from the perimeter collapse the North Korean rear. Fighter-bombers return permanently to Taegu as the air-base system expands northward.",
+      "line": [[37.62,126.30],[37.65,126.98],[37.61,127.70],[37.57,128.45],[37.53,129.10]],
+      "view": { "lat": 37.30, "lng": 127.65, "zoom": 7 }
+    },
+    {
+      "date": "1950-10-07",
+      "label": "Across the Parallel",
+      "initiative": "UN",
+      "pressure": 15,
+      "headline": "UN forces cross the 38th Parallel as Korean airfields reopen behind them.",
+      "summary": "Pohang is back in USAF use, and support organizations move into Suwon. The operational front has returned to the prewar boundary and is beginning to move into North Korea.",
+      "line": [[38.06,125.75],[38.10,126.55],[38.14,127.35],[38.12,128.20],[38.16,128.85]],
+      "view": { "lat": 37.72, "lng": 127.50, "zoom": 7 }
+    }
+  ],
+  "airfields": [
+    {
+      "id": "ITAZUKE",
+      "name": "Itazuke Air Base",
+      "kNumber": "JAPAN",
+      "position": [33.5859,130.4507],
+      "note": "Primary Black Scorpions base and dependable F-80 operating location throughout the opening campaign.",
+      "states": [{ "date": "1950-06-25", "status": "SUSTAINED", "detail": "Established jet base in Japan" }]
+    },
+    {
+      "id": "PUSAN_WEST",
+      "name": "Pusan West",
+      "kNumber": "K-1",
+      "position": [35.18,128.94],
+      "note": "Logistics and transport gateway; the only initially surfaced Korean runway reported capable of handling an F-80.",
+      "states": [{ "date": "1950-06-25", "status": "STAGING", "detail": "Transport, emergency and staging use" }]
+    },
+    {
+      "id": "TAEGU",
+      "name": "Taegu No. 1",
+      "kNumber": "K-2",
+      "position": [35.894,128.659],
+      "note": "Central tactical-air-control and staging field; early runway remained marginal for advanced aircraft.",
+      "states": [
+        { "date": "1950-06-25", "status": "LIMITED", "detail": "Primitive former Japanese field" },
+        { "date": "1950-07-14", "status": "STAGING", "detail": "Joint Operations Center and tactical control" },
+        { "date": "1950-07-28", "status": "FRAGILE", "detail": "Fighter elements arrive" },
+        { "date": "1950-08-08", "status": "STAGING", "detail": "Flying units evacuated; refuel/rearm staging continues" },
+        { "date": "1950-09-28", "status": "SUSTAINED", "detail": "Fighter-bombers return permanently" }
+      ]
+    },
+    {
+      "id": "POHANG",
+      "name": "Pohangdong",
+      "kNumber": "K-3",
+      "position": [35.988,129.420],
+      "note": "First South Korean base to host a USAF fighter group; repeatedly threatened during the perimeter battle.",
+      "states": [
+        { "date": "1950-06-25", "status": "LIMITED", "detail": "Rough field under improvement" },
+        { "date": "1950-07-14", "status": "FRAGILE", "detail": "First USAF fighter group based in Korea" },
+        { "date": "1950-08-13", "status": "EVACUATED", "detail": "Aircraft evacuated under enemy pressure" },
+        { "date": "1950-08-18", "status": "REPAIR", "detail": "Area recovered; field not yet a sustained base" },
+        { "date": "1950-10-03", "status": "SUSTAINED", "detail": "USAF flying units return" }
+      ]
+    },
+    {
+      "id": "TAEJON",
+      "name": "Taejon",
+      "kNumber": "K-5",
+      "position": [36.321,127.408],
+      "note": "Useful for command and light operations before the city fell; not a dependable opening-war fighter base.",
+      "states": [
+        { "date": "1950-06-25", "status": "LIMITED", "detail": "Light and command use" },
+        { "date": "1950-07-20", "status": "ENEMY", "detail": "City and field lost" },
+        { "date": "1950-09-28", "status": "REPAIR", "detail": "Recaptured; rehabilitation required" }
+      ]
+    },
+    {
+      "id": "PUSAN_EAST",
+      "name": "Pusan East",
+      "kNumber": "K-9",
+      "position": [35.141,129.061],
+      "note": "Secure perimeter fighter base as the southeastern airfield network matured.",
+      "states": [
+        { "date": "1950-06-25", "status": "LIMITED", "detail": "Development and local use" },
+        { "date": "1950-09-08", "status": "SUSTAINED", "detail": "Permanent fighter squadron presence" }
+      ]
+    },
+    {
+      "id": "SUWON",
+      "name": "Suwon",
+      "kNumber": "K-13",
+      "position": [37.239,127.007],
+      "note": "Forward jet-capable objective south of Seoul; lost during the opening retreat and reopened after the counteroffensive.",
+      "states": [
+        { "date": "1950-06-25", "status": "EVACUATED", "detail": "Abandoned during the northern advance" },
+        { "date": "1950-07-04", "status": "ENEMY", "detail": "Captured by North Korean forces" },
+        { "date": "1950-09-28", "status": "REPAIR", "detail": "Recaptured and under rehabilitation" },
+        { "date": "1950-10-07", "status": "SUSTAINED", "detail": "Tactical support organization moves in" }
+      ]
+    },
+    {
+      "id": "KIMPO",
+      "name": "Kimpo",
+      "kNumber": "K-14",
+      "position": [37.558,126.791],
+      "note": "Major Seoul-area airfield; captured in June, retaken after Inchon, and rebuilt for forward operations.",
+      "states": [
+        { "date": "1950-06-25", "status": "EVACUATED", "detail": "Evacuation and combat around Seoul" },
+        { "date": "1950-06-28", "status": "ENEMY", "detail": "Captured with the Seoul area" },
+        { "date": "1950-09-18", "status": "REPAIR", "detail": "Retaken after the Inchon landing" },
+        { "date": "1950-10-07", "status": "SUSTAINED", "detail": "Rebuilt forward fighter field" }
+      ]
+    }
+  ],
+  "sources": [
+    { "label": "U.S. Army CMH — Korean War campaign summary", "url": "https://history.army.mil/Research/Reference-Topics/Army-Campaigns/Brief-Summaries/Korean-War/" },
+    { "label": "Appleman — South to the Naktong, North to the Yalu", "url": "https://history.army.mil/Portals/143/Images/Publications/Publication%20By%20Title%20Images/S%20PDF/CMH_Pub_20-2.pdf" },
+    { "label": "USAF — The U.S. Air Force's First War: Korea chronology", "url": "https://www.dafhistory.af.mil/Portals/16/documents/Timelines/Korea/KoreanWarChronology.pdf" },
+    { "label": "USAF — Organizations in Korea, 1950–1953", "url": "https://www.dafhistory.af.mil/Portals/16/documents/Timelines/Korea/USAFOrganizationsinKorea.pdf" },
+    { "label": "National Museum USAF — K-Bases in Korea", "url": "https://www.nationalmuseum.af.mil/Visit/Museum-Exhibits/Fact-Sheets/Display/Article/196394/k-bases-in-korea/" }
+  ]
+}

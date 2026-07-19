@@ -50,3 +50,16 @@ cookie-cutter template. Details, emphasis, uncertainty, package composition,
 route presentation, and tactical warnings must follow the current war state
 and the distinctive operational problem of that sortie.
 
+## Persistent situation reporting
+
+Treat `campaign/current-situation.json` as the canonical campaign state. After
+an adjudicated sortie, update its time, squadron condition, sortie record,
+contacts, formation conditions, sector pressure, and front assessment wherever
+the result or elapsed time justifies a change. Preserve uncertainty instead of
+inventing exact observations.
+
+Keep historical facts, player-reported outcomes, and campaign-reconstructed
+estimates distinguishable in `basis`, `note`, and confidence fields. Battalion
+values are operational-resolution indices, not claimed historical headcounts.
+After changing the state, run `npm run report:situation` so
+`reports/current-situation.html` remains synchronized and printable.

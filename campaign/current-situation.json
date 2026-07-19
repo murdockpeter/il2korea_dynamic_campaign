@@ -1,0 +1,152 @@
+{
+  "situationId": "KOR_1950_07_04_1430",
+  "title": "Korean Peninsula Operational Situation",
+  "subtitle": "Black Scorpions Campaign Intelligence Estimate",
+  "date": "1950-07-04",
+  "localTime": "14:30",
+  "phase": "Delaying the North Korean Advance",
+  "classification": "CAMPAIGN SECRET // PLAYER STAFF",
+  "weather": {
+    "summary": "Broken cloud, light haze, no precipitation",
+    "temperatureC": 25,
+    "wind": "Calm",
+    "visibility": "Good below broken cloud; localized haze",
+    "cloudConfig": "summer\\02_Medium_06\\sky.ini"
+  },
+  "assessment": {
+    "frontState": "Suwon-Osan pressure / Wonju contested / east coast withdrawal",
+    "frontConfidence": 0.66,
+    "initiative": "DPRK",
+    "tempo": "High",
+    "summary": "The North Korean advance retains the initiative across all three principal corridors. The western thrust has broken the morning Suwon delay and is pressing toward Osan. The central advance is approaching Wonju against a more coherent ROK 6th Division withdrawal. East-coast forces are separated by difficult terrain and incomplete reporting.",
+    "commanderNote": "The displayed line is an intelligence estimate, not a continuous trench system. Local columns, bypassed defenders, refugees, and friendly withdrawals may exist on either side of it."
+  },
+  "sectors": [
+    {
+      "id": "WEST",
+      "name": "Western Corridor",
+      "axis": "Seoul - Suwon - Osan - Pyeongtaek",
+      "status": "DPRK breakthrough developing",
+      "pressure": 91,
+      "confidence": 82,
+      "note": "NKPA 4th Division spearheads are advancing on Suwon with tanks. ROK traffic and headquarters elements are withdrawing south through Osan."
+    },
+    {
+      "id": "CENTRAL",
+      "name": "Central Mountains",
+      "axis": "Chuncheon - Hongcheon - Wonju - Chungju",
+      "status": "Fighting near Wonju",
+      "pressure": 74,
+      "confidence": 63,
+      "note": "The former NKPA 7th Division, redesignated 12th, is behind schedule but approaching Wonju. ROK 6th Division remains the most coherent major defending formation in the sector."
+    },
+    {
+      "id": "EAST",
+      "name": "East Coast",
+      "axis": "Gangneung - Samcheok - Ulchin",
+      "status": "ROK withdrawal / fragmented contact",
+      "pressure": 68,
+      "confidence": 48,
+      "note": "NKPA 5th Division and attached irregular forces are moving south and inland. ROK 8th Division reports are delayed by terrain and disrupted communications."
+    }
+  ],
+  "squadron": {
+    "id": "VFS_081",
+    "name": "81st Fighter-Bomber Squadron, Black Scorpions",
+    "group": "8th Fighter-Bomber Group",
+    "base": "Itazuke Air Base, Japan",
+    "aircraft": "F-80C Shooting Star",
+    "assigned": 24,
+    "serviceable": 17,
+    "pilotsAvailable": 21,
+    "fatigue": 27,
+    "morale": 76,
+    "sortiesRecorded": 1,
+    "losses": 0,
+    "note": "All four aircraft and pilots returned from Sortie 001. Individual post-flight aircraft condition was not reported; the serviceable count remains a planning estimate."
+  },
+  "airForces": [
+    { "side": "UN", "unit": "81st FBS Black Scorpions", "type": "F-80C", "location": "Itazuke", "available": 17, "assigned": 24, "mission": "Fighter-bomber / armed reconnaissance", "condition": 76, "confidence": 88 },
+    { "side": "UN", "unit": "8th FBG support pool", "type": "F-80C", "location": "Japan bases", "available": 34, "assigned": 48, "mission": "Air cover / interdiction", "condition": 72, "confidence": 58 },
+    { "side": "UN", "unit": "Fifth Air Force reconnaissance", "type": "RF-80 / liaison", "location": "Japan and Korea staging", "available": 8, "assigned": 12, "mission": "Route and contact reconnaissance", "condition": 64, "confidence": 42 },
+    { "side": "DPRK", "unit": "KPAF Yak force estimate", "type": "Yak-9P", "location": "Forward fields north of Seoul", "available": 6, "assigned": 10, "mission": "Local interception / airfield defense", "condition": 55, "confidence": 47 },
+    { "side": "DPRK", "unit": "KPAF attack force estimate", "type": "Il-10", "location": "Dispersed forward fields", "available": 12, "assigned": 20, "mission": "Ground attack", "condition": 61, "confidence": 39 }
+  ],
+  "contacts": [
+    { "id": "CONTACT_OSAN_021", "side": "DPRK", "classification": "Armored and transport column", "sector": "WEST", "lastKnown": "Suwon-Osan road corridor", "observed": "1950-07-04 09:05", "movement": "South at estimated 15-20 km/h", "confidence": 57, "status": "Aging; not damaged by Sortie 001" },
+    { "id": "CONTACT_YAK_007", "side": "DPRK", "classification": "Two-ship fighter patrol", "sector": "WEST", "lastKnown": "Northeast of Suwon", "observed": "1950-07-04 12:40", "movement": "Intermittent patrol activity", "confidence": 36, "status": "Possible; not confirmed for Mission 2" },
+    { "id": "CONTACT_WONJU_014", "side": "DPRK", "classification": "Division advance guard", "sector": "CENTRAL", "lastKnown": "North and east approaches to Wonju", "observed": "1950-07-04 10:20", "movement": "South / southeast", "confidence": 69, "status": "Reported in contact with ROK delaying forces" },
+    { "id": "CONTACT_EAST_009", "side": "DPRK", "classification": "Infantry and irregular detachments", "sector": "EAST", "lastKnown": "Gangneung-Samcheok corridor and mountain tracks", "observed": "1950-07-04 06:30", "movement": "South and inland", "confidence": 44, "status": "Fragmented reporting" }
+  ],
+  "sorties": [
+    {
+      "id": "BS-001",
+      "time": "08:30",
+      "name": "Suwon Road Interdiction",
+      "result": "Objective not achieved",
+      "effect": "No confirmed ground damage; enemy advance retained mobility",
+      "personnel": "4 pilots returned",
+      "aircraft": "4 aircraft returned; detailed serviceability unknown"
+    },
+    {
+      "id": "BS-002",
+      "time": "14:30",
+      "name": "Osan Road Hunt",
+      "result": "Pending",
+      "effect": "Armed reconnaissance tasked to reacquire and delay the moving column",
+      "personnel": "4-player strike element; 2 AI top cover",
+      "aircraft": "Mission package allocated"
+    }
+  ],
+  "formations": [
+    { "side": "UN", "nationality": "US", "sector": "WEST", "division": "24th Infantry Division", "regiment": "1st Battalion, 21st Infantry (Task Force Smith)", "battalions": 1, "location": "North of Osan", "posture": "Preparing hasty blocking position", "strength": 46, "supply": 58, "mobility": 42, "cohesion": 84, "fatigue": 36, "confidence": 96, "basis": "Historical core; campaign condition estimate", "note": "Approximately two rifle companies with supporting elements; weak antitank capability. Battle has not yet begun." },
+
+    { "side": "UN", "nationality": "ROK", "sector": "WEST", "division": "ROK 2d Division", "regiment": "5th Regiment", "battalions": 3, "location": "Anyang-Suwon-Osan withdrawal axis", "posture": "Delay / disorganized withdrawal", "strength": 37, "supply": 29, "mobility": 44, "cohesion": 31, "fatigue": 82, "confidence": 91, "basis": "Historically identified regiment; battalion conditions reconstructed", "note": "T-34 penetration has disorganized the regiment and caused heavy casualties." },
+    { "side": "UN", "nationality": "ROK", "sector": "WEST", "division": "ROK 1st Division", "regiment": "11th Regiment", "battalions": 3, "location": "South of Han / western regrouping area", "posture": "Reorganizing", "strength": 51, "supply": 38, "mobility": 43, "cohesion": 49, "fatigue": 76, "confidence": 47, "basis": "June OOB; July 4 location and condition estimated", "note": "Separated elements and equipment losses after the Han withdrawal." },
+    { "side": "UN", "nationality": "ROK", "sector": "WEST", "division": "ROK 1st Division", "regiment": "12th Regiment", "battalions": 3, "location": "South of Han / western regrouping area", "posture": "Reorganizing", "strength": 48, "supply": 35, "mobility": 40, "cohesion": 45, "fatigue": 79, "confidence": 44, "basis": "June OOB; July 4 condition estimated", "note": "Remnants moving south among congested roads and headquarters traffic." },
+    { "side": "UN", "nationality": "ROK", "sector": "WEST", "division": "ROK 1st Division", "regiment": "13th Regiment", "battalions": 3, "location": "Western reserve / assembly uncertain", "posture": "Reconstituting reserve", "strength": 54, "supply": 41, "mobility": 46, "cohesion": 52, "fatigue": 71, "confidence": 39, "basis": "June OOB; current disposition uncertain", "note": "Tracked as battalion equivalents pending firmer situation reporting." },
+    { "side": "UN", "nationality": "ROK", "sector": "WEST", "division": "ROK Capital Division", "regiment": "2d Regiment", "battalions": 3, "location": "South of Seoul / dispersed", "posture": "Withdrawal and local security", "strength": 45, "supply": 34, "mobility": 39, "cohesion": 42, "fatigue": 77, "confidence": 38, "basis": "June OOB; current condition inferred", "note": "Not represented as a continuous front-line formation." },
+    { "side": "UN", "nationality": "ROK", "sector": "WEST", "division": "ROK Capital Division", "regiment": "18th Regiment", "battalions": 3, "location": "South of Seoul / assembly uncertain", "posture": "Reorganizing", "strength": 47, "supply": 36, "mobility": 41, "cohesion": 44, "fatigue": 73, "confidence": 35, "basis": "June OOB; current condition inferred", "note": "Exact battalion locations are not known to campaign headquarters." },
+
+    { "side": "UN", "nationality": "ROK", "sector": "CENTRAL", "division": "ROK 6th Division", "regiment": "7th Regiment", "battalions": 3, "location": "Wonju-Chungju corridor", "posture": "Organized delay", "strength": 71, "supply": 57, "mobility": 63, "cohesion": 74, "fatigue": 58, "confidence": 72, "basis": "Historical divisional action; battalion conditions estimated", "note": "Division has withdrawn comparatively effectively and inflicted losses on the pursuing force." },
+    { "side": "UN", "nationality": "ROK", "sector": "CENTRAL", "division": "ROK 6th Division", "regiment": "8th Regiment", "battalions": 3, "location": "Wonju approaches", "posture": "Defending / screening", "strength": 68, "supply": 55, "mobility": 60, "cohesion": 70, "fatigue": 62, "confidence": 68, "basis": "June OOB and historical sector; detailed state estimated", "note": "Mountain routes and communications create reporting lag." },
+    { "side": "UN", "nationality": "ROK", "sector": "CENTRAL", "division": "ROK 6th Division", "regiment": "19th Regiment", "battalions": 3, "location": "South of Wonju / divisional reserve", "posture": "Mobile reserve", "strength": 73, "supply": 60, "mobility": 66, "cohesion": 75, "fatigue": 54, "confidence": 61, "basis": "June OOB; campaign reserve estimate", "note": "Held as a battalion-scale reserve pool in the central situation model." },
+
+    { "side": "UN", "nationality": "ROK", "sector": "EAST", "division": "ROK 8th Division", "regiment": "10th Regiment", "battalions": 3, "location": "Mountain withdrawal toward Tanyang", "posture": "Fighting withdrawal", "strength": 64, "supply": 49, "mobility": 55, "cohesion": 67, "fatigue": 69, "confidence": 61, "basis": "Historically identified; battalion conditions estimated", "note": "The division withdrew with much of its equipment but is difficult to locate precisely." },
+    { "side": "UN", "nationality": "ROK", "sector": "EAST", "division": "ROK 8th Division", "regiment": "21st Regiment", "battalions": 3, "location": "Samcheok and inland detachments", "posture": "Dispersed withdrawal / antiguerrilla security", "strength": 58, "supply": 44, "mobility": 49, "cohesion": 58, "fatigue": 72, "confidence": 53, "basis": "Historically identified; detachments reconstructed", "note": "Two battalions had been dispersed on antiguerrilla duties when the invasion began." },
+    { "side": "UN", "nationality": "ROK", "sector": "EAST", "division": "ROK 3d Division", "regiment": "22d Regiment", "battalions": 3, "location": "East-coast reinforcement route", "posture": "Moving to threatened sector", "strength": 61, "supply": 52, "mobility": 58, "cohesion": 62, "fatigue": 55, "confidence": 42, "basis": "June OOB; July 4 disposition estimated", "note": "Tracked as a potential reinforcing formation rather than confirmed line holder." },
+    { "side": "UN", "nationality": "ROK", "sector": "EAST", "division": "ROK 3d Division", "regiment": "23d Regiment", "battalions": 3, "location": "Southeast assembly area", "posture": "Preparing east-coast defense", "strength": 65, "supply": 56, "mobility": 60, "cohesion": 65, "fatigue": 51, "confidence": 39, "basis": "June OOB; July 4 disposition estimated", "note": "Exact contact status not confirmed in the campaign intelligence picture." },
+
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 4th Division", "regiment": "5th Regiment", "battalions": 3, "location": "Anyang-Suwon road", "posture": "Lead advance", "strength": 88, "supply": 79, "mobility": 84, "cohesion": 89, "fatigue": 42, "confidence": 94, "basis": "Historically identified lead regiment; conditions campaign-estimated", "note": "Departed south on the Suwon road at 0600; armor and infantry reported near Anyang before noon." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 4th Division", "regiment": "16th Regiment", "battalions": 3, "location": "Yongdungpo-Seoul-Suwon axis", "posture": "Follow-on advance", "strength": 84, "supply": 76, "mobility": 78, "cohesion": 86, "fatigue": 46, "confidence": 76, "basis": "Historical formation; current spacing estimated", "note": "Follow-on combat power behind the lead regiment." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 4th Division", "regiment": "18th Regiment", "battalions": 3, "location": "South of Seoul / divisional follow-on", "posture": "Advancing reserve", "strength": 86, "supply": 78, "mobility": 77, "cohesion": 87, "fatigue": 40, "confidence": 63, "basis": "Historical regiment; July 4 location estimated", "note": "Available to reinforce the main Suwon axis as the division closes south." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "105th Armored Brigade", "regiment": "Suwon-axis T-34 detachment", "battalions": 2, "location": "Anyang-Suwon road", "posture": "Breakthrough spearhead", "strength": 91, "supply": 74, "mobility": 88, "cohesion": 90, "fatigue": 35, "confidence": 92, "basis": "Tank presence historically confirmed; battalion organization abstracted", "note": "Fourteen T-34s were reported penetrating ROK positions; tracked as two armored battalion-equivalents for campaign resolution." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 3d Division", "regiment": "7th Regiment", "battalions": 3, "location": "Seoul-Han crossing area", "posture": "Follow-on advance", "strength": 83, "supply": 73, "mobility": 75, "cohesion": 84, "fatigue": 48, "confidence": 66, "basis": "Historical division/regiment; current location estimated", "note": "The division follows the main western breakthrough and retains substantial combat power." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 3d Division", "regiment": "8th Regiment", "battalions": 3, "location": "Seoul-Han crossing area", "posture": "Consolidating / advancing", "strength": 81, "supply": 72, "mobility": 73, "cohesion": 82, "fatigue": 50, "confidence": 54, "basis": "Historical parent formation; battalion state inferred", "note": "Exact order of march is uncertain." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 3d Division", "regiment": "9th Regiment", "battalions": 3, "location": "Seoul-south staging", "posture": "Follow-on reserve", "strength": 82, "supply": 75, "mobility": 74, "cohesion": 83, "fatigue": 45, "confidence": 58, "basis": "Historically identified regiment; current disposition estimated", "note": "First element of its division to reach Seoul; now assessed south of the capital." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 6th Division", "regiment": "13th Regiment", "battalions": 3, "location": "Kaesong-western coastal axis", "posture": "Advancing south / flank pressure", "strength": 79, "supply": 71, "mobility": 72, "cohesion": 81, "fatigue": 47, "confidence": 57, "basis": "Historically identified at Kaesong; current location estimated", "note": "Part of the western coastal thrust, outside the immediate Suwon road fight." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 6th Division", "regiment": "14th Regiment", "battalions": 3, "location": "Western coastal route", "posture": "Advancing", "strength": 80, "supply": 72, "mobility": 73, "cohesion": 80, "fatigue": 44, "confidence": 41, "basis": "Parent division confirmed; regiment state reconstructed", "note": "Designation and precise July 4 position have lower campaign confidence." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "WEST", "division": "NKPA 6th Division", "regiment": "15th Regiment", "battalions": 3, "location": "Kaesong-western coastal axis", "posture": "Advancing", "strength": 78, "supply": 70, "mobility": 71, "cohesion": 79, "fatigue": 49, "confidence": 55, "basis": "Historically identified at Kaesong; current location estimated", "note": "Maintains pressure west of the main Seoul-Suwon corridor." },
+
+    { "side": "DPRK", "nationality": "DPRK", "sector": "CENTRAL", "division": "NKPA 12th Division (former 7th)", "regiment": "1st Regiment", "battalions": 3, "location": "Hongcheon-Wonju road", "posture": "Advance guard", "strength": 76, "supply": 66, "mobility": 67, "cohesion": 73, "fatigue": 64, "confidence": 74, "basis": "Historical division axis; battalion conditions estimated", "note": "Behind schedule after fighting through the central corridor." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "CENTRAL", "division": "NKPA 12th Division (former 7th)", "regiment": "2d Regiment", "battalions": 3, "location": "North of Wonju", "posture": "Advancing", "strength": 74, "supply": 64, "mobility": 65, "cohesion": 71, "fatigue": 66, "confidence": 65, "basis": "Historical parent formation; detailed state estimated", "note": "Mountain road congestion and accumulated losses reduce tempo." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "CENTRAL", "division": "NKPA 12th Division (former 7th)", "regiment": "3d Regiment", "battalions": 3, "location": "Hongcheon-Wonju follow-on", "posture": "Follow-on advance", "strength": 77, "supply": 67, "mobility": 64, "cohesion": 74, "fatigue": 61, "confidence": 59, "basis": "Historical parent formation; current spacing estimated", "note": "Available to reinforce either Wonju or the later southeast turn." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "CENTRAL", "division": "NKPA 2d Division", "regiment": "Regimental Group A", "battalions": 3, "location": "Chuncheon-Seoul lateral axis", "posture": "Reorienting / follow-on", "strength": 75, "supply": 65, "mobility": 62, "cohesion": 72, "fatigue": 63, "confidence": 43, "basis": "Division historically present; subordinate identity unresolved", "note": "Placeholder regimental label prevents false precision while retaining battalion-scale combat power." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "CENTRAL", "division": "NKPA 2d Division", "regiment": "Regimental Group B", "battalions": 3, "location": "Central follow-on area", "posture": "Reorienting", "strength": 73, "supply": 63, "mobility": 61, "cohesion": 70, "fatigue": 65, "confidence": 38, "basis": "Campaign reconstruction", "note": "Location and condition are low-confidence operational estimates." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "CENTRAL", "division": "NKPA 2d Division", "regiment": "Regimental Group C", "battalions": 3, "location": "Central reserve axis", "posture": "Follow-on reserve", "strength": 76, "supply": 68, "mobility": 63, "cohesion": 73, "fatigue": 58, "confidence": 34, "basis": "Campaign reconstruction", "note": "Included to preserve division-scale mass without inventing exact observed placement." },
+
+    { "side": "DPRK", "nationality": "DPRK", "sector": "EAST", "division": "NKPA 5th Division", "regiment": "10th Regiment group", "battalions": 3, "location": "Gangneung-Samcheok corridor", "posture": "Advancing south", "strength": 77, "supply": 65, "mobility": 59, "cohesion": 75, "fatigue": 60, "confidence": 48, "basis": "Parent division confirmed; regimental state reconstructed", "note": "Exact regimental naming and location are less certain than the divisional axis." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "EAST", "division": "NKPA 5th Division", "regiment": "11th Regiment", "battalions": 3, "location": "Turning inland from Gangneung", "posture": "Mountain march / flank movement", "strength": 74, "supply": 58, "mobility": 48, "cohesion": 70, "fatigue": 72, "confidence": 67, "basis": "Historically identified march; conditions estimated", "note": "Beginning a difficult inland movement that will impose losses and delay." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "EAST", "division": "NKPA 5th Division", "regiment": "12th Regiment group", "battalions": 3, "location": "East-coast follow-on", "posture": "Advancing", "strength": 78, "supply": 66, "mobility": 57, "cohesion": 76, "fatigue": 58, "confidence": 45, "basis": "Parent division confirmed; regimental state reconstructed", "note": "Maintains pressure along the coastal route." },
+    { "side": "DPRK", "nationality": "DPRK", "sector": "EAST", "division": "766th Independent Unit", "regiment": "Infiltration groups", "battalions": 2, "location": "Coastal landings and Taebaek approaches", "posture": "Infiltration / communications disruption", "strength": 69, "supply": 52, "mobility": 71, "cohesion": 64, "fatigue": 57, "confidence": 61, "basis": "Historical unit; battalion-equivalent abstraction", "note": "Represents dispersed landing parties and inland infiltration rather than a continuous battalion front." }
+  ],
+  "sources": [
+    { "label": "U.S. Army CMH - Korean War campaign summary", "url": "https://history.army.mil/Research/Reference-Topics/Army-Campaigns/Brief-Summaries/Korean-War/" },
+    { "label": "Appleman, South to the Naktong, North to the Yalu - Chapter II", "url": "https://webdoc.sub.gwdg.de/ebook/p/2005/CMH_2/www.army.mil/cmh-pg/books/korea/20-2-1/sn02.htm" },
+    { "label": "Appleman - Chapter III, Invasion Across the Parallel", "url": "https://webdoc.sub.gwdg.de/ebook/p/2005/CMH_2/www.army.mil/cmh-pg/books/korea/20-2-1/sn03.htm" },
+    { "label": "Appleman - Chapter V, The North Koreans Cross the Han", "url": "https://webdoc.sub.gwdg.de/ebook/p/2005/CMH_2/www.army.mil/cmh-pg/books/korea/20-2-1/sn05.htm" },
+    { "label": "Appleman - Chapter VIII, The Front Moves South", "url": "https://webdoc.sub.gwdg.de/ebook/p/2005/CMH_2/www.army.mil/cmh-pg/books/korea/20-2-1/sn08.htm" },
+    { "label": "National Museum of the USAF - F-80C Shooting Star", "url": "https://www.nationalmuseum.af.mil/Visit/Museum-Exhibits/Fact-Sheets/Display/Article/196116/lockheed-f-80c-shooting-star/" },
+    { "label": "Campaign skeleton and design notes", "url": "https://docs.google.com/document/d/1XAE0tv5kd3I2kY3hjLNFcWVIlDITr30Hpou71J4KvRA/edit?usp=sharing" }
+  ]
+}

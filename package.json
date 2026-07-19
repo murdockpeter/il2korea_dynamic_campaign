@@ -12,6 +12,9 @@
     "test:scratch:matrix": "node .\\tools\\run_scratch_matrix.js",
     "scenario:black-scorpions-001": "node .\\tools\\build_black_scorpions_001.js",
     "scenario:black-scorpions-002": "node .\\tools\\build_black_scorpions_002.js",
+    "report:situation": "node .\\tools\\build_situation_report.js",
+    "report:history": "node .\\tools\\build_frontline_history_report.js",
+    "report:serve": "node .\\tools\\serve_situation_report.js",
     "dist": "electron-builder --win nsis",
     "pack": "electron-builder --dir"
   },

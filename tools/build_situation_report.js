@@ -1,0 +1,174 @@
+const fs = require('fs');
+const path = require('path');
+
+const root = path.resolve(__dirname, '..');
+const input = path.join(root, 'campaign', 'current-situation.json');
+const outputDir = path.join(root, 'reports');
+const output = path.join(outputDir, 'current-situation.html');
+const state = JSON.parse(fs.readFileSync(input, 'utf8'));
+const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY || '';
+
+if (googleMapsApiKey && !/^[A-Za-z0-9_-]+$/.test(googleMapsApiKey)) {
+  throw new Error('GOOGLE_MAPS_API_KEY contains unexpected characters.');
+}
+
+const esc = (value) => String(value ?? '')
+  .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;').replaceAll("'", '&#039;');
+const clamp = (value) => Math.max(0, Math.min(100, value));
+const roman = ['I', 'II', 'III', 'IV'];
+const deltas = [
+  { strength: -3, supply: 1, mobility: -2, cohesion: 2, fatigue: 3, confidence: 0 },
+  { strength: 1, supply: -3, mobility: 2, cohesion: -2, fatigue: -1, confidence: -2 },
+  { strength: 2, supply: 2, mobility: 0, cohesion: 1, fatigue: -2, confidence: -4 },
+  { strength: 0, supply: -1, mobility: 3, cohesion: -1, fatigue: 1, confidence: -6 }
+];
+
+const battalions = state.formations.flatMap((formation) => {
+  if (formation.battalions === 1) return [{ ...formation, battalion: formation.regiment }];
+  return Array.from({ length: formation.battalions }, (_, i) => {
+    const d = deltas[i] || deltas[deltas.length - 1];
+    const adjusted = { ...formation, battalion: `${roman[i] || i + 1}/${formation.regiment}` };
+    for (const key of Object.keys(d)) adjusted[key] = clamp(formation[key] + d[key]);
+    return adjusted;
+  });
+});
+
+const average = (side, key) => Math.round(
+  battalions.filter((b) => b.side === side).reduce((sum, b) => sum + b[key], 0) /
+  battalions.filter((b) => b.side === side).length
+);
+const countSide = (side) => battalions.filter((b) => b.side === side).length;
+const meter = (value, kind = '') => `<span class="meter ${kind}" title="${value}/100"><i style="width:${value}%"></i><b>${value}</b></span>`;
+
+function condition(value) {
+  if (value >= 80) return ['Excellent', 'good'];
+  if (value >= 65) return ['Effective', 'good'];
+  if (value >= 50) return ['Degraded', 'watch'];
+  if (value >= 35) return ['Fragile', 'poor'];
+  return ['Critical', 'poor'];
+}
+
+function mapSvg() {
+  return `<svg class="situation-map" viewBox="0 0 720 680" role="img" aria-labelledby="mapTitle mapDesc">
+    <title id="mapTitle">Estimated Korean front, 4 July 1950</title>
+    <desc id="mapDesc">Schematic map showing the western, central and eastern advances, estimated front, principal towns, Task Force Smith and the Black Scorpions mission area.</desc>
+    <defs>
+      <linearGradient id="land" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#d8cda9"/><stop offset="1" stop-color="#aa9d78"/></linearGradient>
+      <pattern id="grid" width="32" height="32" patternUnits="userSpaceOnUse"><path d="M32 0H0V32" fill="none" stroke="#273231" stroke-opacity=".08"/></pattern>
+      <pattern id="hatch" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><path d="M0 0V12" stroke="#8b2228" stroke-width="5" opacity=".13"/></pattern>
+      <filter id="shadow"><feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity=".25"/></filter>
+      <marker id="redArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5 0 10z" fill="#9f2831"/></marker>
+      <marker id="blueArrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5 0 10z" fill="#345d86"/></marker>
+    </defs>
+    <rect width="720" height="680" rx="12" fill="#8ca9ad"/>
+    <path d="M109 16C175 38 181 91 227 121c47 31 72 66 100 110 24 37 36 60 63 88 42 44 49 98 66 143 18 48 70 91 91 146 14 37 6 88 2 149H94c14-53 21-96 8-142-17-58 9-103 21-148 13-48-9-94-25-135-17-44 3-78 24-110 23-36 11-72-13-106z" fill="url(#land)" stroke="#4c5c55" stroke-width="3" filter="url(#shadow)"/>
+    <path d="M109 16C175 38 181 91 227 121c47 31 72 66 100 110 24 37 36 60 63 88 42 44 49 98 66 143 18 48 70 91 91 146 14 37 6 88 2 149H94c14-53 21-96 8-142-17-58 9-103 21-148 13-48-9-94-25-135-17-44 3-78 24-110 23-36 11-72-13-106z" fill="url(#grid)"/>
+    <path d="M120 22c48 21 63 63 103 93 54 40 79 77 112 129 38 60 83 87 104 147 22 65 76 109 96 165l8 101H339L303 528 240 445 191 348 139 267 96 202 122 122z" fill="url(#hatch)"/>
+    <g fill="none" stroke="#625d49" stroke-opacity=".28" stroke-width="2">
+      <path d="M167 95c64 19 71 65 116 102s60 75 82 126 65 90 82 147"/><path d="M198 112c-12 49 11 92 42 131s47 78 55 127 47 102 77 142"/><path d="M303 205c-43 31-57 72-56 119s21 85 52 120"/><path d="M349 277c41 23 59 58 66 99s32 77 63 105"/>
+    </g>
+    <g fill="none" stroke="#6c654e" stroke-width="4" stroke-linecap="round" opacity=".72">
+      <path d="M177 91L169 155 182 218 198 280 218 354 238 441 264 543"/><path d="M240 126L277 196 305 274 330 361 356 460 382 561"/><path d="M383 128L402 207 418 292 449 381 484 478 520 578"/>
+    </g>
+    <path d="M118 258c59 1 87 13 128 30 48 20 82 17 127 28 55 14 84 34 129 45" fill="none" stroke="#f4e6b4" stroke-width="12" opacity=".65"/>
+    <path d="M118 258c59 1 87 13 128 30 48 20 82 17 127 28 55 14 84 34 129 45" fill="none" stroke="#79242b" stroke-width="5" stroke-dasharray="13 9"/>
+    <g font-family="Segoe UI, sans-serif" font-size="15" fill="#24261f">
+      ${[['Seoul',177,91],['Anyang',178,169],['Suwon',190,224],['Osan',205,283],['Pyeongtaek',226,355],['Chungju',329,427],['Wonju',316,304],['Chuncheon',288,190],['Gangneung',422,215],['Samcheok',452,312]].map(([n,x,y]) => `<g><circle cx="${x}" cy="${y}" r="5" fill="#1c2928"/><text x="${x+9}" y="${y-7}">${n}</text></g>`).join('')}
+    </g>
+    <g fill="none" stroke="#9f2831" stroke-width="8" marker-end="url(#redArrow)" opacity=".9"><path d="M169 113C174 157 188 202 201 270"/><path d="M292 215c7 28 15 51 21 77"/><path d="M414 236c13 24 24 43 34 64"/></g>
+    <g transform="translate(209 304)" filter="url(#shadow)"><rect x="-29" y="-15" width="58" height="30" rx="2" fill="#e8e4cf" stroke="#315d8c" stroke-width="3"/><text text-anchor="middle" y="5" font-size="12" font-weight="800" fill="#21466d">TF SMITH</text></g>
+    <path d="M640 565C540 520 416 447 275 344 237 316 217 297 203 276" fill="none" stroke="#315d8c" stroke-width="4" stroke-dasharray="9 7" marker-end="url(#blueArrow)"/>
+    <g transform="translate(606 540) rotate(-25)" fill="#315d8c"><path d="M-24 2L-8-3 0-17 7-16 5-3 24 2 24 6 5 5 8 17 2 18-4 6-24 7z"/></g>
+    <g transform="translate(24 600)"><rect width="268" height="58" rx="6" fill="#e7dec2" fill-opacity=".93"/><path d="M14 19h35" stroke="#79242b" stroke-width="4" stroke-dasharray="10 6"/><text x="57" y="24" font-size="13" fill="#2b2c25">Estimated contact line</text><path d="M14 42h35" stroke="#315d8c" stroke-width="3" stroke-dasharray="8 6"/><text x="57" y="47" font-size="13" fill="#2b2c25">Black Scorpions mission axis</text></g>
+    <text x="626" y="44" font-size="13" letter-spacing="2" fill="#eef4ed" transform="rotate(90 626 44)">SEA OF JAPAN</text><text x="30" y="80" font-size="13" letter-spacing="2" fill="#eef4ed" transform="rotate(-90 30 80)">YELLOW SEA</text>
+    <text x="565" y="628" font-size="11" fill="#eef4ed" text-anchor="middle">SCHEMATIC — NOT FOR NAVIGATION</text>
+  </svg>`;
+}
+
+function battalionRows() {
+  return battalions.map((b) => {
+    const [label, tone] = condition(b.strength);
+    const search = [b.side, b.nationality, b.sector, b.division, b.regiment, b.battalion, b.location, b.posture].join(' ').toLowerCase();
+    return `<tr data-side="${b.side}" data-sector="${b.sector}" data-search="${esc(search)}">
+      <td><span class="side-mark ${b.side.toLowerCase()}">${b.side}</span><small>${esc(b.nationality)}</small></td>
+      <td><strong>${esc(b.battalion)}</strong><small>${esc(b.division)}</small></td>
+      <td>${esc(b.location)}<small>${esc(b.posture)}</small></td>
+      <td><span class="condition ${tone}">${label}</span></td>
+      <td>${meter(b.strength)}</td><td>${meter(b.supply)}</td><td>${meter(b.cohesion)}</td><td>${meter(b.mobility)}</td><td>${meter(b.fatigue, 'fatigue')}</td><td>${meter(b.confidence, 'confidence')}</td>
+      <td class="intel"><span>${esc(b.note)}</span><small>${esc(b.basis)}</small></td>
+    </tr>`;
+  }).join('');
+}
+
+function sectorCards() {
+  return state.sectors.map((s) => `<article class="sector-card ${s.id.toLowerCase()}"><div class="sector-head"><span>${s.id}</span><b>${esc(s.status)}</b></div><h3>${esc(s.name)}</h3><p class="axis">${esc(s.axis)}</p><p>${esc(s.note)}</p><div class="duo"><label>Enemy pressure ${meter(s.pressure, 'pressure')}</label><label>Intel confidence ${meter(s.confidence, 'confidence')}</label></div></article>`).join('');
+}
+
+function airRows() {
+  return state.airForces.map((a) => `<tr><td><span class="side-mark ${a.side.toLowerCase()}">${a.side}</span></td><td><strong>${esc(a.unit)}</strong><small>${esc(a.location)}</small></td><td>${esc(a.type)}</td><td><b>${a.available}</b> / ${a.assigned}</td><td>${esc(a.mission)}</td><td>${meter(a.condition)}</td><td>${meter(a.confidence, 'confidence')}</td></tr>`).join('');
+}
+
+function sourceList() {
+  return state.sources.map((s, i) => `<li><span>${String(i + 1).padStart(2, '0')}</span><a href="${esc(s.url)}">${esc(s.label)}</a></li>`).join('');
+}
+
+const html = `<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(state.title)} — ${state.date}</title>
+<style>
+:root{--ink:#202923;--muted:#657066;--paper:#eee8d4;--sheet:#f8f4e8;--navy:#14282f;--navy2:#203c43;--blue:#315d8c;--red:#922a31;--gold:#bd9348;--line:#c9bea0;--good:#467254;--watch:#a16d24;--poor:#9b3739}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#18272a;color:var(--ink);font:14px/1.45 "Segoe UI",Arial,sans-serif;background-image:radial-gradient(#526163 1px,transparent 1px);background-size:22px 22px}.page{max-width:1580px;margin:28px auto;background:var(--paper);box-shadow:0 30px 90px #071011;border:1px solid #53605b}.masthead{position:relative;overflow:hidden;background:linear-gradient(120deg,#10252b,#28474c);color:#f5efd9;padding:34px 42px 28px;border-bottom:6px solid var(--gold)}.masthead:after{content:"81";position:absolute;right:25px;top:-63px;font:900 210px Georgia;color:#fff;opacity:.035}.eyebrow,.label{font-size:11px;font-weight:800;letter-spacing:2.4px;text-transform:uppercase;color:#d1ae68}.masthead h1{font:700 clamp(30px,4vw,58px)/.95 Georgia,serif;margin:12px 0 8px}.masthead .sub{font-size:16px;letter-spacing:.8px;color:#cbd5d1}.dateline{display:flex;gap:26px;flex-wrap:wrap;margin-top:25px;padding-top:18px;border-top:1px solid #ffffff2e}.dateline b{display:block;font-size:15px;color:#fff}.dateline span{font-size:10px;letter-spacing:1.6px;color:#9fb2ad;text-transform:uppercase}.print{position:absolute;right:35px;bottom:28px;border:1px solid #d6b66f;background:#d0a855;color:#17282a;padding:9px 15px;font-weight:800;cursor:pointer}.body{padding:30px 34px 45px}.notice{display:grid;grid-template-columns:auto 1fr;gap:16px;background:#e1d6b8;border-left:5px solid var(--gold);padding:16px 18px;margin-bottom:24px}.notice b{font:700 20px Georgia}.notice p{margin:2px 0;color:#4f574e}.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:18px 0 28px}.kpi{background:var(--sheet);border:1px solid var(--line);padding:14px 15px;min-height:95px}.kpi span{font-size:10px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);font-weight:700}.kpi b{display:block;margin-top:8px;font:700 27px Georgia;color:#1c383c}.kpi small{color:#73796e}.section-title{display:flex;align-items:flex-end;justify-content:space-between;border-bottom:2px solid #7e7259;padding-bottom:8px;margin:35px 0 18px}.section-title h2{font:700 27px Georgia;margin:0}.section-title p{margin:0;color:var(--muted);font-size:12px}.overview{display:grid;grid-template-columns:minmax(520px,1.1fr) minmax(420px,.9fr);gap:24px}.map-wrap{background:#26383a;padding:12px;border:1px solid #132628;box-shadow:0 10px 24px #37403c33}.situation-map{width:100%;height:auto;display:block}.assessment{display:flex;flex-direction:column;gap:15px}.assessment .lead{font:18px/1.55 Georgia;margin:0;background:var(--sheet);padding:20px;border:1px solid var(--line)}.initiative{display:grid;grid-template-columns:1fr 1fr;gap:12px}.initiative div{background:#263d41;color:#f5efd9;padding:17px}.initiative span{display:block;color:#a9bbb6;text-transform:uppercase;font-size:10px;letter-spacing:1.5px}.initiative b{font:700 22px Georgia}.commander{border:1px dashed #8e805f;padding:16px;color:#4d544b}.commander:before{content:"COMMANDER'S CAUTION";display:block;font-size:10px;letter-spacing:1.5px;font-weight:800;color:#8d6029;margin-bottom:6px}.sectors{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.sector-card{background:var(--sheet);border:1px solid var(--line);border-top:5px solid var(--red);padding:18px}.sector-card.central{border-top-color:#9a6a2f}.sector-card.east{border-top-color:#6c745a}.sector-head{display:flex;justify-content:space-between;gap:10px}.sector-head span{font-size:10px;font-weight:900;letter-spacing:1.8px}.sector-head b{font-size:11px;color:var(--red);text-align:right}.sector-card h3{font:700 21px Georgia;margin:10px 0 0}.sector-card p{color:#50584f}.sector-card .axis{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:#7a705c}.duo{display:grid;gap:8px}.duo label{font-size:10px;text-transform:uppercase;color:#6d7168}.force-balance{display:grid;grid-template-columns:1fr 1fr;gap:16px}.balance{padding:22px;background:#f9f6eb;border:1px solid var(--line);display:grid;grid-template-columns:auto 1fr;gap:20px}.balance.un{border-left:7px solid var(--blue)}.balance.dprk{border-left:7px solid var(--red)}.balance .big{font:700 48px Georgia;line-height:1;color:#18343a}.balance h3{margin:0 0 8px}.balance p{margin:4px 0;color:#5f675f}.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 13px}.filters button,.filters select,.filters input{border:1px solid #a89d83;background:#faf7ed;padding:9px 12px;color:#28342f}.filters button{font-weight:800;cursor:pointer}.filters button.active{background:#203b40;color:#fff}.filters input{min-width:260px;margin-left:auto}.table-shell{border:1px solid #aa9f85;overflow:auto;max-height:760px;background:#f8f4e8}table{border-collapse:collapse;width:100%;min-width:1260px}th{position:sticky;top:0;z-index:2;background:#20383d;color:#eae5d4;padding:11px 9px;text-align:left;font-size:10px;letter-spacing:1px;text-transform:uppercase}td{padding:10px 9px;border-bottom:1px solid #d4cbb4;vertical-align:top;font-size:12px}tbody tr:nth-child(even){background:#eee8d7}tbody tr:hover{background:#fff8dc}td small{display:block;color:#6c736b;margin-top:3px}.side-mark{display:inline-block;padding:2px 6px;color:#fff;font-size:9px;font-weight:900;letter-spacing:1px}.side-mark.un{background:var(--blue)}.side-mark.dprk{background:var(--red)}.condition{font-size:10px;font-weight:800;padding:3px 7px;border-radius:10px;color:#fff;white-space:nowrap}.condition.good{background:var(--good)}.condition.watch{background:var(--watch)}.condition.poor{background:var(--poor)}.meter{position:relative;display:inline-block;width:70px;height:19px;background:#d5cfbe;overflow:hidden}.meter i{display:block;height:100%;background:#547864}.meter.fatigue i,.meter.pressure i{background:#a24a45}.meter.confidence i{background:#54728b}.meter b{position:absolute;inset:1px 4px;text-align:right;font-size:10px;color:#fff;text-shadow:0 1px 2px #000}.intel{min-width:245px;max-width:320px}.intel small{font-style:italic}.table-note{margin:10px 0;color:#646b62;font-size:11px}.hidden{display:none!important}.air-table{border:1px solid var(--line);overflow:auto}.air-table table{min-width:900px}.contacts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.contact{background:#f8f4e8;border:1px solid var(--line);padding:16px}.contact .stamp{font-size:10px;font-weight:900;letter-spacing:1.2px;color:var(--red)}.contact h3{font:700 17px Georgia;margin:8px 0}.contact p{margin:5px 0;color:#555e55}.contact .confidence{margin-top:12px}.timeline{position:relative;margin:15px 0;padding-left:34px}.timeline:before{content:"";position:absolute;left:10px;top:8px;bottom:8px;border-left:2px solid #9b8f71}.event{position:relative;background:#f8f4e8;border:1px solid var(--line);padding:17px;margin-bottom:13px}.event:before{content:"";position:absolute;left:-31px;top:19px;width:12px;height:12px;border-radius:50%;background:var(--gold);border:3px solid var(--paper)}.event-head{display:flex;gap:18px;align-items:baseline}.event h3{font:700 18px Georgia;margin:0}.event .result{margin-left:auto;font-weight:800;color:var(--red)}.event dl{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:12px 0 0}.event dt{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:#777466}.event dd{margin:2px 0}.squadron{background:#182f35;color:#ede8d9;padding:22px;display:grid;grid-template-columns:1.5fr repeat(5,1fr);gap:15px;align-items:center}.squadron h3{font:700 23px Georgia;margin:0}.squadron p{color:#b9c5bf}.sq-stat{border-left:1px solid #ffffff2c;padding-left:14px}.sq-stat b{display:block;font:700 25px Georgia;color:#dfbf79}.sq-stat span{font-size:9px;letter-spacing:1.2px;text-transform:uppercase;color:#9caeaa}.sources{columns:2;list-style:none;padding:0}.sources li{break-inside:avoid;margin:0 0 9px;display:flex;gap:10px}.sources span{font-weight:900;color:#9a6e31}.sources a{color:#294f68;text-decoration:none;border-bottom:1px solid #294f6844}.method{background:#dfd5ba;border:1px solid #b6a989;padding:18px;margin-top:20px}.method h3{font:700 18px Georgia;margin:0 0 6px}.footer{background:#15292d;color:#aebcb7;padding:18px 34px;display:flex;justify-content:space-between;font-size:11px}.footer b{color:#e0c17d}a:focus,button:focus,input:focus,select:focus{outline:3px solid #d1a547;outline-offset:2px}
+@media(max-width:1050px){.kpis{grid-template-columns:repeat(3,1fr)}.overview{grid-template-columns:1fr}.sectors,.contacts{grid-template-columns:1fr 1fr}.squadron{grid-template-columns:1fr 1fr}.print{position:static;margin-top:15px}.filters input{margin-left:0}.sources{columns:1}}
+@media(max-width:650px){.body{padding:18px}.masthead{padding:27px 20px}.kpis,.sectors,.force-balance,.contacts,.initiative{grid-template-columns:1fr}.event dl{grid-template-columns:1fr}.squadron{grid-template-columns:1fr}.sq-stat{border-left:0;border-top:1px solid #ffffff2c;padding:9px 0 0}.footer{display:block}}
+@page{size:A4 landscape;margin:9mm}@media print{body{background:#fff;font-size:9px}.page{max-width:none;margin:0;box-shadow:none;border:0}.masthead{padding:15px 22px}.masthead h1{font-size:30px}.print,.filters{display:none!important}.body{padding:12px 16px}.kpis{grid-template-columns:repeat(6,1fr);gap:5px;margin:8px 0}.kpi{min-height:0;padding:7px}.kpi b{font-size:17px}.overview{grid-template-columns:1fr 1fr;gap:10px}.sectors{grid-template-columns:repeat(3,1fr);gap:6px}.sector-card{padding:8px}.section-title{margin:16px 0 8px}.section-title h2{font-size:18px}.situation-map{max-height:165mm}.table-shell{max-height:none;overflow:visible;border:0}table{min-width:0;font-size:7px}th{position:static;padding:4px 3px}td{padding:3px;font-size:7px}.meter{width:39px;height:13px}.meter b{font-size:7px}.intel{min-width:130px}.contacts{grid-template-columns:repeat(4,1fr);gap:5px}.contact{padding:7px}.squadron{padding:10px;grid-template-columns:1.5fr repeat(5,1fr)}.sources{columns:2}.page-break{break-before:page}.avoid-break,.sector-card,.contact,.event,.balance{break-inside:avoid}.footer{padding:9px 16px}}
+.map-wrap{align-self:start;position:relative}.google-map{width:100%;height:790px;background:#d8d0b8}.map-loading{height:100%;display:grid;place-content:center;text-align:center;padding:40px;background:linear-gradient(145deg,#263b3e,#14282d);color:#eae3cf}.map-loading b{font:700 24px Georgia}.map-loading span{display:block;max-width:440px;margin-top:8px;color:#b8c6c0}.map-legend{background:#f8f3e3f2;border:1px solid #746b55;border-radius:3px;box-shadow:0 3px 12px #0005;margin:12px;padding:10px 12px;color:#25312d;font:12px/1.6 "Segoe UI",sans-serif}.map-legend b{display:block;font:700 14px Georgia;margin-bottom:3px}.map-legend i{display:inline-block;width:25px;height:4px;margin-right:8px;vertical-align:middle}.map-legend .front{background:repeating-linear-gradient(90deg,#8f2630 0 7px,transparent 7px 11px)}.map-legend .axis{background:#a12e35}.map-legend .mission{background:repeating-linear-gradient(90deg,#315d8c 0 7px,transparent 7px 11px)}.map-error{color:#e1bd75!important}@media(max-width:650px){.google-map{height:580px}}@media print{.google-map{height:165mm}.map-loading{border:1px solid #777}}
+</style></head><body><main class="page">
+<header class="masthead"><div class="eyebrow">${esc(state.classification)}</div><h1>${esc(state.title)}</h1><div class="sub">${esc(state.subtitle)} · Situation ${esc(state.situationId)}</div><div class="dateline"><div><span>Effective</span><b>${esc(state.date)} · ${esc(state.localTime)} local</b></div><div><span>Campaign phase</span><b>${esc(state.phase)}</b></div><div><span>Weather</span><b>${esc(state.weather.summary)} · ${state.weather.temperatureC}°C</b></div></div><button class="print" onclick="window.print()">PRINT DOSSIER</button></header>
+<div class="body"><section class="notice"><b>Intelligence estimate</b><p>This is the canonical campaign picture immediately before Sortie BS-002. Historical order of battle and major movements are distinguished from retroactively reconstructed battalion conditions. Confidence is shown throughout; low-confidence entries are deliberately retained as estimates rather than presented as observed fact.</p></section>
+<section class="kpis"><div class="kpi"><span>Front state</span><b>${esc(state.assessment.initiative)} initiative</b><small>${esc(state.assessment.tempo)} operational tempo</small></div><div class="kpi"><span>Battalion equivalents</span><b>${battalions.length}</b><small>${countSide('UN')} UN / ROK · ${countSide('DPRK')} DPRK</small></div><div class="kpi"><span>UN avg strength</span><b>${average('UN','strength')}%</b><small>Campaign fighting-power index</small></div><div class="kpi"><span>DPRK avg strength</span><b>${average('DPRK','strength')}%</b><small>Campaign fighting-power index</small></div><div class="kpi"><span>Squadron serviceable</span><b>${state.squadron.serviceable} / ${state.squadron.assigned}</b><small>${esc(state.squadron.aircraft)}</small></div><div class="kpi"><span>Recorded sorties</span><b>${state.squadron.sortiesRecorded}</b><small>${state.squadron.losses} confirmed losses</small></div></section>
+<div class="section-title"><h2>Operational picture</h2><p>Google terrain map · estimated front and principal axes</p></div><section class="overview"><div class="map-wrap"><div id="situationMap" class="google-map"><div class="map-loading"><b>Loading operational map…</b><span>Google Maps supplies the geographic base; campaign overlays remain intelligence estimates.</span></div></div></div><div class="assessment"><p class="lead">${esc(state.assessment.summary)}</p><div class="initiative"><div><span>Initiative</span><b>${esc(state.assessment.initiative)}</b></div><div><span>Assessment confidence</span><b>${Math.round(state.assessment.frontConfidence*100)}%</b></div></div><div class="commander">${esc(state.assessment.commanderNote)}</div>${sectorCards()}</div></section>
+<div class="section-title"><h2>Ground-force balance</h2><p>Operational-area battalion equivalents, not national totals</p></div><section class="force-balance"><article class="balance un"><div class="big">${countSide('UN')}</div><div><h3>United Nations / Republic of Korea</h3><p>Average strength <b>${average('UN','strength')}%</b> · cohesion <b>${average('UN','cohesion')}%</b> · supply <b>${average('UN','supply')}%</b></p><p>Western forces are fragmented; central defenders retain comparatively strong cohesion.</p></div></article><article class="balance dprk"><div class="big">${countSide('DPRK')}</div><div><h3>Democratic People's Republic of Korea</h3><p>Average strength <b>${average('DPRK','strength')}%</b> · cohesion <b>${average('DPRK','cohesion')}%</b> · supply <b>${average('DPRK','supply')}%</b></p><p>Western spearheads retain momentum; mountains and lengthening supply routes reduce central and eastern tempo.</p></div></article></section>
+<div class="section-title page-break"><h2>Battalion condition ledger</h2><p id="rowCount">Showing all ${battalions.length} battalion equivalents</p></div><div class="filters"><button class="active" data-side="ALL">ALL</button><button data-side="UN">UN / ROK</button><button data-side="DPRK">DPRK</button><select id="sector"><option value="ALL">All sectors</option><option>WEST</option><option>CENTRAL</option><option>EAST</option></select><input id="search" type="search" placeholder="Search unit, location or posture…" aria-label="Search units"></div><div class="table-shell"><table><thead><tr><th>Side</th><th>Battalion / parent</th><th>Location / posture</th><th>State</th><th>Str</th><th>Supply</th><th>Coh</th><th>Mob</th><th>Fatigue</th><th>Intel</th><th>Assessment and basis</th></tr></thead><tbody id="unitRows">${battalionRows()}</tbody></table></div><p class="table-note">STR = effective fighting strength; COH = cohesion; MOB = mobility. Values are 0–100 campaign indices, not literal headcounts. Fatigue is adverse: a higher value is worse. “Intel” is confidence in the estimate.</p>
+<div class="section-title"><h2>Air situation</h2><p>Available / assigned aircraft are planning estimates</p></div><section class="squadron avoid-break"><div><div class="label">Player formation</div><h3>${esc(state.squadron.name)}</h3><p>${esc(state.squadron.group)} · ${esc(state.squadron.base)}</p></div><div class="sq-stat"><b>${state.squadron.serviceable}</b><span>Serviceable</span></div><div class="sq-stat"><b>${state.squadron.pilotsAvailable}</b><span>Pilots available</span></div><div class="sq-stat"><b>${state.squadron.morale}</b><span>Morale index</span></div><div class="sq-stat"><b>${state.squadron.fatigue}</b><span>Fatigue index</span></div><div class="sq-stat"><b>${state.squadron.losses}</b><span>Campaign losses</span></div></section><p class="table-note">${esc(state.squadron.note)}</p><div class="air-table"><table><thead><tr><th>Side</th><th>Formation</th><th>Type</th><th>Avail / assigned</th><th>Current role</th><th>Condition</th><th>Intel</th></tr></thead><tbody>${airRows()}</tbody></table></div>
+<div class="section-title"><h2>Active contacts</h2><p>Reports age continuously; mission sightings supersede these entries</p></div><section class="contacts">${state.contacts.map((c) => `<article class="contact"><div class="stamp">${esc(c.id)} · ${esc(c.observed)}</div><h3>${esc(c.classification)}</h3><p><b>${esc(c.lastKnown)}</b></p><p>${esc(c.movement)}</p><p>${esc(c.status)}</p><div class="confidence">Intel confidence ${meter(c.confidence,'confidence')}</div></article>`).join('')}</section>
+<div class="section-title"><h2>Black Scorpions sortie record</h2><p>Campaign effects carried forward to the next situation</p></div><section class="timeline">${state.sorties.map((s) => `<article class="event"><div class="event-head"><span class="stamp">${esc(s.time)}</span><h3>${esc(s.id)} · ${esc(s.name)}</h3><span class="result">${esc(s.result)}</span></div><dl><div><dt>Operational effect</dt><dd>${esc(s.effect)}</dd></div><div><dt>Personnel</dt><dd>${esc(s.personnel)}</dd></div><div><dt>Aircraft</dt><dd>${esc(s.aircraft)}</dd></div></dl></article>`).join('')}</section>
+<div class="section-title"><h2>Sources and estimate method</h2><p>Historical anchor points plus campaign adjudication</p></div><ol class="sources">${sourceList()}</ol><aside class="method"><h3>How to read this report</h3><p><b>Historical core</b> identifies formations, major axes and events supported by the cited U.S. Army history. <b>Campaign estimate</b> assigns usable condition, supply, fatigue and location values where no battalion diary is available. Three-battalion regiments are expanded into battalion equivalents with small deterministic differences so the campaign can resolve losses and movement without pretending those figures were directly observed. Update <code>campaign/current-situation.json</code> after each sortie, then rebuild this dossier.</p></aside></div>
+<footer class="footer"><span><b>${esc(state.classification)}</b> · Generated from campaign/current-situation.json</span><span>${esc(state.situationId)} · Effective ${esc(state.date)} ${esc(state.localTime)} local</span></footer></main>
+<script>
+const rows=[...document.querySelectorAll('#unitRows tr')], buttons=[...document.querySelectorAll('[data-side]')], sector=document.querySelector('#sector'), search=document.querySelector('#search'), count=document.querySelector('#rowCount');let selected='ALL';function filter(){const q=search.value.trim().toLowerCase(), sec=sector.value;let visible=0;rows.forEach(row=>{const show=(selected==='ALL'||row.dataset.side===selected)&&(sec==='ALL'||row.dataset.sector===sec)&&(!q||row.dataset.search.includes(q));row.classList.toggle('hidden',!show);if(show)visible++});count.textContent='Showing '+visible+' of ${battalions.length} battalion equivalents'}buttons.forEach(button=>button.addEventListener('click',()=>{selected=button.dataset.side;buttons.forEach(b=>b.classList.toggle('active',b===button));filter()}));sector.addEventListener('change',filter);search.addEventListener('input',filter);
+
+const GOOGLE_MAPS_API_KEY=${JSON.stringify(googleMapsApiKey)};
+const mapElement=document.querySelector('#situationMap');
+function mapFailure(message){mapElement.innerHTML='<div class="map-loading"><b>Operational map unavailable</b><span class="map-error">'+message+'</span><span>The force ledger and campaign assessment remain available below.</span></div>'}
+window.gm_authFailure=()=>mapFailure('Google rejected the Maps credential. Check that Maps JavaScript API is enabled and the key restrictions allow this local report.');
+window.initSituationMap=()=>{
+  const front=[{lat:37.33,lng:126.72},{lat:37.264,lng:127.029},{lat:37.342,lng:127.920},{lat:37.450,lng:129.166}];
+  const map=new google.maps.Map(mapElement,{center:{lat:37.30,lng:127.85},zoom:8,mapTypeId:'terrain',mapTypeControl:true,streetViewControl:false,fullscreenControl:true,gestureHandling:'greedy',controlSize:28});
+  const red='#922a31',blue='#315d8c',ink='#1d2927';
+  const dashed=(color)=>({path:'M 0,-1 0,1',strokeOpacity:1,strokeColor:color,strokeWeight:4,scale:3});
+  new google.maps.Polygon({map,paths:[...front,{lat:38.25,lng:129.42},{lat:38.25,lng:126.45}],fillColor:red,fillOpacity:.12,strokeOpacity:0,clickable:false});
+  new google.maps.Polyline({map,path:front,strokeOpacity:0,icons:[{icon:dashed(red),offset:'0',repeat:'18px'}],clickable:false,zIndex:4});
+  const arrow={path:google.maps.SymbolPath.FORWARD_CLOSED_ARROW,fillOpacity:1,strokeOpacity:1,scale:4};
+  function axis(path,color){new google.maps.Polyline({map,path,strokeColor:color,strokeOpacity:.88,strokeWeight:5,icons:[{icon:{...arrow,fillColor:color,strokeColor:color},offset:'100%'}],clickable:false,zIndex:3})}
+  axis([{lat:37.5665,lng:126.9780},{lat:37.3943,lng:126.9568},{lat:37.2636,lng:127.0286},{lat:37.1498,lng:127.0772}],red);
+  axis([{lat:37.8813,lng:127.7300},{lat:37.6972,lng:127.8886},{lat:37.3422,lng:127.9202}],red);
+  axis([{lat:37.7519,lng:128.8761},{lat:37.4499,lng:129.1658}],red);
+  const mission=[{lat:33.5859,lng:130.4507},{lat:35.80,lng:129.55},{lat:36.75,lng:128.10},{lat:37.20,lng:127.07}];
+  new google.maps.Polyline({map,path:mission,strokeOpacity:0,icons:[{icon:dashed(blue),offset:'0',repeat:'20px'},{icon:{...arrow,fillColor:blue,strokeColor:blue},offset:'100%'}],clickable:false,zIndex:5});
+  const info=new google.maps.InfoWindow();
+  function marker(position,label,title,note,color){const item=new google.maps.Marker({map,position,title,label:{text:label,color:'#fff',fontSize:'10px',fontWeight:'800'},icon:{path:google.maps.SymbolPath.CIRCLE,fillColor:color,fillOpacity:1,strokeColor:'#f8f2df',strokeWeight:2,scale:13},zIndex:7});item.addListener('click',()=>{info.setContent('<div style="max-width:240px"><b>'+title+'</b><br>'+note+'</div>');info.open({map,anchor:item})});return item}
+  marker({lat:37.19,lng:127.03},'TF','Task Force Smith','Preparing a hasty blocking position north of Osan.',blue);
+  marker({lat:37.22,lng:127.08},'OBJ','BS-002 search area','Moving armored and transport contact; exact position uncertain.',red);
+  marker({lat:37.3422,lng:127.9202},'C','Wonju sector','ROK 6th Division conducting an organized delay.',ink);
+  marker({lat:37.4499,lng:129.1658},'E','East-coast sector','Fragmented reporting south of Gangneung.',ink);
+  marker({lat:33.5859,lng:130.4507},'81','Itazuke Air Base','81st Fighter-Bomber Squadron, Black Scorpions.',blue);
+  const legend=document.createElement('div');legend.className='map-legend';legend.innerHTML='<b>4 July 1950 · 14:30</b><div><i class="front"></i>Estimated contact line</div><div><i class="axis"></i>DPRK advance axes</div><div><i class="mission"></i>Black Scorpions mission route</div><small>Click unit symbols for the assessment.</small>';map.controls[google.maps.ControlPosition.LEFT_BOTTOM].push(legend);
+  const bounds=new google.maps.LatLngBounds();[{lat:37.08,lng:126.66},{lat:37.92,lng:129.30}].forEach(p=>bounds.extend(p));map.fitBounds(bounds,34);
+};
+if(GOOGLE_MAPS_API_KEY){const loader=document.createElement('script');loader.src='https://maps.googleapis.com/maps/api/js?key='+encodeURIComponent(GOOGLE_MAPS_API_KEY)+'&callback=initSituationMap&v=weekly&loading=async&region=KR&language=en';loader.async=true;loader.onerror=()=>mapFailure('The Google Maps script could not be loaded. Check the network connection and API configuration.');document.head.appendChild(loader)}else{mapFailure('No key was embedded. Set GOOGLE_MAPS_API_KEY and rebuild with npm run report:situation.')}
+</script></body></html>`;
+
+fs.mkdirSync(outputDir, { recursive: true });
+fs.writeFileSync(output, html, 'utf8');
+console.log(`Wrote ${output}`);
+console.log(`${battalions.length} battalion equivalents (${countSide('UN')} UN/ROK, ${countSide('DPRK')} DPRK)`);
+console.log(googleMapsApiKey ? 'Google Maps enabled from GOOGLE_MAPS_API_KEY.' : 'Google Maps key absent; wrote safe fallback.');
