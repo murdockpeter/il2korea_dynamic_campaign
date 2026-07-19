@@ -56,16 +56,21 @@
         "2026-07-02: Beta screenshots showed the derived spawn sitting in dirt just off the paved strip.",
         "Manual override moves the spawn onto the visible concrete at Tatung-kao while preserving the east-northeast launch heading.",
         "Second manual adjustment moves the start closer to the runway threshold after the first override still placed the aircraft beside the taxiway.",
-        "Third manual adjustment recenters the two-ship spawn on the visible runway concrete using the latest in-game screenshots."
+        "Third manual adjustment recenters the two-ship spawn on the visible runway concrete using the latest in-game screenshots.",
+        "Fourth manual adjustment shifts the start off the near taxi strip and onto the farther parallel runway visible in follow-up screenshots.",
+        "Fifth manual adjustment places the lead aircraft near the southwest runway threshold and points it down the runway length rather than along the taxi strip.",
+        "Sixth manual adjustment switches Tatung-kao to the main runway axis visible on the briefing map, using the approximately 020/200 true heading family instead of the incorrect side-strip axis.",
+        "Seventh manual adjustment places the lead aircraft close to the runway-end black-dot position on the briefing map so the flight starts at the threshold rather than mid-strip.",
+        "Eighth manual adjustment snaps the start onto the actual runway threshold endpoint from the local crossing geometry and aligns the heading to the runway centerline instead of the approximate map estimate."
       ],
       "screenshotRefs": [
         "2026-07-02 user screenshots: Tatung-kao spawn off pavement on grass/dirt shoulder beside strip."
       ],
       "manualOverride": {
         "enabled": true,
-        "x": 372056.0,
-        "z": 40766.0,
-        "headingDeg": 80.5
+        "x": 373243.0,
+        "z": 40478.0,
+        "headingDeg": 218.0
       },
       "derivedRunwayAxisDeg": 80.631,
       "derivedHeadingDeg": 80.631,

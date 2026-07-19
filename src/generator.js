@@ -2022,6 +2022,75 @@ function transformBlockXZ(block, origin, targetOrigin, rotationDeg = 0, rotateHe
   return updated;
 }
 
+function getMissionHeadingForwardVector(headingDeg) {
+  const radians = (normalizeHeadingDegrees(headingDeg) * Math.PI) / 180;
+  return {
+    x: Math.sin(radians),
+    z: -Math.cos(radians),
+  };
+}
+
+function snapPlayerFlightToRunwayLayout(missionText, playerFlight, placement) {
+  if (!placement || !Number.isFinite(placement.x) || !Number.isFinite(placement.z) || !Number.isFinite(placement.headingDeg)) {
+    return missionText;
+  }
+
+  const memberPlanes = parsePlaneBlocks(missionText)
+    .filter((entry) => entry.callsign === playerFlight.callsign && entry.country === playerFlight.country)
+    .map((entry) => ({
+      planeIndex: extractMissionValue(entry.block, 'Index'),
+      formationSlot: Number(extractMissionValue(entry.block, 'NumberInFormation')) || 0,
+    }))
+    .sort((left, right) => left.formationSlot - right.formationSlot);
+
+  if (!memberPlanes.length) {
+    return missionText;
+  }
+
+  const spacingMeters = 28;
+  const forward = getMissionHeadingForwardVector(placement.headingDeg);
+  const assignedPositions = new Map();
+
+  memberPlanes.forEach((member, memberIndex) => {
+    assignedPositions.set(member.planeIndex, {
+      x: placement.x - forward.x * spacingMeters * memberIndex,
+      z: placement.z - forward.z * spacingMeters * memberIndex,
+      headingDeg: normalizeHeadingDegrees(placement.headingDeg),
+    });
+  });
+
+  let updated = missionText;
+
+  const planeBlockPattern = /Plane\s*\{[\s\S]*?\n\s*\}/g;
+  updated = updated.replace(planeBlockPattern, (block) => {
+    const index = extractMissionValue(block, 'Index');
+    const assigned = assignedPositions.get(index);
+    if (!assigned) {
+      return block;
+    }
+
+    let snapped = replaceMissionCoordinate(block, 'XPos', assigned.x);
+    snapped = replaceMissionCoordinate(snapped, 'ZPos', assigned.z);
+    snapped = replaceMissionOrientation(snapped, 'YOri', assigned.headingDeg);
+    return snapped;
+  });
+
+  const entityPattern = /MCU_TR_Entity\s*\{[\s\S]*?\n\s*\}/g;
+  updated = updated.replace(entityPattern, (block) => {
+    const planeIndex = extractMissionValue(block, 'MisObjID');
+    const assigned = assignedPositions.get(planeIndex);
+    if (!assigned) {
+      return block;
+    }
+
+    let snapped = replaceMissionCoordinate(block, 'XPos', assigned.x);
+    snapped = replaceMissionCoordinate(snapped, 'ZPos', assigned.z);
+    return snapped;
+  });
+
+  return updated;
+}
+
 function stripObjectRefsFromBlockTypes(missionText, objectIds, blockTypes) {
   let updated = missionText;
 
@@ -2122,6 +2191,10 @@ function shiftPlayerStartPackage(missionText, playerAircraft, startAirfield) {
         : block;
     });
   });
+
+  if (placement) {
+    updated = snapPlayerFlightToRunwayLayout(updated, playerFlight, placement);
+  }
 
   return updated;
 }
