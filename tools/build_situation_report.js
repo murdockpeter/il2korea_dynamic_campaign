@@ -1,16 +1,14 @@
 const fs = require('fs');
 const path = require('path');
+const { readLocalGoogleMapsKey } = require('./local_google_maps_key');
 
 const root = path.resolve(__dirname, '..');
 const input = path.join(root, 'campaign', 'current-situation.json');
 const outputDir = path.join(root, 'reports');
 const output = path.join(outputDir, 'current-situation.html');
 const state = JSON.parse(fs.readFileSync(input, 'utf8'));
-const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY || '';
-
-if (googleMapsApiKey && !/^[A-Za-z0-9_-]+$/.test(googleMapsApiKey)) {
-  throw new Error('GOOGLE_MAPS_API_KEY contains unexpected characters.');
-}
+const mapsCredential = readLocalGoogleMapsKey(root);
+const googleMapsApiKey = mapsCredential.key;
 
 const esc = (value) => String(value ?? '')
   .replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
@@ -171,4 +169,4 @@ fs.mkdirSync(outputDir, { recursive: true });
 fs.writeFileSync(output, html, 'utf8');
 console.log(`Wrote ${output}`);
 console.log(`${battalions.length} battalion equivalents (${countSide('UN')} UN/ROK, ${countSide('DPRK')} DPRK)`);
-console.log(googleMapsApiKey ? 'Google Maps enabled from GOOGLE_MAPS_API_KEY.' : 'Google Maps key absent; wrote safe fallback.');
+console.log(googleMapsApiKey ? `Google Maps enabled from ${mapsCredential.source}.` : 'Google Maps key absent; wrote safe fallback.');

@@ -61,5 +61,13 @@ inventing exact observations.
 Keep historical facts, player-reported outcomes, and campaign-reconstructed
 estimates distinguishable in `basis`, `note`, and confidence fields. Battalion
 values are operational-resolution indices, not claimed historical headcounts.
-After changing the state, run `npm run report:situation` so
-`reports/current-situation.html` remains synchronized and printable.
+After changing the state, run both `npm run report:situation` and
+`npm run report:campaign` so the printable condition dossier and interactive
+campaign map remain synchronized.
+
+Keep the `map` section of `campaign/current-situation.json` synchronized with
+the adjudicated war state. Update the estimated front line, sector deployment
+zones, active mission route/search area, and last-known contact coordinates
+when intelligence or elapsed time justifies a change. Positional dispersion is
+deterministic presentation logic; the stored anchors should express the best
+campaign estimate without claiming false precision.

@@ -21,6 +21,22 @@
     "summary": "The North Korean advance retains the initiative across all three principal corridors. The western thrust has broken the morning Suwon delay and is pressing toward Osan. The central advance is approaching Wonju against a more coherent ROK 6th Division withdrawal. East-coast forces are separated by difficult terrain and incomplete reporting.",
     "commanderNote": "The displayed line is an intelligence estimate, not a continuous trench system. Local columns, bypassed defenders, refugees, and friendly withdrawals may exist on either side of it."
   },
+  "map": {
+    "frontLine": [[37.31,126.54],[37.26,127.03],[37.34,127.92],[37.45,129.17]],
+    "unitZones": {
+      "UN": { "WEST": [37.12,127.04], "CENTRAL": [37.20,127.93], "EAST": [37.31,129.05] },
+      "DPRK": { "WEST": [37.39,126.99], "CENTRAL": [37.49,127.91], "EAST": [37.59,129.05] }
+    },
+    "views": {
+      "ALL": { "center": [37.30,127.80], "zoom": 8 },
+      "WEST": { "center": [37.24,127.02], "zoom": 10 },
+      "CENTRAL": { "center": [37.34,127.92], "zoom": 10 },
+      "EAST": { "center": [37.46,129.03], "zoom": 10 },
+      "SQUADRON": { "center": [33.5859,130.4507], "zoom": 10 }
+    },
+    "missionRoute": [[33.5859,130.4507],[35.80,129.55],[36.75,128.10],[37.20,127.07]],
+    "searchArea": { "center": [37.20,127.07], "radiusMeters": 16000, "label": "BS-002 Osan Road search area" }
+  },
   "sectors": [
     {
       "id": "WEST",
@@ -73,10 +89,10 @@
     { "side": "DPRK", "unit": "KPAF attack force estimate", "type": "Il-10", "location": "Dispersed forward fields", "available": 12, "assigned": 20, "mission": "Ground attack", "condition": 61, "confidence": 39 }
   ],
   "contacts": [
-    { "id": "CONTACT_OSAN_021", "side": "DPRK", "classification": "Armored and transport column", "sector": "WEST", "lastKnown": "Suwon-Osan road corridor", "observed": "1950-07-04 09:05", "movement": "South at estimated 15-20 km/h", "confidence": 57, "status": "Aging; not damaged by Sortie 001" },
-    { "id": "CONTACT_YAK_007", "side": "DPRK", "classification": "Two-ship fighter patrol", "sector": "WEST", "lastKnown": "Northeast of Suwon", "observed": "1950-07-04 12:40", "movement": "Intermittent patrol activity", "confidence": 36, "status": "Possible; not confirmed for Mission 2" },
-    { "id": "CONTACT_WONJU_014", "side": "DPRK", "classification": "Division advance guard", "sector": "CENTRAL", "lastKnown": "North and east approaches to Wonju", "observed": "1950-07-04 10:20", "movement": "South / southeast", "confidence": 69, "status": "Reported in contact with ROK delaying forces" },
-    { "id": "CONTACT_EAST_009", "side": "DPRK", "classification": "Infantry and irregular detachments", "sector": "EAST", "lastKnown": "Gangneung-Samcheok corridor and mountain tracks", "observed": "1950-07-04 06:30", "movement": "South and inland", "confidence": 44, "status": "Fragmented reporting" }
+    { "id": "CONTACT_OSAN_021", "side": "DPRK", "classification": "Armored and transport column", "sector": "WEST", "position": [37.20,127.07], "lastKnown": "Suwon-Osan road corridor", "observed": "1950-07-04 09:05", "movement": "South at estimated 15-20 km/h", "confidence": 57, "status": "Aging; not damaged by Sortie 001" },
+    { "id": "CONTACT_YAK_007", "side": "DPRK", "classification": "Two-ship fighter patrol", "sector": "WEST", "position": [37.38,127.25], "lastKnown": "Northeast of Suwon", "observed": "1950-07-04 12:40", "movement": "Intermittent patrol activity", "confidence": 36, "status": "Possible; not confirmed for Mission 2" },
+    { "id": "CONTACT_WONJU_014", "side": "DPRK", "classification": "Division advance guard", "sector": "CENTRAL", "position": [37.46,127.94], "lastKnown": "North and east approaches to Wonju", "observed": "1950-07-04 10:20", "movement": "South / southeast", "confidence": 69, "status": "Reported in contact with ROK delaying forces" },
+    { "id": "CONTACT_EAST_009", "side": "DPRK", "classification": "Infantry and irregular detachments", "sector": "EAST", "position": [37.55,129.10], "lastKnown": "Gangneung-Samcheok corridor and mountain tracks", "observed": "1950-07-04 06:30", "movement": "South and inland", "confidence": 44, "status": "Fragmented reporting" }
   ],
   "sorties": [
     {

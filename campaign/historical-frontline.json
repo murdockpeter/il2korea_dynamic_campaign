@@ -11,7 +11,11 @@
       "headline": "The North Korean invasion opens across the 38th Parallel.",
       "summary": "Seven assault divisions, armored forces, and supporting formations cross into the Republic of Korea. The line shown is the prewar boundary and opening contact zone, not a stabilized battlefield front.",
       "line": [[37.96,125.25],[37.97,126.30],[38.02,127.10],[38.05,128.10],[38.08,128.90]],
-      "view": { "lat": 37.65, "lng": 127.35, "zoom": 7 }
+      "view": { "lat": 37.65, "lng": 127.35, "zoom": 7 },
+      "unitZones": {
+        "UN": { "WEST": [37.84,126.70], "CENTRAL": [37.86,127.70], "EAST": [37.87,128.72] },
+        "DPRK": { "WEST": [38.15,126.62], "CENTRAL": [38.19,127.64], "EAST": [38.22,128.70] }
+      }
     },
     {
       "date": "1950-06-28",
@@ -21,7 +25,11 @@
       "headline": "Seoul falls as the ROK defense fragments south of the Han.",
       "summary": "The western defense is no longer a continuous line. North Korean columns enter Seoul while other axes press through the central mountains and down the east coast.",
       "line": [[37.48,126.40],[37.48,126.90],[37.56,127.45],[37.63,128.10],[37.68,128.95]],
-      "view": { "lat": 37.45, "lng": 127.65, "zoom": 7 }
+      "view": { "lat": 37.45, "lng": 127.65, "zoom": 7 },
+      "unitZones": {
+        "UN": { "WEST": [37.34,126.92], "CENTRAL": [37.42,127.70], "EAST": [37.50,128.78] },
+        "DPRK": { "WEST": [37.66,126.91], "CENTRAL": [37.73,127.67], "EAST": [37.79,128.79] }
+      }
     },
     {
       "date": "1950-07-04",
@@ -32,7 +40,11 @@
       "headline": "The invasion reaches the Suwon–Wonju–Samcheok alignment.",
       "summary": "The western thrust breaks the Suwon delay and presses toward Osan. The former NKPA 7th Division approaches Wonju, while east-coast forces continue south toward Samcheok. Task Force Smith prepares north of Osan.",
       "line": [[37.31,126.54],[37.26,127.03],[37.34,127.92],[37.45,129.17]],
-      "view": { "lat": 37.25, "lng": 127.80, "zoom": 8 }
+      "view": { "lat": 37.25, "lng": 127.80, "zoom": 8 },
+      "unitZones": {
+        "UN": { "WEST": [37.12,127.04], "CENTRAL": [37.20,127.93], "EAST": [37.31,129.05] },
+        "DPRK": { "WEST": [37.39,126.99], "CENTRAL": [37.49,127.91], "EAST": [37.59,129.05] }
+      }
     },
     {
       "date": "1950-07-20",
@@ -42,7 +54,11 @@
       "headline": "Taejon falls; the delaying battle moves toward the southeast.",
       "summary": "UN and ROK forces continue trading ground for time. North Korean columns push beyond the Kum River and threaten the approaches to Taegu, while the eastern advance pressures the Andong–Yongdok region.",
       "line": [[36.20,126.55],[36.23,127.35],[36.48,128.05],[36.54,128.70],[36.42,129.43]],
-      "view": { "lat": 36.35, "lng": 128.05, "zoom": 7 }
+      "view": { "lat": 36.35, "lng": 128.05, "zoom": 7 },
+      "unitZones": {
+        "UN": { "WEST": [36.04,127.24], "CENTRAL": [36.24,128.02], "EAST": [36.27,129.22] },
+        "DPRK": { "WEST": [36.38,127.20], "CENTRAL": [36.56,128.02], "EAST": [36.57,129.22] }
+      }
     },
     {
       "date": "1950-08-04",
@@ -52,7 +68,11 @@
       "headline": "The UN defense contracts behind the Naktong into the Pusan Perimeter.",
       "summary": "The southeastern lodgment becomes the final defensive position. Taegu, Pohang, the Naktong crossings, and the southwestern approach to Pusan are all under pressure.",
       "line": [[35.12,128.08],[35.40,128.28],[35.72,128.25],[36.04,128.38],[36.28,128.63],[36.18,129.02],[36.35,129.39]],
-      "view": { "lat": 35.78, "lng": 128.70, "zoom": 8 }
+      "view": { "lat": 35.78, "lng": 128.70, "zoom": 8 },
+      "unitZones": {
+        "UN": { "WEST": [35.22,128.38], "CENTRAL": [35.76,128.72], "EAST": [35.94,129.24] },
+        "DPRK": { "WEST": [35.45,128.08], "CENTRAL": [36.04,128.40], "EAST": [36.26,129.27] }
+      }
     },
     {
       "date": "1950-09-15",
@@ -63,7 +83,11 @@
       "summary": "The Pusan Perimeter still exists, but the strategic geometry has changed. X Corps lands at Inchon while Eighth Army prepares to break out from the southeast.",
       "line": [[35.12,128.08],[35.40,128.28],[35.72,128.25],[36.04,128.38],[36.28,128.63],[36.18,129.02],[36.35,129.39]],
       "secondary": [[37.38,126.47],[37.46,126.57],[37.49,126.70]],
-      "view": { "lat": 36.40, "lng": 127.85, "zoom": 7 }
+      "view": { "lat": 36.40, "lng": 127.85, "zoom": 7 },
+      "unitZones": {
+        "UN": { "WEST": [35.27,128.37], "CENTRAL": [35.82,128.71], "EAST": [35.99,129.20] },
+        "DPRK": { "WEST": [35.49,128.09], "CENTRAL": [36.05,128.42], "EAST": [36.25,129.26] }
+      }
     },
     {
       "date": "1950-09-28",
@@ -73,7 +97,11 @@
       "headline": "Seoul is recaptured and North Korean forces retreat toward the parallel.",
       "summary": "The Inchon force and the breakout from the perimeter collapse the North Korean rear. Fighter-bombers return permanently to Taegu as the air-base system expands northward.",
       "line": [[37.62,126.30],[37.65,126.98],[37.61,127.70],[37.57,128.45],[37.53,129.10]],
-      "view": { "lat": 37.30, "lng": 127.65, "zoom": 7 }
+      "view": { "lat": 37.30, "lng": 127.65, "zoom": 7 },
+      "unitZones": {
+        "UN": { "WEST": [37.47,126.80], "CENTRAL": [37.39,127.64], "EAST": [37.36,128.77] },
+        "DPRK": { "WEST": [37.77,126.82], "CENTRAL": [37.73,127.63], "EAST": [37.69,128.80] }
+      }
     },
     {
       "date": "1950-10-07",
@@ -83,7 +111,11 @@
       "headline": "UN forces cross the 38th Parallel as Korean airfields reopen behind them.",
       "summary": "Pohang is back in USAF use, and support organizations move into Suwon. The operational front has returned to the prewar boundary and is beginning to move into North Korea.",
       "line": [[38.06,125.75],[38.10,126.55],[38.14,127.35],[38.12,128.20],[38.16,128.85]],
-      "view": { "lat": 37.72, "lng": 127.50, "zoom": 7 }
+      "view": { "lat": 37.72, "lng": 127.50, "zoom": 7 },
+      "unitZones": {
+        "UN": { "WEST": [37.91,126.62], "CENTRAL": [37.93,127.53], "EAST": [37.96,128.53] },
+        "DPRK": { "WEST": [38.25,126.62], "CENTRAL": [38.28,127.53], "EAST": [38.30,128.54] }
+      }
     }
   ],
   "airfields": [

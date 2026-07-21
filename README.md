@@ -114,6 +114,13 @@ Remove-Item Env:\GOOGLE_MAPS_API_KEY
 npm run report:serve
 ```
 
+The environment variable is required for the first local map build. Afterward,
+the builders can reuse the credential already embedded in any existing
+Git-ignored report. This prevents a routine no-environment rebuild from
+silently overwriting a working map with the no-key fallback. If all generated
+reports are deleted, set the environment variable once again for the next
+build.
+
 Open `http://localhost:4173/` while the local server is running. Serving over
 localhost is more reliable than a `file:` URL for Google Maps website
 restrictions. The generated HTML is ignored by Git because a browser-side Maps
@@ -127,8 +134,16 @@ email a key-bearing generated report.
 The separate historical atlas follows the mobile front from the invasion on
 25 June through the UN crossing of the 38th Parallel on 7 October 1950. Its
 Google terrain map has a playable date slider, broad front-line
-reconstructions, initiative shading, and dated viability states for Itazuke and
-the principal early Korean K-bases.
+reconstructions, initiative shading, dated viability states for Itazuke and
+the principal early Korean K-bases, and 98 campaign-tracked battalion
+equivalents derived from the 4 July situation ledger.
+
+Battalion symbols use a blue UN/ROK or red DPRK outer ring. Their inner core
+shows campaign-estimated combat effectiveness: green for effective, amber for
+degraded, orange for fragile, and red for critical. Side toggles can declutter
+the map. Positions have deterministic formation and battalion offsets around
+dated sector anchors; this provides realistic dispersion while ensuring the
+same unit does not jump randomly whenever the page is loaded.
 
 The historical source data is
 [`campaign/historical-frontline.json`](campaign/historical-frontline.json).
@@ -144,7 +159,39 @@ npm run report:serve
 Open `http://localhost:4173/history`. The displayed lines are deliberately
 operational-scale estimates: the opening campaign frequently consisted of
 road-bound columns, local delaying positions, bypassed units, and gaps rather
-than one continuous front.
+than one continuous front. Battalion positions before and after the campaign's
+4 July baseline are reconstructions, not claimed historical coordinates or an
+exhaustive theater order of battle.
+
+### Black Scorpions campaign tracker
+
+The live campaign operations board is generated directly from
+[`campaign/current-situation.json`](campaign/current-situation.json). It uses
+the historical atlas presentation for the evolving fictional campaign and
+shows:
+
+- the current estimated front and DPRK-controlled-area shading;
+- all campaign-tracked battalions with allegiance rings and effectiveness
+  cores;
+- deterministic formation dispersion and intelligence-confidence opacity;
+- last-known contact diamonds, current K-base status, and the active sortie
+  route and search area;
+- focus controls for the full front, each operational sector, and the Black
+  Scorpions' home station;
+- squadron readiness, current mission, sector pressure, force balance, contacts,
+  and sortie history.
+
+Build it with the same temporary Maps environment variable:
+
+```powershell
+$env:GOOGLE_MAPS_API_KEY = '<your Google Maps key>'
+npm run report:campaign
+Remove-Item Env:\GOOGLE_MAPS_API_KEY
+npm run report:serve
+```
+
+Open `http://localhost:4173/campaign`. After each adjudicated sortie, update
+the canonical state and rebuild both `report:situation` and `report:campaign`.
 
 ## Mission quality standard
 
@@ -249,6 +296,12 @@ Rebuild the historical front-line atlas:
 
 ```powershell
 npm run report:history
+```
+
+Rebuild the live Black Scorpions campaign tracker:
+
+```powershell
+npm run report:campaign
 ```
 
 Serve the dossier locally after building it:

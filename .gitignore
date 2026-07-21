@@ -2,6 +2,7 @@ node_modules/
 generated/
 reports/current-situation.html
 reports/historical-frontline.html
+reports/campaign-tracker.html
 dist/
 catalog/landscape_Korea_*.Group
 
