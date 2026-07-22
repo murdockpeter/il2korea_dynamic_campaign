@@ -231,6 +231,17 @@ The canonical editor reference is the included
 The Great Battles manual remains substantially applicable to Korea, while the
 shipped Korea missions and live tests identify version-specific differences.
 
+For historical air-war context, the repository also includes the USAF
+chronology [*The U.S. Air Force's First War: Korea, 1950-1953: Significant
+Events*](docs/KoreanWarChronology.pdf). It supplies Korean-local dates, monthly
+operational summaries, and daily significant events for judging plausible
+theater tempo, basing, reinforcements, capabilities, and threats. It is not a
+fixed event script: adjudicated mission results and
+[`campaign/current-situation.json`](campaign/current-situation.json) control
+the dynamic campaign's local front, force condition, intelligence, and next
+sortie. Material departures from historical anchors should be identified as
+campaign divergences rather than silently corrected.
+
 ## Repository layout
 
 ```text

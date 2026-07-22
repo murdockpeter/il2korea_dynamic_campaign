@@ -157,6 +157,7 @@
     { "side": "DPRK", "nationality": "DPRK", "sector": "EAST", "division": "766th Independent Unit", "regiment": "Infiltration groups", "battalions": 2, "location": "Coastal landings and Taebaek approaches", "posture": "Infiltration / communications disruption", "strength": 69, "supply": 52, "mobility": 71, "cohesion": 64, "fatigue": 57, "confidence": 61, "basis": "Historical unit; battalion-equivalent abstraction", "note": "Represents dispersed landing parties and inland infiltration rather than a continuous battalion front." }
   ],
   "sources": [
+    { "label": "USAF - The U.S. Air Force's First War: Korea chronology", "url": "https://www.dafhistory.af.mil/Portals/16/documents/Timelines/Korea/KoreanWarChronology.pdf" },
     { "label": "U.S. Army CMH - Korean War campaign summary", "url": "https://history.army.mil/Research/Reference-Topics/Army-Campaigns/Brief-Summaries/Korean-War/" },
     { "label": "Appleman, South to the Naktong, North to the Yalu - Chapter II", "url": "https://webdoc.sub.gwdg.de/ebook/p/2005/CMH_2/www.army.mil/cmh-pg/books/korea/20-2-1/sn02.htm" },
     { "label": "Appleman - Chapter III, Invasion Across the Parallel", "url": "https://webdoc.sub.gwdg.de/ebook/p/2005/CMH_2/www.army.mil/cmh-pg/books/korea/20-2-1/sn03.htm" },

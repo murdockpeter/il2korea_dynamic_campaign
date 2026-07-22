@@ -71,3 +71,32 @@ zones, active mission route/search area, and last-known contact coordinates
 when intelligence or elapsed time justifies a change. Positional dispersion is
 deterministic presentation logic; the stored anchors should express the best
 campaign estimate without claiming false precision.
+
+## Historical context and campaign divergence
+
+Use `docs/KoreanWarChronology.pdf`, *The U.S. Air Force's First War: Korea,
+1950-1953: Significant Events*, as the principal USAF chronology for the wider
+air war. Consult it when advancing campaign time or judging plausible theater
+tempo, basing, reinforcements, aircraft and weapon employment, support activity,
+enemy air activity, and the relationship between air operations and the land
+battle. Its dates are Korean local dates.
+
+The chronology is context, not a script for the dynamic campaign. Treat
+theater-level events beyond the player's influence as historical anchors unless
+the accumulated campaign state supplies a credible reason for divergence.
+Treat the local front, unit condition and position, intelligence picture,
+sortie results, losses, and follow-on tasking as campaign variables governed by
+`campaign/current-situation.json`. Never silently force those variables back
+onto their historical outcome.
+
+When the campaign materially departs from a historical anchor, record the
+departure and its cause in the relevant `basis`, `note`, confidence, or sortie
+fields. Preserve three distinct categories in reports and reasoning:
+
+- documented historical fact;
+- player-observed or reported campaign fact;
+- campaign reconstruction or estimate.
+
+The mission editor manual and verified demo missions remain authoritative for
+mission-file construction. The chronology informs historical plausibility; the
+canonical campaign state controls the world the next mission must inherit.
