@@ -69,9 +69,20 @@ The target is a seven-vehicle DPRK formation:
 - two Studebaker transports, one carrying troops;
 - one Studebaker fuel tanker.
 
-Formation-member entities target-link to the column leader entity. Three
+Formation-member entities target-link to the column leader entity. Nine
 ground waypoints are object-linked to that leader and target-linked in order.
-The route runs generally south through the reported Osan corridor at 12 m/s.
+The revised route runs south and southwest at 12 m/s along ten control points
+read directly from Korea summer's compiled `ROADS/highways.bin` network. The
+vehicles begin aligned with the first road leg at 38-meter spacing. This
+replaces the original three broad waypoint legs, which increasingly cut across
+open terrain and ended more than five kilometers from the nearest detected
+highway control point.
+
+The builder validates all ten full-precision coordinate pairs against the
+installed highway binary before it writes or installs either mission mode.
+The player search waypoint, attack area, and briefing search icon were moved
+north to cover the verified road branch without disclosing the convoy's exact
+starting point.
 
 Every vehicle death reports to a three-count counter. Reaching three marks the
 mission objective successful and records that the column has been delayed; it
@@ -129,20 +140,20 @@ npm run scenario:black-scorpions-002
 
 Hashes after generation:
 
-- Single-player Mission: `E959451CE9691576A5EDAD1FB86799D5E52C1CD44C167C298372B13B557A7C57`
-- COOP Mission: `51C74592A9F291DE6A85C71AC33E07CD70611D8FAC9DC3B780C27769D5A93F86`
-- English localization: `730B4DFA72AA8A8832E03B884B6F943BF373D7335412861B9AAAA80F570C1BC2`
+- Single-player Mission: `2DE559646F7D4D2438EA9CA88F673919700FD0C877AD519F9B44AFCB37F46B03`
+- COOP Mission: `FAB858DDCAA1E73B378E6ED23DD668BDB0264DBA2E17A925A8869AB8CE67BFEB`
+- English localization: `BCEB975156AFFCB491F37A970C826B5CFED221DCFD9B70217C0121994B6F59E6`
 
 ## Static validation
 
 - balanced mission braces;
-- 77 unique new mission IDs and no duplicate new IDs;
+- 83 unique new mission IDs and no duplicate new IDs;
 - no unresolved new Target, Object, event, or command references;
 - exactly four COOP player slots;
 - two independent AI escort aircraft;
 - two disabled-at-start Yak aircraft;
 - one 50-percent interception timer;
-- three object-linked convoy waypoints;
+- nine object-linked convoy waypoints on a validated summer highway branch;
 - five localized and target-linked briefing route icons;
 - UTF-16LE English localization with the Korea-compatible byte-order mark;
 - Korea-compatible field schemas for all new MCU and object types;
@@ -154,8 +165,8 @@ Hashes after generation:
 1. Do the single-player and COOP versions load without Error 1006?
 2. Are Scorpion 1-4 visible and selectable as expected?
 3. Does Falcon flight appear above/near Scorpion and remain on cover duty?
-4. Does the convoy move south in formation without leaving the road corridor,
-   colliding, or becoming stuck?
+4. Does the convoy move south and southwest in formation, remain on the visible
+   road through all nine waypoints, and avoid collisions or stoppages?
 5. Is the broad search marker useful without revealing the exact convoy?
 6. Do Scorpion AI wingmen attack moving ground targets in the action area?
 7. When Yaks appear, does Falcon engage while Scorpion can remain on task?

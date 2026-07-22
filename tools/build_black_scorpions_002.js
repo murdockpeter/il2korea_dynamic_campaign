@@ -12,6 +12,22 @@ const REPO_ROOT = path.resolve(__dirname, '..');
 const DEFAULT_GAME_MISSIONS = 'C:\\Program Files\\IL2Series\\game\\data\\Missions';
 const MISSION_NAME = 'BlackScorpions_002_Osan_Road_Hunt';
 
+// Control points extracted from Korea summer's compiled highway network.
+// Keep full precision here so main() can prove every pair exists in highways.bin;
+// mission serialization rounds them to the editor's usual millimeter precision.
+const VERIFIED_HIGHWAY_ROUTE = [
+  [72116.35528356096, 301358.42],
+  [71154.8801027808, 302331.85000000003],
+  [69713.7695458143, 303219.585],
+  [69204.46782257805, 304034.75],
+  [67695.60265707065, 305061.31],
+  [66950.22385147917, 306208.67],
+  [66078.4677130643, 306610.435],
+  [64942.93124047091, 306794.58],
+  [63963.89539826778, 307168.765],
+  [62845.23725289766, 307750.33],
+];
+
 function parseArgs(argv) {
   const args = {};
   for (let i = 0; i < argv.length; i += 1) {
@@ -343,7 +359,7 @@ function buildMissionLayer() {
   blocks.push(timer({ index: 81051, name: '1s initialization', targets: [81052,81060,81110,81111,81220,81350], time: 1, x: 46000, z: 324000 }));
   blocks.push(formation({ index: 81052, name: 'Scorpion formation', object: playerLeader, x: 46500, y: 2200, z: 324000 }));
   blocks.push(waypoint({ index: 81060, name: 'Rejoin top cover', targets: [81061], objects: [playerLeader], x: 55000, y: 2200, z: 320000, area: 1800, speed: 650 }));
-  blocks.push(waypoint({ index: 81061, name: 'Osan search corridor', targets: [81070,81071,81072], objects: [playerLeader], x: 64000, y: 1500, z: 316000, area: 2500, speed: 620 }));
+  blocks.push(waypoint({ index: 81061, name: 'Osan search corridor', targets: [81070,81071,81072], objects: [playerLeader], x: 64000, y: 1500, z: 309000, area: 2500, speed: 620 }));
   blocks.push(`MCU_CMD_AttackArea
 {
   Index = 81070;
@@ -351,9 +367,9 @@ function buildMissionLayer() {
   Desc = "";
   Targets = [];
   Objects = [${playerLeader}];
-  XPos = 67000.000;
+  XPos = 67500.000;
   YPos = 900.000;
-  ZPos = 318000.000;
+  ZPos = 305000.000;
   XOri = 0;
   YOri = 0;
   ZOri = 0;
@@ -361,7 +377,7 @@ function buildMissionLayer() {
   AttackGround = 1;
   AttackAir = 0;
   AttackGTargets = 0;
-  AttackArea = 6500;
+  AttackArea = 7000;
   Time = 360;
   Priority = 1;
 }`);
@@ -453,22 +469,35 @@ function buildMissionLayer() {
   blocks.push(waypoint({ index: 81227, name: 'Yak withdrawal north', targets: [], objects: [yakLeader], x: 110000, y: 3200, z: 275000, area: 3000, speed: 520 }));
   blocks.push(formation({ index: 81228, name: 'Yak patrol formation', object: yakLeader, x: 88000, y: 3200, z: 296000, density: 0 }));
 
-  const convoy = [
-    ['DPRK Column Leader',81301,81302,67200,306000,'LuaScripts\\WorldObjects\\vehicles\\isu122.txt','graphics\\vehicles\\isu122\\isu122.mgm'],
-    ['DPRK Assault Gun 2',81303,81304,67240,305930,'LuaScripts\\WorldObjects\\vehicles\\isu122.txt','graphics\\vehicles\\isu122\\isu122.mgm'],
-    ['DPRK Transport 1',81305,81306,67280,305860,'LuaScripts\\WorldObjects\\vehicles\\gaz63.txt','graphics\\vehicles\\gaz63\\gaz63.mgm'],
-    ['DPRK Transport 2',81307,81308,67320,305790,'LuaScripts\\WorldObjects\\vehicles\\studebakerus6.txt','graphics\\vehicles\\studebakerus6\\studebakerus6.mgm'],
-    ['DPRK Transport 3',81309,81310,67360,305720,'LuaScripts\\WorldObjects\\vehicles\\gaz63.txt','graphics\\vehicles\\gaz63\\gaz63.mgm'],
-    ['DPRK Fuel Truck',81311,81312,67400,305650,'LuaScripts\\WorldObjects\\vehicles\\studebakerus6-tanker.txt','graphics\\vehicles\\studebakerus6-tanker\\studebakerus6-tanker.mgm'],
-    ['DPRK Troop Truck',81313,81314,67440,305580,'LuaScripts\\WorldObjects\\vehicles\\studebakerus6.txt','graphics\\vehicles\\studebakerus6\\studebakerus6.mgm'],
+  const [roadStart, firstRoadPoint] = VERIFIED_HIGHWAY_ROUTE;
+  const roadDx = firstRoadPoint[0] - roadStart[0];
+  const roadDz = firstRoadPoint[1] - roadStart[1];
+  const roadLength = Math.hypot(roadDx, roadDz);
+  const roadYaw = (Math.atan2(roadDx, roadDz) * 180 / Math.PI + 360) % 360;
+  const convoyTypes = [
+    ['DPRK Column Leader',81301,81302,'LuaScripts\\WorldObjects\\vehicles\\isu122.txt','graphics\\vehicles\\isu122\\isu122.mgm'],
+    ['DPRK Assault Gun 2',81303,81304,'LuaScripts\\WorldObjects\\vehicles\\isu122.txt','graphics\\vehicles\\isu122\\isu122.mgm'],
+    ['DPRK Transport 1',81305,81306,'LuaScripts\\WorldObjects\\vehicles\\gaz63.txt','graphics\\vehicles\\gaz63\\gaz63.mgm'],
+    ['DPRK Transport 2',81307,81308,'LuaScripts\\WorldObjects\\vehicles\\studebakerus6.txt','graphics\\vehicles\\studebakerus6\\studebakerus6.mgm'],
+    ['DPRK Transport 3',81309,81310,'LuaScripts\\WorldObjects\\vehicles\\gaz63.txt','graphics\\vehicles\\gaz63\\gaz63.mgm'],
+    ['DPRK Fuel Truck',81311,81312,'LuaScripts\\WorldObjects\\vehicles\\studebakerus6-tanker.txt','graphics\\vehicles\\studebakerus6-tanker\\studebakerus6-tanker.mgm'],
+    ['DPRK Troop Truck',81313,81314,'LuaScripts\\WorldObjects\\vehicles\\studebakerus6.txt','graphics\\vehicles\\studebakerus6\\studebakerus6.mgm'],
   ];
+  const convoy = convoyTypes.map(([name,index,entityIndex,script,model], i) => {
+    const spacing = i * 38;
+    return [name,index,entityIndex,
+      roadStart[0] - roadDx / roadLength * spacing,
+      roadStart[1] - roadDz / roadLength * spacing,
+      script,model];
+  });
   convoy.forEach(([name,index,entityIndex,x,z,script,model], i) => {
-    blocks.push(vehicle({ name, index, entityIndex, x, z, yaw: 180, script, model, formation: i }));
+    blocks.push(vehicle({ name, index, entityIndex, x, z, yaw: roadYaw, script, model, formation: i }));
     blocks.push(entity({ index: entityIndex, objectIndex: index, name: `${name} entity`, x, y: 0, z, targets: i === 0 ? [] : [convoyLeader], deathTarget: resultCounter }));
   });
-  blocks.push(waypoint({ index: 81350, name: 'Column south 1', targets: [81351], objects: [convoyLeader], x: 67400, y: 0, z: 313000, area: 120, speed: 12, priority: 1 }));
-  blocks.push(waypoint({ index: 81351, name: 'Column south 2', targets: [81352], objects: [convoyLeader], x: 67000, y: 0, z: 321000, area: 120, speed: 12, priority: 1 }));
-  blocks.push(waypoint({ index: 81352, name: 'Column destination', targets: [], objects: [convoyLeader], x: 66300, y: 0, z: 329000, area: 150, speed: 12, priority: 1 }));
+  VERIFIED_HIGHWAY_ROUTE.slice(1).forEach(([x,z], i, route) => {
+    const index = 81350 + i;
+    blocks.push(waypoint({ index, name: i === route.length - 1 ? 'Column road destination' : `Column road ${i + 1}`, targets: i === route.length - 1 ? [] : [index + 1], objects: [convoyLeader], x, y: 0, z, area: i === route.length - 1 ? 150 : 90, speed: 12, priority: 1 }));
+  });
 
   blocks.push(`MCU_Counter
 {
@@ -507,13 +536,13 @@ function buildMissionLayer() {
   Success = 1;
   IconType = 559;
 }`);
-  blocks.push(subtitle({ index: 81402, lcText: 13, x: 68500, z: 318500 }));
-  blocks.push(icon({ index: 81410, x: 67000, z: 318000, lcName: 7, lcDesc: 8, iconId: 511, r: 255, g: 128, b: 0, lineType: 0, coalitions: [2] }));
+  blocks.push(subtitle({ index: 81402, lcText: 13, x: 68500, z: 305500 }));
+  blocks.push(icon({ index: 81410, x: 67500, z: 305000, lcName: 7, lcDesc: 8, iconId: 511, r: 255, g: 128, b: 0, lineType: 0, coalitions: [2] }));
 
   const routeIcons = [
     [81600,81601,45000,325000,14,15,903],
     [81601,81602,55000,320000,16,17,901],
-    [81602,81603,64000,316000,18,19,902],
+    [81602,81603,64000,309000,18,19,902],
     [81603,81604,48000,330000,20,21,901],
     [81604,null,12000,337000,22,23,901],
   ];
@@ -538,6 +567,19 @@ function replaceOption(text, key, value) {
   const pattern = new RegExp(`(^\\s*${key}\\s*=\\s*)[^;]+;`, 'm');
   if (!pattern.test(text)) throw new Error(`Could not find mission option ${key}`);
   return text.replace(pattern, `$1${value};`);
+}
+
+function validateHighwayRoute(gameData) {
+  const highwayPath = path.join(gameData, 'graphics', 'LANDSCAPE_Korea_su', 'ROADS', 'highways.bin');
+  if (!fs.existsSync(highwayPath)) throw new Error(`Korea summer highway network not found: ${highwayPath}`);
+  const highwayData = fs.readFileSync(highwayPath);
+  VERIFIED_HIGHWAY_ROUTE.forEach(([x,z], i) => {
+    const pair = Buffer.allocUnsafe(16);
+    pair.writeDoubleLE(x, 0);
+    pair.writeDoubleLE(z, 8);
+    if (highwayData.indexOf(pair) < 0) throw new Error(`Convoy road control point ${i + 1} is absent from highways.bin: ${x}, ${z}`);
+  });
+  return { highwayPath, controlPoints: VERIFIED_HIGHWAY_ROUTE.length };
 }
 
 function buildMission(sourceText) {
@@ -565,7 +607,7 @@ function buildEnglishText() {
     '5:Estimated front - 4 July 1950 afternoon',
     '6:The western sector has moved south under continued pressure; central and eastern estimates remain less changed.',
     '7:Osan road search corridor',
-    '8:Last-known movement south. The convoy may have advanced beyond the center of this marker.',
+    '8:Last-known movement south and southwest along this road branch. The convoy may have advanced beyond the center of this marker.',
     '9:Scorpion flight, begin armed reconnaissance. Falcon flight is covering above.',
     '10:Search window closed. Reform and exit southwest for Itazuke.',
     '11:Scorpion and Falcon flights clear of the operational area. Mission ending.',
@@ -611,12 +653,13 @@ function main() {
   const gameMissions = path.resolve(args['game-missions'] || DEFAULT_GAME_MISSIONS);
   const sourcePath = path.resolve(args.source || path.join(gameMissions, 'F80_vs_Infantry_And_Armor_1.Mission'));
   if (!fs.existsSync(sourcePath)) throw new Error(`Source mission not found: ${sourcePath}`);
+  const gameData = path.dirname(gameMissions);
+  const roadValidation = validateHighwayRoute(gameData);
   const missionText = buildMission(fs.readFileSync(sourcePath, 'utf8'));
   const coopMissionText = buildCoopMissionText(missionText);
   const englishText = buildEnglishText();
   const generated = writePackage(path.join(REPO_ROOT, 'generated', MISSION_NAME), missionText, englishText);
   const game = writePackage(gameMissions, missionText, englishText);
-  const gameData = path.dirname(gameMissions);
   const multiplayerRoot = path.join(gameData, 'Multiplayer');
   const coopRoot = path.join(multiplayerRoot, 'COOP');
   const preferredRoot = path.join(multiplayerRoot, 'Cooperative', MISSION_NAME);
@@ -625,9 +668,9 @@ function main() {
   const coopCompatibility = writePackage(coopRoot, coopMissionText, englishText, buildCoopSdsText(metadata(), `${MISSION_NAME}.Mission`));
   const multiplayerCompatibility = writePackage(multiplayerRoot, coopMissionText, englishText, buildCoopSdsText(metadata(), `COOP/${MISSION_NAME}.Mission`));
   registerCoopMissionInLocalServerSetup([`Multiplayer/Cooperative/${MISSION_NAME}/${MISSION_NAME}`,`Multiplayer/${MISSION_NAME}`,`Multiplayer/COOP/${MISSION_NAME}`]);
-  process.stdout.write(JSON.stringify({ sourcePath, singlePlayer: { generated, game }, coop: { generatedCoop, cooperative, coopCompatibility, multiplayerCompatibility } }, null, 2));
+  process.stdout.write(JSON.stringify({ sourcePath, roadValidation, singlePlayer: { generated, game }, coop: { generatedCoop, cooperative, coopCompatibility, multiplayerCompatibility } }, null, 2));
 }
 
 if (require.main === module) main();
 
-module.exports = { buildMission, buildMissionLayer, buildEnglishText };
+module.exports = { buildMission, buildMissionLayer, buildEnglishText, validateHighwayRoute, VERIFIED_HIGHWAY_ROUTE };

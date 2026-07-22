@@ -50,6 +50,28 @@ cookie-cutter template. Details, emphasis, uncertainty, package composition,
 route presentation, and tactical warnings must follow the current war state
 and the distinctive operational problem of that sortie.
 
+## Terrain and ground-route grounding
+
+Preserve the complete baked landscape, airfield, bridge, settlement, and other
+baseline content inherited from the selected Korea mission source. Do not
+confuse preservation of that baseline with validation of newly authored unit
+placement.
+
+Before describing a moving ground formation as road-following, validate its
+start, spacing, and waypoint chain against the active seasonal landscape's
+compiled highway network or by direct Mission Editor inspection. Prefer
+multiple shorter control legs through real bends over a few long waypoints
+that cut across terrain. Validate intended bridge crossings against serialized
+baseline bridges and confirm the bridge is usable in the mission state.
+
+Keep the player search/attack geometry synchronized with the verified ground
+route. A moving target must remain plausibly acquirable during the assigned
+action window. Record the terrain source and validation method in the scenario
+learning note, and do not claim that a route follows a road until it has been
+checked in the editor or against the installed landscape data. Final in-game
+testing must still confirm vehicle pathfinding, spacing, bridge behavior, and
+the absence of collisions or stoppages.
+
 ## Persistent situation reporting
 
 Treat `campaign/current-situation.json` as the canonical campaign state. After
