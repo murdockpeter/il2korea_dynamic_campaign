@@ -193,6 +193,26 @@ npm run report:serve
 Open `http://localhost:4173/campaign`. After each adjudicated sortie, update
 the canonical state and rebuild both `report:situation` and `report:campaign`.
 
+### BS-002 sortie OPORD
+
+The one-off BS-002 planning order converts the playable Osan Road Hunt and the
+current campaign estimate into an Air Force-oriented sortie-planning page. It
+includes an operational map, commander's intent, Air METT-TC, Air OCOKA, three
+approach courses of action, a synchronization matrix, and emergency and threat
+contingencies. Hidden scenario coordinates remain generalized as intelligence
+zones rather than being disclosed to the player.
+
+Build and serve it with:
+
+```powershell
+npm run report:opord-002
+npm run report:serve
+```
+
+Open `http://localhost:4173/opord-002`. The generated standalone file is
+`reports/sortie-opord-002.html` and embeds the squadron artwork and local Maps
+credential in the same ignored-report pattern as the campaign tracker.
+
 ## Mission quality standard
 
 Every delivered campaign mission should include:
@@ -313,6 +333,12 @@ Rebuild the live Black Scorpions campaign tracker:
 
 ```powershell
 npm run report:campaign
+```
+
+Rebuild the one-off BS-002 sortie OPORD:
+
+```powershell
+npm run report:opord-002
 ```
 
 Serve the dossier locally after building it:

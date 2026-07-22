@@ -8,7 +8,9 @@ const reports = {
   '/history': path.resolve(__dirname, '..', 'reports', 'historical-frontline.html'),
   '/historical-frontline.html': path.resolve(__dirname, '..', 'reports', 'historical-frontline.html'),
   '/campaign': path.resolve(__dirname, '..', 'reports', 'campaign-tracker.html'),
-  '/campaign-tracker.html': path.resolve(__dirname, '..', 'reports', 'campaign-tracker.html')
+  '/campaign-tracker.html': path.resolve(__dirname, '..', 'reports', 'campaign-tracker.html'),
+  '/opord-002': path.resolve(__dirname, '..', 'reports', 'sortie-opord-002.html'),
+  '/sortie-opord-002.html': path.resolve(__dirname, '..', 'reports', 'sortie-opord-002.html')
 };
 const port = Number(process.env.SITUATION_REPORT_PORT || 4173);
 
@@ -26,7 +28,7 @@ const server = http.createServer((request, response) => {
   }
   if (!fs.existsSync(report)) {
     response.writeHead(503, { 'Content-Type': 'text/plain; charset=utf-8' });
-    response.end('Report not built. Run npm run report:situation, npm run report:history, or npm run report:campaign.');
+    response.end('Report not built. Run the matching npm report command.');
     return;
   }
   response.writeHead(200, {
@@ -41,5 +43,6 @@ server.listen(port, '127.0.0.1', () => {
   console.log(`Current situation: http://localhost:${port}/`);
   console.log(`Historical atlas:  http://localhost:${port}/history`);
   console.log(`Campaign tracker:  http://localhost:${port}/campaign`);
+  console.log(`BS-002 sortie OPORD: http://localhost:${port}/opord-002`);
   console.log('Press Ctrl+C to stop.');
 });
